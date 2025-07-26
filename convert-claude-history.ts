@@ -45,44 +45,40 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
           output.push(...lines.map(line => `> ${line}`));
         }
       } else if (contentItem.type === 'tool_result') {
-        // Output tool result content with blockquotes
+        // Output tool result content without blockquotes
         if (contentItem.content) {
-          output.push('> ```');
+          output.push('```');
           const contentStr = typeof contentItem.content === 'string'
             ? contentItem.content
             : JSON.stringify(contentItem.content, null, 2);
-          const contentLines = contentStr.split('\n');
-          output.push(...contentLines.map(line => `> ${line}`));
-          output.push('> ```');
+          output.push(contentStr);
+          output.push('```');
         }
 
         // Output toolUseResult if available at the message level
         if (entry.message.toolUseResult) {
-          output.push('> ```json');
-          const jsonLines = JSON.stringify(entry.message.toolUseResult, null, 2).split('\n');
-          output.push(...jsonLines.map(line => `> ${line}`));
-          output.push('> ```');
+          output.push('```json');
+          output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
+          output.push('```');
         }
       }
     }
   } else if (typeof entry.message.content === 'object' && entry.message.content.type === 'tool_result') {
-    // Output tool result content with blockquotes
+    // Output tool result content without blockquotes
     if (entry.message.content.content) {
-      output.push('> ```');
+      output.push('```');
       const contentStr = typeof entry.message.content.content === 'string'
         ? entry.message.content.content
         : JSON.stringify(entry.message.content.content, null, 2);
-      const contentLines = contentStr.split('\n');
-      output.push(...contentLines.map(line => `> ${line}`));
-      output.push('> ```');
+      output.push(contentStr);
+      output.push('```');
     }
 
     // Output toolUseResult
     if (entry.message.toolUseResult) {
-      output.push('> ```json');
-      const jsonLines = JSON.stringify(entry.message.toolUseResult, null, 2).split('\n');
-      output.push(...jsonLines.map(line => `> ${line}`));
-      output.push('> ```');
+      output.push('```json');
+      output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
+      output.push('```');
     }
   } else {
     // Unknown format
@@ -153,11 +149,17 @@ function processAssistantEntry(entry: Entry, lineNumber: number): string {
       if (contentItem.type === 'text' && contentItem.text) {
         output.push(contentItem.text);
       } else if (contentItem.type === 'tool_use') {
-        output.push('```json');
-        output.push(JSON.stringify(contentItem, null, 2));
-        output.push('```');
+        // Format tool use with emoji and name
+        const toolName = contentItem.name || 'Unknown Tool';
+        const description = contentItem.input?.description || contentItem.input?.path || contentItem.input?.file_path || '';
+        output.push(`🛠️ ${toolName}: ${description}`);
       }
     }
+  } else if (entry.message.type === 'tool_use') {
+    // Handle direct tool_use message type
+    const toolName = entry.message.name || 'Unknown Tool';
+    const description = entry.message.input?.description || entry.message.input?.path || entry.message.input?.file_path || '';
+    output.push(`🛠️ ${toolName}: ${description}`);
   } else {
     // Unknown format
     output.push(`## Unknown assistant line #${lineNumber}`);
