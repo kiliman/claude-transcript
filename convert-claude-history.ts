@@ -23,7 +23,7 @@ function getLanguageFromExtension(ext: string): string {
     'tsx': 'tsx',
     'mjs': 'javascript',
     'cjs': 'javascript',
-    
+
     // Web
     'html': 'html',
     'htm': 'html',
@@ -31,7 +31,7 @@ function getLanguageFromExtension(ext: string): string {
     'scss': 'scss',
     'sass': 'sass',
     'less': 'less',
-    
+
     // Data formats
     'json': 'json',
     'jsonl': 'json',
@@ -39,7 +39,7 @@ function getLanguageFromExtension(ext: string): string {
     'yml': 'yaml',
     'toml': 'toml',
     'xml': 'xml',
-    
+
     // Programming languages
     'py': 'python',
     'rb': 'ruby',
@@ -63,7 +63,7 @@ function getLanguageFromExtension(ext: string): string {
     'clj': 'clojure',
     'ex': 'elixir',
     'exs': 'elixir',
-    
+
     // Shell/Scripts
     'sh': 'bash',
     'bash': 'bash',
@@ -72,23 +72,23 @@ function getLanguageFromExtension(ext: string): string {
     'ps1': 'powershell',
     'bat': 'batch',
     'cmd': 'batch',
-    
+
     // Config files
     'ini': 'ini',
     'cfg': 'ini',
     'conf': 'conf',
     'properties': 'properties',
     'env': 'bash',
-    
+
     // Documentation
     'md': 'markdown',
     'markdown': 'markdown',
     'rst': 'rst',
     'tex': 'latex',
-    
+
     // Database
     'sql': 'sql',
-    
+
     // Other
     'dockerfile': 'dockerfile',
     'makefile': 'makefile',
@@ -96,7 +96,7 @@ function getLanguageFromExtension(ext: string): string {
     'diff': 'diff',
     'patch': 'diff',
   };
-  
+
   return languageMap[ext] || '';
 }
 
@@ -138,17 +138,19 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
           if (entry.toolUseResult.file) {
             const file = entry.toolUseResult.file;
             output.push(file.filePath);
-            
+
             // Determine language from file extension
             const ext = file.filePath.split('.').pop()?.toLowerCase() || '';
             const language = getLanguageFromExtension(ext);
-            
+
             output.push(`\`\`\`${language}`);
             output.push(file.content);
             output.push('```');
           } else {
-            output.push('```json');
-            output.push(JSON.stringify(entry.toolUseResult, null, 2));
+            output.push('```');
+            output.push(typeof entry.toolUseResult === 'string' 
+              ? entry.toolUseResult 
+              : JSON.stringify(entry.toolUseResult, null, 2));
             output.push('```');
           }
         } else if (contentItem.content) {
@@ -169,17 +171,19 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
       if (entry.toolUseResult.file) {
         const file = entry.toolUseResult.file;
         output.push(file.filePath);
-        
+
         // Determine language from file extension
         const ext = file.filePath.split('.').pop()?.toLowerCase() || '';
         const language = getLanguageFromExtension(ext);
-        
+
         output.push(`\`\`\`${language}`);
         output.push(file.content);
         output.push('```');
       } else {
-        output.push('```json');
-        output.push(JSON.stringify(entry.toolUseResult, null, 2));
+        output.push('```');
+        output.push(typeof entry.toolUseResult === 'string' 
+          ? entry.toolUseResult 
+          : JSON.stringify(entry.toolUseResult, null, 2));
         output.push('```');
       }
     } else if (entry.message.content.content) {
