@@ -4,8 +4,10 @@ import { createHash } from 'crypto';
 
 interface Message {
   type: string;
-  content: string | any[] | { type: string; content?: string; [key: string]: any };
+  content: string | any[] | { type: string; content?: string; id?: string; tool_use_id?: string; [key: string]: any };
   toolUseResult?: any;
+  name?: string;
+  input?: any;
 }
 
 interface Entry {
@@ -13,6 +15,8 @@ interface Entry {
   message: Message;
   isMeta?: boolean;
   toolUseResult?: any;
+  uuid?: string;
+  parentUuid?: string;
 }
 
 function escapeCodeFences(content: string): string {
@@ -357,7 +361,7 @@ function parseCommandContent(text: string): string[] | null {
   return output;
 }
 
-function processAssistantEntry(entry: Entry, lineNumber: number): string {
+function processAssistantEntry(entry: Entry, lineNumber: number, childEntries: { entry: Entry; lineNumber: number }[] = []): string {
   const output: string[] = [];
 
   if (entry.message.type === 'message' && Array.isArray(entry.message.content)) {
@@ -369,6 +373,60 @@ function processAssistantEntry(entry: Entry, lineNumber: number): string {
         const toolName = contentItem.name || 'Unknown Tool';
         const description = contentItem.input?.description || contentItem.input?.path || contentItem.input?.file_path || '';
         output.push(`🛠️ ${toolName}: ${description}`);
+        
+        // Look for tool result in child entries
+        const toolUseId = contentItem.id;
+        if (toolUseId) {
+          for (const child of childEntries) {
+            if (Array.isArray(child.entry.message.content)) {
+              for (const childContent of child.entry.message.content) {
+                if (childContent.type === 'tool_result' && childContent.tool_use_id === toolUseId) {
+                  // Found the matching tool result
+                  output.push('');
+                  if (childContent.content) {
+                    // Handle file content or regular content
+                    if (typeof childContent.content === 'object' && childContent.content.file) {
+                      const file = childContent.content.file;
+                      output.push(file.filePath);
+                      
+                      // Determine language from file extension
+                      const ext = file.filePath.split('.').pop()?.toLowerCase() || '';
+                      const language = getLanguageFromExtension(ext);
+                      
+                      // Handle potentially large file content
+                      const { content: processedContent, savedPath, remainingLines } = handleLargeContent(file.content, file.filePath);
+                      
+                      output.push(`\`\`\`${language}`);
+                      output.push(processedContent);
+                      output.push('```');
+                      
+                      // Add truncation notice outside code fence
+                      if (savedPath && remainingLines) {
+                        output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
+                      }
+                    } else {
+                      // Regular content
+                      const contentStr = typeof childContent.content === 'string'
+                        ? childContent.content
+                        : JSON.stringify(childContent.content, null, 2);
+                      const { content: processedContent, savedPath, remainingLines } = handleLargeContent(contentStr);
+                      
+                      output.push('```');
+                      output.push(processedContent);
+                      output.push('```');
+                      
+                      // Add truncation notice outside code fence
+                      if (savedPath && remainingLines) {
+                        output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
+                      }
+                    }
+                  }
+                  break;
+                }
+              }
+            }
+          }
+        }
       }
     }
   } else if (entry.message.type === 'tool_use') {
@@ -390,32 +448,65 @@ function processAssistantEntry(entry: Entry, lineNumber: number): string {
 function convertJsonlToMarkdown(jsonlPath: string): string | null {
   const content = readFileSync(jsonlPath, 'utf-8');
   const lines = content.trim().split('\n');
-  const markdownSections: string[] = [];
-
-  let hasValidEntries = false;
-
+  
+  // First pass: Read all entries and build lookup maps
+  const entries: { entry: Entry; lineNumber: number }[] = [];
+  const entriesByParentUuid = new Map<string, { entry: Entry; lineNumber: number }[]>();
+  const processedUuids = new Set<string>();
+  
   lines.forEach((line, index) => {
     if (!line.trim()) return;
-
+    
     try {
       const entry: Entry = JSON.parse(line);
-
-      // Skip meta entries
-      if (entry.isMeta === true) return;
-
-      // Process user and assistant entries
-      if (entry.type === 'user') {
-        const processed = processUserEntry(entry, index + 1);
-        if (processed !== null) {
-          hasValidEntries = true;
-          markdownSections.push(`### Line #${index + 1}\n\n${processed}`);
+      const entryWithLineNumber = { entry, lineNumber: index + 1 };
+      entries.push(entryWithLineNumber);
+      
+      // Build parent lookup map
+      if (entry.parentUuid) {
+        if (!entriesByParentUuid.has(entry.parentUuid)) {
+          entriesByParentUuid.set(entry.parentUuid, []);
         }
-      } else if (entry.type === 'assistant') {
-        hasValidEntries = true;
-        markdownSections.push(`### Line #${index + 1}\n\n${processAssistantEntry(entry, index + 1)}`);
+        entriesByParentUuid.get(entry.parentUuid)!.push(entryWithLineNumber);
       }
     } catch (error) {
       console.error(`Error parsing line ${index + 1} in ${jsonlPath}:`, error);
+    }
+  });
+  
+  // Second pass: Process entries with access to tool results
+  const markdownSections: string[] = [];
+  let hasValidEntries = false;
+  
+  entries.forEach(({ entry, lineNumber }) => {
+    // Skip if already processed as a child entry
+    if (entry.uuid && processedUuids.has(entry.uuid)) return;
+    
+    // Skip meta entries
+    if (entry.isMeta === true) return;
+    
+    // Process user and assistant entries
+    if (entry.type === 'user') {
+      const processed = processUserEntry(entry, lineNumber);
+      if (processed !== null) {
+        hasValidEntries = true;
+        markdownSections.push(`### Line #${lineNumber}\n\n${processed}`);
+      }
+    } else if (entry.type === 'assistant') {
+      hasValidEntries = true;
+      
+      // Get child entries for tool results
+      const childEntries = entry.uuid ? entriesByParentUuid.get(entry.uuid) || [] : [];
+      
+      const processed = processAssistantEntry(entry, lineNumber, childEntries);
+      markdownSections.push(`### Line #${lineNumber}\n\n${processed}`);
+      
+      // Mark child entries as processed
+      childEntries.forEach(child => {
+        if (child.entry.uuid) {
+          processedUuids.add(child.entry.uuid);
+        }
+      });
     }
   });
 
