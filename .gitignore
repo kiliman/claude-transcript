@@ -1,6 +1,9 @@
 # Generated markdown files
 *.md
 
+# Generated file contents
+contents/
+
 # Node modules
 node_modules/
 

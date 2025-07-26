@@ -1,5 +1,6 @@
-import { readFileSync, readdirSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, basename } from 'path';
+import { createHash } from 'crypto';
 
 interface Message {
   type: string;
@@ -12,6 +13,52 @@ interface Entry {
   message: Message;
   isMeta?: boolean;
   toolUseResult?: any;
+}
+
+function handleLargeContent(content: string, filePath?: string): { content: string; savedPath?: string } {
+  const lines = content.split('\n');
+  const lineCount = lines.length;
+  
+  // If 12 lines or fewer, return as is
+  if (lineCount <= 12) {
+    return { content };
+  }
+  
+  // Truncate to 8 lines
+  const truncatedLines = lines.slice(0, 8);
+  const remainingLines = lineCount - 8;
+  
+  // Generate hash for filename
+  const hash = createHash('md5').update(content).digest('hex').substring(0, 8);
+  
+  // Extract extension from filePath if provided
+  let extension = '';
+  if (filePath) {
+    const ext = filePath.split('.').pop();
+    if (ext && ext !== filePath) {
+      extension = `.${ext}`;
+    }
+  }
+  
+  // Create filename with hash
+  const filename = `${filePath ? basename(filePath, extension).replace(/[^a-zA-Z0-9-_]/g, '_') + '-' : ''}${hash}${extension}`;
+  const savedPath = join('contents', filename);
+  
+  // Ensure contents directory exists
+  if (!existsSync('contents')) {
+    mkdirSync('contents', { recursive: true });
+  }
+  
+  // Save full content to file
+  writeFileSync(savedPath, content);
+  
+  // Add truncation notice with link
+  truncatedLines.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
+  
+  return { 
+    content: truncatedLines.join('\n'),
+    savedPath
+  };
 }
 
 function getLanguageFromExtension(ext: string): string {
@@ -143,23 +190,32 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
             const ext = file.filePath.split('.').pop()?.toLowerCase() || '';
             const language = getLanguageFromExtension(ext);
 
+            // Handle potentially large file content
+            const { content: processedContent } = handleLargeContent(file.content, file.filePath);
+            
             output.push(`\`\`\`${language}`);
-            output.push(file.content);
+            output.push(processedContent);
             output.push('```');
           } else {
-            output.push('```');
-            output.push(typeof entry.toolUseResult === 'string' 
+            // Handle non-file toolUseResult
+            const content = typeof entry.toolUseResult === 'string' 
               ? entry.toolUseResult 
-              : JSON.stringify(entry.toolUseResult, null, 2));
+              : JSON.stringify(entry.toolUseResult, null, 2);
+            const { content: processedContent } = handleLargeContent(content);
+            
+            output.push('```');
+            output.push(processedContent);
             output.push('```');
           }
         } else if (contentItem.content) {
           // Fallback to tool_result content if no toolUseResult
-          output.push('```');
           const contentStr = typeof contentItem.content === 'string'
             ? contentItem.content
             : JSON.stringify(contentItem.content, null, 2);
-          output.push(contentStr);
+          const { content: processedContent } = handleLargeContent(contentStr);
+          
+          output.push('```');
+          output.push(processedContent);
           output.push('```');
         }
       }
@@ -176,23 +232,32 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
         const ext = file.filePath.split('.').pop()?.toLowerCase() || '';
         const language = getLanguageFromExtension(ext);
 
+        // Handle potentially large file content
+        const { content: processedContent } = handleLargeContent(file.content, file.filePath);
+        
         output.push(`\`\`\`${language}`);
-        output.push(file.content);
+        output.push(processedContent);
         output.push('```');
       } else {
-        output.push('```');
-        output.push(typeof entry.toolUseResult === 'string' 
+        // Handle non-file toolUseResult
+        const content = typeof entry.toolUseResult === 'string' 
           ? entry.toolUseResult 
-          : JSON.stringify(entry.toolUseResult, null, 2));
+          : JSON.stringify(entry.toolUseResult, null, 2);
+        const { content: processedContent } = handleLargeContent(content);
+        
+        output.push('```');
+        output.push(processedContent);
         output.push('```');
       }
     } else if (entry.message.content.content) {
       // Fallback to tool_result content if no toolUseResult
-      output.push('```');
       const contentStr = typeof entry.message.content.content === 'string'
         ? entry.message.content.content
         : JSON.stringify(entry.message.content.content, null, 2);
-      output.push(contentStr);
+      const { content: processedContent } = handleLargeContent(contentStr);
+      
+      output.push('```');
+      output.push(processedContent);
       output.push('```');
     }
   } else {
