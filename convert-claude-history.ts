@@ -13,6 +13,92 @@ interface Entry {
   isMeta?: boolean;
 }
 
+function getLanguageFromExtension(ext: string): string {
+  const languageMap: { [key: string]: string } = {
+    // JavaScript/TypeScript
+    'js': 'javascript',
+    'jsx': 'jsx',
+    'ts': 'typescript',
+    'tsx': 'tsx',
+    'mjs': 'javascript',
+    'cjs': 'javascript',
+    
+    // Web
+    'html': 'html',
+    'htm': 'html',
+    'css': 'css',
+    'scss': 'scss',
+    'sass': 'sass',
+    'less': 'less',
+    
+    // Data formats
+    'json': 'json',
+    'jsonl': 'json',
+    'yaml': 'yaml',
+    'yml': 'yaml',
+    'toml': 'toml',
+    'xml': 'xml',
+    
+    // Programming languages
+    'py': 'python',
+    'rb': 'ruby',
+    'go': 'go',
+    'rs': 'rust',
+    'java': 'java',
+    'kt': 'kotlin',
+    'swift': 'swift',
+    'c': 'c',
+    'cpp': 'cpp',
+    'cc': 'cpp',
+    'cxx': 'cpp',
+    'h': 'c',
+    'hpp': 'cpp',
+    'cs': 'csharp',
+    'php': 'php',
+    'r': 'r',
+    'lua': 'lua',
+    'dart': 'dart',
+    'elm': 'elm',
+    'clj': 'clojure',
+    'ex': 'elixir',
+    'exs': 'elixir',
+    
+    // Shell/Scripts
+    'sh': 'bash',
+    'bash': 'bash',
+    'zsh': 'bash',
+    'fish': 'fish',
+    'ps1': 'powershell',
+    'bat': 'batch',
+    'cmd': 'batch',
+    
+    // Config files
+    'ini': 'ini',
+    'cfg': 'ini',
+    'conf': 'conf',
+    'properties': 'properties',
+    'env': 'bash',
+    
+    // Documentation
+    'md': 'markdown',
+    'markdown': 'markdown',
+    'rst': 'rst',
+    'tex': 'latex',
+    
+    // Database
+    'sql': 'sql',
+    
+    // Other
+    'dockerfile': 'dockerfile',
+    'makefile': 'makefile',
+    'mk': 'makefile',
+    'diff': 'diff',
+    'patch': 'diff',
+  };
+  
+  return languageMap[ext] || '';
+}
+
 function processUserEntry(entry: Entry, lineNumber: number): string | null {
   const output: string[] = [];
 
@@ -45,8 +131,27 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
           output.push(...lines.map(line => `> ${line}`));
         }
       } else if (contentItem.type === 'tool_result') {
-        // Output tool result content without blockquotes
-        if (contentItem.content) {
+        // Prefer toolUseResult over tool_result content
+        if (entry.message.toolUseResult) {
+          // Check if toolUseResult has a file object
+          if (entry.message.toolUseResult.file) {
+            const file = entry.message.toolUseResult.file;
+            output.push(file.filePath);
+            
+            // Determine language from file extension
+            const ext = file.filePath.split('.').pop()?.toLowerCase() || '';
+            const language = getLanguageFromExtension(ext);
+            
+            output.push(`\`\`\`${language}`);
+            output.push(file.content);
+            output.push('```');
+          } else {
+            output.push('```json');
+            output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
+            output.push('```');
+          }
+        } else if (contentItem.content) {
+          // Fallback to tool_result content if no toolUseResult
           output.push('```');
           const contentStr = typeof contentItem.content === 'string'
             ? contentItem.content
@@ -54,30 +159,35 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
           output.push(contentStr);
           output.push('```');
         }
-
-        // Output toolUseResult if available at the message level
-        if (entry.message.toolUseResult) {
-          output.push('```json');
-          output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
-          output.push('```');
-        }
       }
     }
   } else if (typeof entry.message.content === 'object' && entry.message.content.type === 'tool_result') {
-    // Output tool result content without blockquotes
-    if (entry.message.content.content) {
+    // Prefer toolUseResult over tool_result content
+    if (entry.message.toolUseResult) {
+      // Check if toolUseResult has a file object
+      if (entry.message.toolUseResult.file) {
+        const file = entry.message.toolUseResult.file;
+        output.push(file.filePath);
+        
+        // Determine language from file extension
+        const ext = file.filePath.split('.').pop()?.toLowerCase() || '';
+        const language = getLanguageFromExtension(ext);
+        
+        output.push(`\`\`\`${language}`);
+        output.push(file.content);
+        output.push('```');
+      } else {
+        output.push('```json');
+        output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
+        output.push('```');
+      }
+    } else if (entry.message.content.content) {
+      // Fallback to tool_result content if no toolUseResult
       output.push('```');
       const contentStr = typeof entry.message.content.content === 'string'
         ? entry.message.content.content
         : JSON.stringify(entry.message.content.content, null, 2);
       output.push(contentStr);
-      output.push('```');
-    }
-
-    // Output toolUseResult
-    if (entry.message.toolUseResult) {
-      output.push('```json');
-      output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
       output.push('```');
     }
   } else {
