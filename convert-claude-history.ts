@@ -31,17 +31,20 @@ function handleLargeContent(content: string, filePath?: string): { content: stri
   // Generate hash for filename
   const hash = createHash('md5').update(content).digest('hex').substring(0, 8);
   
-  // Extract extension from filePath if provided
+  // Extract extension and basename from filePath
   let extension = '';
+  let baseFileName = 'results'; // Default basename when no filePath provided
+  
   if (filePath) {
     const ext = filePath.split('.').pop();
     if (ext && ext !== filePath) {
       extension = `.${ext}`;
     }
+    baseFileName = basename(filePath, extension).replace(/[^a-zA-Z0-9-_]/g, '_');
   }
   
-  // Create filename with hash
-  const filename = `${filePath ? basename(filePath, extension).replace(/[^a-zA-Z0-9-_]/g, '_') + '-' : ''}${hash}${extension}`;
+  // Create filename with basename-hash.extension format
+  const filename = `${baseFileName}-${hash}${extension}`;
   const savedPath = join('contents', filename);
   
   // Ensure contents directory exists
