@@ -15,13 +15,18 @@ interface Entry {
   toolUseResult?: any;
 }
 
+function escapeCodeFences(content: string): string {
+  // Replace ``` with \`\`\` to escape code fences in markdown
+  return content.replace(/```/g, '\\`\\`\\`');
+}
+
 function handleLargeContent(content: string, filePath?: string): { content: string; savedPath?: string; remainingLines?: number } {
   const lines = content.split('\n');
   const lineCount = lines.length;
   
-  // If 12 lines or fewer, return as is
+  // If 12 lines or fewer, return as is (but escaped for markdown)
   if (lineCount <= 12) {
-    return { content };
+    return { content: escapeCodeFences(content) };
   }
   
   // Truncate to 8 lines
@@ -52,11 +57,11 @@ function handleLargeContent(content: string, filePath?: string): { content: stri
     mkdirSync('contents', { recursive: true });
   }
   
-  // Save full content to file
+  // Save full content to file (raw, unescaped)
   writeFileSync(savedPath, content);
   
   return { 
-    content: truncatedLines.join('\n'),
+    content: escapeCodeFences(truncatedLines.join('\n')),
     savedPath,
     remainingLines
   };
@@ -358,7 +363,7 @@ function processAssistantEntry(entry: Entry, lineNumber: number): string {
   if (entry.message.type === 'message' && Array.isArray(entry.message.content)) {
     for (const contentItem of entry.message.content) {
       if (contentItem.type === 'text' && contentItem.text) {
-        output.push(contentItem.text);
+        output.push(escapeCodeFences(contentItem.text));
       } else if (contentItem.type === 'tool_use') {
         // Format tool use with emoji and name
         const toolName = contentItem.name || 'Unknown Tool';
