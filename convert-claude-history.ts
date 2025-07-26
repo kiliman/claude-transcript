@@ -11,6 +11,7 @@ interface Entry {
   type: string;
   message: Message;
   isMeta?: boolean;
+  toolUseResult?: any;
 }
 
 function getLanguageFromExtension(ext: string): string {
@@ -132,10 +133,10 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
         }
       } else if (contentItem.type === 'tool_result') {
         // Prefer toolUseResult over tool_result content
-        if (entry.message.toolUseResult) {
+        if (entry.toolUseResult) {
           // Check if toolUseResult has a file object
-          if (entry.message.toolUseResult.file) {
-            const file = entry.message.toolUseResult.file;
+          if (entry.toolUseResult.file) {
+            const file = entry.toolUseResult.file;
             output.push(file.filePath);
             
             // Determine language from file extension
@@ -147,7 +148,7 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
             output.push('```');
           } else {
             output.push('```json');
-            output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
+            output.push(JSON.stringify(entry.toolUseResult, null, 2));
             output.push('```');
           }
         } else if (contentItem.content) {
@@ -163,10 +164,10 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
     }
   } else if (typeof entry.message.content === 'object' && entry.message.content.type === 'tool_result') {
     // Prefer toolUseResult over tool_result content
-    if (entry.message.toolUseResult) {
+    if (entry.toolUseResult) {
       // Check if toolUseResult has a file object
-      if (entry.message.toolUseResult.file) {
-        const file = entry.message.toolUseResult.file;
+      if (entry.toolUseResult.file) {
+        const file = entry.toolUseResult.file;
         output.push(file.filePath);
         
         // Determine language from file extension
@@ -178,7 +179,7 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
         output.push('```');
       } else {
         output.push('```json');
-        output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
+        output.push(JSON.stringify(entry.toolUseResult, null, 2));
         output.push('```');
       }
     } else if (entry.message.content.content) {
