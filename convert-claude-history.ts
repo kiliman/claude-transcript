@@ -15,7 +15,7 @@ interface Entry {
   toolUseResult?: any;
 }
 
-function handleLargeContent(content: string, filePath?: string): { content: string; savedPath?: string } {
+function handleLargeContent(content: string, filePath?: string): { content: string; savedPath?: string; remainingLines?: number } {
   const lines = content.split('\n');
   const lineCount = lines.length;
   
@@ -52,12 +52,10 @@ function handleLargeContent(content: string, filePath?: string): { content: stri
   // Save full content to file
   writeFileSync(savedPath, content);
   
-  // Add truncation notice with link
-  truncatedLines.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
-  
   return { 
     content: truncatedLines.join('\n'),
-    savedPath
+    savedPath,
+    remainingLines
   };
 }
 
@@ -191,32 +189,47 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
             const language = getLanguageFromExtension(ext);
 
             // Handle potentially large file content
-            const { content: processedContent } = handleLargeContent(file.content, file.filePath);
+            const { content: processedContent, savedPath, remainingLines } = handleLargeContent(file.content, file.filePath);
             
             output.push(`\`\`\`${language}`);
             output.push(processedContent);
             output.push('```');
+            
+            // Add truncation notice outside code fence
+            if (savedPath && remainingLines) {
+              output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
+            }
           } else {
             // Handle non-file toolUseResult
             const content = typeof entry.toolUseResult === 'string' 
               ? entry.toolUseResult 
               : JSON.stringify(entry.toolUseResult, null, 2);
-            const { content: processedContent } = handleLargeContent(content);
+            const { content: processedContent, savedPath, remainingLines } = handleLargeContent(content);
             
             output.push('```');
             output.push(processedContent);
             output.push('```');
+            
+            // Add truncation notice outside code fence
+            if (savedPath && remainingLines) {
+              output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
+            }
           }
         } else if (contentItem.content) {
           // Fallback to tool_result content if no toolUseResult
           const contentStr = typeof contentItem.content === 'string'
             ? contentItem.content
             : JSON.stringify(contentItem.content, null, 2);
-          const { content: processedContent } = handleLargeContent(contentStr);
+          const { content: processedContent, savedPath, remainingLines } = handleLargeContent(contentStr);
           
           output.push('```');
           output.push(processedContent);
           output.push('```');
+          
+          // Add truncation notice outside code fence
+          if (savedPath && remainingLines) {
+            output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
+          }
         }
       }
     }
@@ -233,32 +246,47 @@ function processUserEntry(entry: Entry, lineNumber: number): string | null {
         const language = getLanguageFromExtension(ext);
 
         // Handle potentially large file content
-        const { content: processedContent } = handleLargeContent(file.content, file.filePath);
+        const { content: processedContent, savedPath, remainingLines } = handleLargeContent(file.content, file.filePath);
         
         output.push(`\`\`\`${language}`);
         output.push(processedContent);
         output.push('```');
+        
+        // Add truncation notice outside code fence
+        if (savedPath && remainingLines) {
+          output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
+        }
       } else {
         // Handle non-file toolUseResult
         const content = typeof entry.toolUseResult === 'string' 
           ? entry.toolUseResult 
           : JSON.stringify(entry.toolUseResult, null, 2);
-        const { content: processedContent } = handleLargeContent(content);
+        const { content: processedContent, savedPath, remainingLines } = handleLargeContent(content);
         
         output.push('```');
         output.push(processedContent);
         output.push('```');
+        
+        // Add truncation notice outside code fence
+        if (savedPath && remainingLines) {
+          output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
+        }
       }
     } else if (entry.message.content.content) {
       // Fallback to tool_result content if no toolUseResult
       const contentStr = typeof entry.message.content.content === 'string'
         ? entry.message.content.content
         : JSON.stringify(entry.message.content.content, null, 2);
-      const { content: processedContent } = handleLargeContent(contentStr);
+      const { content: processedContent, savedPath, remainingLines } = handleLargeContent(contentStr);
       
       output.push('```');
       output.push(processedContent);
       output.push('```');
+      
+      // Add truncation notice outside code fence
+      if (savedPath && remainingLines) {
+        output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
+      }
     }
   } else {
     // Unknown format
