@@ -26,7 +26,7 @@ main()
 
 function main() {
   const args = process.argv.slice(2)
-  if (args.length !== 1) {
+  if (args.length < 1) {
     console.error(
       'Usage: node convert-claude-history.js <path-to-jsonl-folder> [--debug]',
     )
