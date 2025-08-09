@@ -241,9 +241,6 @@ function outputToolUse(item: Item, contentItem: Content): string {
   const output: string[] = []
   // Format tool use with emoji and name
   const toolName = contentItem.name || 'Unknown Tool'
-  const command = contentItem.input?.command
-    ? ` \`${contentItem.input.command}\``
-    : ''
   const pattern = contentItem.input?.pattern
     ? ` (pattern: \`"${contentItem.input.pattern.replace(/\\/g, '\\')}"\`)`
     : ''
@@ -253,10 +250,10 @@ function outputToolUse(item: Item, contentItem: Content): string {
     contentItem.input?.path ||
     contentItem.input?.file_path ||
     ''
-  output.push(`🛠️ ${toolName}: ${description}`)
+  output.push(`${getToolEmoji(toolName)} ${toolName}: ${description}`)
 
   if (contentItem.input?.command) {
-    output.push(`\`\`\`bash\n${contentItem.input?.command}\n\`\`\``)
+    output.push(`\`\`\`shell\n${contentItem.input?.command}\n\`\`\``)
   }
   item.state = 'processing'
   // Look for tool result in child entries
@@ -726,4 +723,19 @@ function convertToGitDiff(
   diffLines.push(convertDiff(structuredPatch))
 
   return diffLines.join('\n')
+}
+
+function getToolEmoji(toolName: string): string {
+  const toolToEmojiMap: { [key: string]: string } = {
+    ls: '📂',
+    read: '📖',
+    write: '✍️',
+    edit: '✏️',
+    multiedit: '✏️',
+    glob: '🔍',
+    todowrite: '✅',
+    bash: '🐚',
+  }
+
+  return toolToEmojiMap[toolName.toLowerCase()] || '🛠️'
 }
