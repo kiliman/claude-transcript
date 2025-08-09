@@ -242,7 +242,7 @@ function outputToolUse(item: Item, contentItem: Content): string {
   // Format tool use with emoji and name
   const toolName = contentItem.name || 'Unknown Tool'
   const pattern = contentItem.input?.pattern
-    ? ` (pattern: \`"${contentItem.input.pattern.replace(/\\/g, '\\')}"\`)`
+    ? `\`"${contentItem.input.pattern.replace(/\\/g, '\\')}"\``
     : ''
   const description =
     contentItem.input?.description ||
@@ -250,7 +250,9 @@ function outputToolUse(item: Item, contentItem: Content): string {
     contentItem.input?.path ||
     contentItem.input?.file_path ||
     ''
-  output.push(`${getToolEmoji(toolName)} ${toolName}: ${description}`)
+  output.push(
+    `${getToolEmoji(toolName)} **${toolName} ${description.replace(/\*/g, '\\*')}**`,
+  )
 
   if (contentItem.input?.command) {
     output.push(`\`\`\`shell\n${contentItem.input?.command}\n\`\`\``)
