@@ -1,0 +1,57 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+  .:
+    dependencies:
+      zod:
+        specifier: ^4.0.16
+        version: 4.0.16
+    devDependencies:
+      '@types/node':
+        specifier: ^24.1.0
+        version: 24.1.0
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
+
+packages:
+  '@types/node@24.1.0':
+    resolution:
+      {
+        integrity: sha512-ut5FthK5moxFKH2T1CUOC6ctR67rQRvvHdFLCD2Ql6KXmMuCrjsSsRI9UsLCm9M18BMwClv4pn327UvB7eeO1w==,
+      }
+
+  prettier@3.6.2:
+    resolution:
+      {
+        integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==,
+      }
+    engines: { node: '>=14' }
+    hasBin: true
+
+  undici-types@7.8.0:
+    resolution:
+      {
+        integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==,
+      }
+
+  zod@4.0.16:
+    resolution:
+      {
+        integrity: sha512-Djo/cM339grjI7/HmN+ixYO2FzEMcWr/On50UlQ/RjrWK1I/hPpWhpC76heCptnRFpH0LMwrEbUY50HDc0V8wg==,
+      }
+
+snapshots:
+  '@types/node@24.1.0':
+    dependencies:
+      undici-types: 7.8.0
+
+  prettier@3.6.2: {}
+
+  undici-types@7.8.0: {}
+
+  zod@4.0.16: {}
