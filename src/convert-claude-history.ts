@@ -428,8 +428,10 @@ function handleOutput({
     output.push('```')
 
     // Add truncation notice outside code fence
-    if (savedPath && remainingLines) {
-      output.push(`... +${remainingLines} lines ([view file](${savedPath}))`)
+    if (savedPath) {
+      output.push(
+        `${remainingLines ? `... +${remainingLines} lines ` : ''}([view file](${savedPath}))`,
+      )
     }
   }
   return output.join('\n')
@@ -446,21 +448,30 @@ function handleLargeContent({
   fileContent?: string
   filePath?: string
 }): { content: string; savedPath?: string; remainingLines?: number } {
-  const lines = content.split('\n')
+  if (!fileContent) {
+    fileContent = content // Save full content if no separate fileContent provided
+  }
+  let truncatedLineCount = 0
+  const lines = content
+    .split('\n')
+    .map((line) => filterAnsi(line)) // Escape backticks for markdown
+    .map((line) => {
+      const t = truncateLine(line, 120)
+      if (t !== line) truncatedLineCount++
+      return t
+    })
   const lineCount = lines.length
 
   // If 12 lines or fewer, return as is (but escaped for markdown)
-  if (!saveOnly && lineCount <= 12) {
-    return { content: escapeCodeFences(content) }
+  // Need to save if there were truncated lines
+  if (!saveOnly && lineCount <= 12 && !truncatedLineCount) {
+    return { content: escapeCodeFences(lines.join('\n')) }
   }
 
   // Truncate to 8 lines
   const truncatedLines = lines.slice(0, 8)
   const remainingLines = lineCount - 8
 
-  if (!fileContent) {
-    fileContent = content // Save full content if no separate fileContent provided
-  }
   // Generate hash for filename
   const hash = createHash('md5')
     .update(fileContent)
@@ -489,7 +500,7 @@ function handleLargeContent({
   return {
     content: escapeCodeFences(truncatedLines.join('\n')),
     savedPath: join('contents', filename), // relative path
-    remainingLines,
+    remainingLines: Math.max(0, remainingLines),
   }
 }
 
@@ -738,4 +749,22 @@ function getToolEmoji(toolName: string): string {
   }
 
   return toolToEmojiMap[toolName.toLowerCase()] || '🛠️'
+}
+function filterAnsi(line: string): string {
+  // Remove ANSI escape codes (color codes, etc.)
+  // Regex matches most common ANSI escape sequences
+  return line.replace(
+    // eslint-disable-next-line no-control-regex
+    // biome-ignore lint/suspicious/noControlCharactersInRegex: <explanation>
+    /\x1b\[[0-9;]*m/g,
+    '',
+  )
+}
+
+// Helper to truncate a single line if it's too long
+function truncateLine(line: string, maxLength: number): string {
+  if (line.length > maxLength) {
+    return line.slice(0, maxLength) + '...(truncated)'
+  }
+  return line
 }
