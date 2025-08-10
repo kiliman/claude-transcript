@@ -339,7 +339,7 @@ function outputToolUseResult(
       //output.push(`Tool Use Result: TODOWRITE Line ${item.lineNumber}`)
       const content = toolUseResult.newTodos
         .map((todo) => {
-          return `- [${todo.status === 'completed' ? 'x' : ' '}]${todo.status === 'in_progress' ? ' ⏳' : ''} ${todo.content} ${todo.priority === 'high' ? '🔺' : todo.priority === 'medium' ? '' : '🔻'}`
+          return `- [${todo.status === 'completed' ? 'x' : ' '}]${todo.status === 'in_progress' ? ' ⏳' : ''} ${todo.content} ${todo.priority === 'high' ? '⚡️' : ''}`
         })
         .join('\n')
       output.push(content)
