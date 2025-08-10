@@ -409,6 +409,9 @@ function handleOutput({
   if (content.length === 0) {
     return ''
   }
+  if (content.startsWith('diff --git')) {
+    filePath = filePath || 'diff.patch'
+  }
   const output: string[] = []
   // Determine language from file extension
   const ext = filePath?.split('.').pop()?.toLowerCase() || ''
