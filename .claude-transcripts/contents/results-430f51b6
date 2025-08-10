@@ -1,0 +1,20 @@
+95cd64a chore: allow .claude-transcripts to be tracked
+72f4dc3 chore: add transcript output folders to .gitignore
+e9734c8 chore: update file permissions for executable
+fbeab13 fix: use first entry with cwd and timestamp for header instead of isMeta flag
+1947570 feat: configure package for npm publishing and npx execution
+0499f96 docs: add comprehensive README with usage instructions
+eb2857d feat: add auto-detection, new output location, and descriptive filenames
+4672078 fix: stop outputting grep/glob results since the are noisy and don't add value
+132cfbe fix: add `update` tool result type
+b3c4293 style: improve transcript header formatting with emojis
+4a04760 feat: add transcript header with directory name and timestamp range
+bb036a0 refactor: split monolithic converter into modular architecture
+5817907 fix: only truncate line if inside a code block (since they don't wrap)
+5fbbcd4 fix: don't escape code fence unless inside a code fence
+a6c2dad feat: support WebFetch tool
+d095ee9 fix: filter Ansi sequence from command output
+aaeb259 feat: output image content
+2893c03 chore: cleanup user output
+e1f248d fix: handle error output one more time
+bcf52da chore: update priority emoji

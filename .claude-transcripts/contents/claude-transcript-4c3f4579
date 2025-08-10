@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+node /Users/michael/Projects/oss/claude-transcript/src/index.ts "$@"

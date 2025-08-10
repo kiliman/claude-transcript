@@ -1,0 +1,47 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/package.json b/Users/michael/Projects/oss/claude-transcript/package.json
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/package.json
++++ b/Users/michael/Projects/oss/claude-transcript/package.json
+@@ -1,14 +1,39 @@
+ {
+   "name": "claude-transcript",
+   "version": "1.0.0",
+-  "description": "",
++  "description": "Convert Claude Code JSONL conversation files to readable markdown transcripts",
+   "type": "module",
++  "main": "src/index.ts",
++  "bin": {
++    "claude-transcript": "./src/index.ts"
++  },
+   "scripts": {
+     "test": "echo \"Error: no test specified\" && exit 1"
+   },
+-  "keywords": [],
++  "keywords": [
++    "claude",
++    "claude-code",
++    "transcript",
++    "markdown",
++    "converter",
++    "jsonl"
++  ],
+   "author": "",
+-  "license": "ISC",
++  "license": "MIT",
++  "repository": {
++    "type": "git",
++    "url": "https://github.com/yourusername/claude-transcript.git"
++  },
++  "homepage": "https://github.com/yourusername/claude-transcript#readme",
++  "bugs": {
++    "url": "https://github.com/yourusername/claude-transcript/issues"
++  },
++  "files": [
++    "src/**/*.ts"
++  ],
++  "engines": {
++    "node": ">=24.0.0"
++  },
+   "packageManager": "pnpm@10.12.1",
+   "devDependencies": {
+     "@types/node": "^24.1.0",

@@ -1,0 +1,37 @@
+==> Fetching downloads for: git-filter-repo
+==> Downloading https://ghcr.io/v2/homebrew/core/git-filter-repo/manifests/2.47.0
+==> Fetching git-filter-repo
+==> Downloading https://ghcr.io/v2/homebrew/core/git-filter-repo/blobs/sha256:719c848f3c0611b909c5d2c3a603bbe5b29e8cbee1aacf7f31e92e4618b4aff0
+==> Pouring git-filter-repo--2.47.0.all.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/git-filter-repo/2.47.0: 9 files, 362.8KB
+==> Running `brew cleanup git-filter-repo`...
+Disable this behaviour by setting `HOMEBREW_NO_INSTALL_CLEANUP=1`.
+Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+==> No outdated dependents to upgrade!
+==> Auto-updating Homebrew...
+Adjust how often this is run with `$HOMEBREW_AUTO_UPDATE_SECS` or disable with
+`$HOMEBREW_NO_AUTO_UPDATE=1`. Hide these hints with `$HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+Warning: No remote 'origin' in /opt/homebrew/Library/Taps/michael/homebrew-local-biome, skipping update!
+==> Auto-updated Homebrew!
+Updated 2 taps (homebrew/core and homebrew/cask).
+==> New Formulae
+aiac: Artificial Intelligence Infrastructure-as-Code Generator
+glom: Declarative object transformer and formatter, for conglomerating nested data
+goodls: CLI tool to download shared files and folders from Google Drive
+msolve: Library for Polynomial System Solving through Algebraic Methods
+wgpu-native: Native WebGPU implementation based on wgpu-core
+==> New Casks
+cursor-cli: Command-line agent for Cursor
+dda: Tool for developing on the Datadog Agent platform
+font-cossette-texte
+font-cossette-titre
+font-maple-mono-nl
+font-maple-mono-nl-cn
+font-maple-mono-nl-nf
+font-maple-mono-nl-nf-cn
+font-maple-mono-normal-nl
+font-maple-mono-normal-nl-cn
+font-maple-mono-normal-nl-nf
+font-maple-mono-normal-nl-nf-cn
+
+You have 46 outdated formulae and 2 outdated casks installed.

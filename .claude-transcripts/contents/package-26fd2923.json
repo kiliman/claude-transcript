@@ -1,0 +1,20 @@
+{
+  "name": "claude-transcript",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "zod": "^4.0.16"
+  }
+}

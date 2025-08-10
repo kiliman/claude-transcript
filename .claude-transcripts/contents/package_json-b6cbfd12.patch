@@ -1,0 +1,19 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/package.json b/Users/michael/Projects/oss/claude-transcript/package.json
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/package.json
++++ b/Users/michael/Projects/oss/claude-transcript/package.json
+@@ -22,11 +22,11 @@
+   "license": "MIT",
+   "repository": {
+     "type": "git",
+-    "url": "https://github.com/yourusername/claude-transcript.git"
++    "url": "https://github.com/kiliman/claude-transcript.git"
+   },
+-  "homepage": "https://github.com/yourusername/claude-transcript#readme",
++  "homepage": "https://github.com/kiliman/claude-transcript#readme",
+   "bugs": {
+-    "url": "https://github.com/yourusername/claude-transcript/issues"
++    "url": "https://github.com/kiliman/claude-transcript/issues"
+   },
+   "files": [
+     "src/**/*.ts"
