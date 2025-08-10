@@ -303,12 +303,17 @@ function outputToolUseResult(
       `### Tool Use Result for ${toolName} on line #${resultItem.lineNumber} (isSidechain: ${resultItem.entry.isSidechain})`,
     )
   }
+  const isError =
+    Array.isArray(resultItem.entry.message?.content) &&
+    resultItem.entry.message.content.some((c) => c.is_error)
+
   // Check if toolUseResult has a file object
   if (typeof toolUseResult === 'object') {
     if (toolUseResult.file) {
       output.push(
         handleOutput({
           saveOnly,
+          isError,
           content: toolUseResult.file.content,
           filePath: toolUseResult.filePath,
         }),
@@ -320,6 +325,7 @@ function outputToolUseResult(
       output.push(
         handleOutput({
           saveOnly,
+          isError,
           content: toolUseResult.content,
           filePath: toolUseResult.filePath,
         }),
@@ -327,7 +333,7 @@ function outputToolUseResult(
     } else if (toolUseResult.filenames) {
       // Handle multiple filenames
       const content = toolUseResult.filenames.join('\n')
-      output.push(handleOutput({ saveOnly, content }))
+      output.push(handleOutput({ saveOnly, content, isError }))
     } else if (
       toolName.toLowerCase() === 'todowrite' &&
       toolUseResult.newTodos
@@ -347,7 +353,7 @@ function outputToolUseResult(
         return '' // Skip empty stdout entries
       }
       const content = toolUseResult.stdout
-      output.push(handleOutput({ saveOnly, content }))
+      output.push(handleOutput({ saveOnly, content, isError }))
     } else if (toolUseResult.structuredPatch && toolUseResult.filePath) {
       const content = convertDiff(toolUseResult.structuredPatch)
       const fileContent = convertToGitDiff(
@@ -366,7 +372,9 @@ function outputToolUseResult(
       // Handle content as string or array
       output.push('')
       if (typeof toolUseResult.content === 'string') {
-        output.push(handleOutput({ saveOnly, content: toolUseResult.content }))
+        output.push(
+          handleOutput({ saveOnly, isError, content: toolUseResult.content }),
+        )
       } else if (Array.isArray(toolUseResult.content)) {
         const content = toolUseResult.content.map((c) => c.text).join('\n')
         output.push(content)
@@ -375,16 +383,16 @@ function outputToolUseResult(
           `Tool Use Result: UNKNOWN CONTENT TYPE Line ${resultItem.lineNumber}\n`,
         )
         const content = JSON.stringify(toolUseResult.content, null, 2)
-        output.push(handleOutput({ saveOnly, content }))
+        output.push(handleOutput({ saveOnly, isError, content }))
       }
     } else {
       output.push(`Tool Use Result: UNKNOWN Line ${resultItem.lineNumber}`)
       const content = JSON.stringify(toolUseResult, null, 2)
-      output.push(handleOutput({ saveOnly, content }))
+      output.push(handleOutput({ saveOnly, isError, content }))
     }
   } else {
     //output.push(`Tool Use Result: STRING Line ${item.lineNumber}`)
-    output.push(handleOutput({ saveOnly, content: toolUseResult }))
+    output.push(handleOutput({ saveOnly, isError, content: toolUseResult }))
   }
   resultItem.state = 'processed' // Mark as processed
   return output.join('\n')
@@ -397,11 +405,13 @@ function escapeCodeFences(content: string): string {
 
 function handleOutput({
   saveOnly,
+  isError,
   content,
   fileContent,
   filePath,
 }: {
   saveOnly: boolean
+  isError: boolean
   content: string
   fileContent?: string
   filePath?: string
@@ -409,6 +419,7 @@ function handleOutput({
   if (content.length === 0) {
     return ''
   }
+
   if (content.startsWith('diff --git')) {
     filePath = filePath || 'diff.patch'
   }
@@ -416,6 +427,11 @@ function handleOutput({
   // Determine language from file extension
   const ext = filePath?.split('.').pop()?.toLowerCase() || ''
   const language = getLanguageFromExtension(ext)
+
+  if (isError) {
+    output.push(`> [!CAUTION]\n> ${content}`)
+    return output.join('\n')
+  }
 
   // Handle potentially large file content
   const {
@@ -624,12 +640,13 @@ function parseCommandContent(text: string): string[] | null {
     return null
   }
 
+  output.push(`> [!IMPORTANT]`)
   // Format command if we have it
   if (commandName) {
     const fullCommand = commandArgs
       ? `${commandName} ${commandArgs}`
       : commandName
-    output.push(`> [! NOTE] \`${fullCommand}\`\\`)
+    output.push(`> \`${fullCommand}\`\\`)
   }
   if (commandMessage) {
     output.push(`> ${commandMessage}`)
@@ -690,12 +707,9 @@ function outputTextContent(item: Item, text: string) {
   } else {
     if (entry.type === 'user') {
       // Convert to blockquote
+      output.push(`> [!IMPORTANT]`)
       const lines = text.split('\n')
-      output.push(
-        ...lines.map(
-          (line, index) => `> ${index === 0 ? '[! NOTE] ' : ''}${line}`,
-        ),
-      )
+      output.push(...lines.map((line) => `> ${line}`))
     } else if (entry.type === 'assistant') {
       // For assistant entries, escape code fences
       output.push(escapeCodeFences(text))
