@@ -427,6 +427,11 @@ function handleOutput({
     return output.join('\n')
   }
 
+  if (content.startsWith("Error: The user doesn't want to proceed")) {
+    output.push(`> [!CAUTION]\n> ${content}`)
+    return output.join('\n')
+  }
+
   // Handle potentially large file content
   const {
     content: processedContent,
@@ -703,6 +708,8 @@ function outputTextContent(item: Item, text: string) {
       // Convert to blockquote
       if (text.startsWith('[Request interrupted')) {
         output.push(`> [!WARNING]`)
+      } else if (text.startsWith("Error: The user doesn't want to proceed")) {
+        output.push(`> [!CAUTION]`)
       } else {
         output.push(`> [!IMPORTANT]`)
       }
