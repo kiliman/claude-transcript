@@ -432,6 +432,10 @@ function handleOutput({
     output.push(`> [!CAUTION]\n> ${content}`)
     return output.join('\n')
   }
+  if (content.startsWith('[Request interrupted')) {
+    output.push(`> [!WARNING]\n> ${content}`)
+    return output.join('\n')
+  }
 
   // Handle potentially large file content
   const {
@@ -707,9 +711,14 @@ function outputTextContent(item: Item, text: string) {
   } else {
     if (entry.type === 'user') {
       // Convert to blockquote
-      output.push(`> [!IMPORTANT]`)
+      if (text.startsWith('[Request interrupted')) {
+        output.push(`> [!WARNING]`)
+      } else {
+        output.push(`> [!IMPORTANT]`)
+      }
       const lines = text.split('\n')
-      output.push(...lines.map((line) => `> ${line}`))
+      const blockquote = lines.map((line) => `> ${line}`)
+      output.push(...blockquote)
     } else if (entry.type === 'assistant') {
       // For assistant entries, escape code fences
       output.push(escapeCodeFences(text))
