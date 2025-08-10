@@ -303,10 +303,6 @@ function outputToolUseResult(
       `### Tool Use Result for ${toolName} on line #${resultItem.lineNumber} (isSidechain: ${resultItem.entry.isSidechain})`,
     )
   }
-  const isError =
-    Array.isArray(resultItem.entry.message?.content) &&
-    resultItem.entry.message.content.some((c) => c.is_error)
-
   // Check if toolUseResult has a file object
   if (typeof toolUseResult === 'object') {
     if (toolUseResult.file) {
@@ -639,7 +635,9 @@ function parseCommandContent(text: string): string[] | null {
     return null
   }
 
-  output.push(`> [!IMPORTANT]`)
+  if (!stdout) {
+    output.push(`> [!IMPORTANT]`)
+  }
   // Format command if we have it
   if (commandName) {
     const fullCommand = commandArgs
@@ -653,10 +651,10 @@ function parseCommandContent(text: string): string[] | null {
 
   // Add stdout in bash code fence if present and not empty
   if (stdout && stdout.length > 0) {
-    output.push('> ```bash')
+    output.push('```bash')
     const stdoutLines = stdout.split('\n')
-    output.push(...stdoutLines.map((line) => `> ${line}`))
-    output.push('> ```')
+    output.push(...stdoutLines)
+    output.push('```')
   }
 
   // If we didn't find any command elements, output as blockquote
@@ -696,6 +694,10 @@ function isToolResult(entry: Entry): string | null {
 function outputTextContent(item: Item, text: string) {
   const { entry, lineNumber } = item
   const output: string[] = []
+  if (text === '(no content)') {
+    console.warn(`Skipping empty content on line #${lineNumber}`)
+    return ''
+  }
   if (
     text.includes('<command-name>') ||
     text.includes('<local-command-stdout>')
