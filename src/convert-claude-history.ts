@@ -462,7 +462,13 @@ function handleOutput({
     content: processedContent,
     savedPath,
     remainingLines,
-  } = handleLargeContent({ saveOnly, content, fileContent, filePath })
+  } = handleLargeContent({
+    saveOnly,
+    content,
+    fileContent,
+    filePath,
+    codeFence,
+  })
 
   if (saveOnly) {
     output.push(`([view file](${savedPath}))`)
@@ -490,11 +496,13 @@ function handleLargeContent({
   content,
   fileContent,
   filePath,
+  codeFence = true,
 }: {
   saveOnly: boolean
   content: string
   fileContent?: string
   filePath?: string
+  codeFence?: boolean
 }): { content: string; savedPath?: string; remainingLines?: number } {
   if (!fileContent) {
     fileContent = content // Save full content if no separate fileContent provided
@@ -513,7 +521,10 @@ function handleLargeContent({
   // If 12 lines or fewer, return as is (but escaped for markdown)
   // Need to save if there were truncated lines
   if (!saveOnly && lineCount <= 12 && !truncatedLineCount) {
-    return { content: escapeCodeFences(trimBlankLines(lines).join('\n')) }
+    if (codeFence) {
+      return { content: escapeCodeFences(trimBlankLines(lines).join('\n')) }
+    }
+    return { content: lines.join('\n') }
   }
 
   // Truncate to 8 lines
@@ -544,8 +555,11 @@ function handleLargeContent({
 
   // Save full content to file (raw, unescaped)
   writeFileSync(savedPath, fileContent, 'utf-8')
+
   return {
-    content: escapeCodeFences(trimBlankLines(truncatedLines).join('\n')),
+    content: codeFence
+      ? escapeCodeFences(trimBlankLines(truncatedLines).join('\n'))
+      : truncatedLines.join('\n'),
     savedPath: join('contents', filename), // relative path
     remainingLines: Math.max(0, remainingLines),
   }
@@ -681,7 +695,7 @@ function outputTextContent(item: Item, text: string) {
       output.push(...blockquote)
     } else if (entry.type === 'assistant') {
       // For assistant entries, escape code fences
-      output.push(escapeCodeFences(text))
+      output.push(text)
     } else {
       // Unknown type, just output as is
       output.push(`## Unknown entry type ${entry.type} on line #${lineNumber}`)
