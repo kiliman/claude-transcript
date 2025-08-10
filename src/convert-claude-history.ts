@@ -103,10 +103,10 @@ function convertJsonlToMarkdown(jsonlPath: string): string | null {
       console.error(validation.error)
       process.exit(1)
     }
-    const state: StateType = 'pending' // Default state for new entries
-    // if (entry.isMeta === true) {
-    //   state = 'skipped' // Skip meta entries
-    // }
+    let state: StateType = 'pending' // Default state for new entries
+    if (entry.isMeta === true) {
+      state = 'skipped' // Skip meta entries
+    }
     // create a new Item object for each entry
     const item: Item = {
       uuid: entry.uuid,
@@ -117,18 +117,6 @@ function convertJsonlToMarkdown(jsonlPath: string): string | null {
     }
     ItemTree.set(item.uuid, item)
     EntryList.push(entry.uuid)
-    // walk up the parent chain to and mark any skipped entries as skipped
-    let currentParentUuid = item.parentUuid
-    while (currentParentUuid) {
-      const parentItem = ItemTree.get(currentParentUuid)
-      if (parentItem) {
-        if (parentItem.state === 'skipped') {
-          item.state = 'skipped'
-          return // Stop if we hit a skipped parent
-        }
-      }
-      currentParentUuid = parentItem ? parentItem.parentUuid : null
-    }
 
     const toolUseId = isToolUse(entry)
     if (toolUseId) {
