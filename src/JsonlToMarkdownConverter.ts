@@ -98,8 +98,8 @@ export class JsonlToMarkdownConverter {
     entries.forEach(({ entry, lineNumber }) => {
       assert(entry.uuid, `Entry on line ${lineNumber} is missing UUID`)
 
-      // Capture meta entry
-      if (entry.isMeta === true && !this.metaEntry) {
+      // Capture first entry with cwd and timestamp for header
+      if (!this.metaEntry && entry.cwd && entry.timestamp) {
         this.metaEntry = entry
       }
 
