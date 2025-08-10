@@ -512,6 +512,7 @@ function handleLargeContent({
     .split('\n')
     .map((line) => filterAnsi(line)) // Escape backticks for markdown
     .map((line) => {
+      if (!codeFence) return line
       const t = truncateLine(line, 120)
       if (t !== line) truncatedLineCount++
       return t
