@@ -218,6 +218,8 @@ function processItem(item: Item): string | null {
         output.push(outputTextContent(item, text))
       } else if (contentItem.type === 'tool_use') {
         output.push(outputToolUse(item, contentItem))
+      } else if (contentItem.type === 'image') {
+        output.push(outputImage(item, contentItem))
       }
     }
   } else {
@@ -799,4 +801,36 @@ function truncateLine(line: string, maxLength: number): string {
     return line.slice(0, maxLength) + '...(truncated)'
   }
   return line
+}
+function outputImage(item: Item, contentItem: Content): string | null {
+  // Only handle base64 PNG images for now
+  if (
+    contentItem.type === 'image' &&
+    contentItem.source &&
+    contentItem.source.type === 'base64' &&
+    typeof contentItem.source.data === 'string'
+  ) {
+    // Generate a unique filename for the image
+    const hash = createHash('md5')
+      .update(contentItem.source.data)
+      .digest('hex')
+      .substring(0, 8)
+    const extension = contentItem.source.media_type.split('/')[1] || 'png'
+    const filename = `image-${item.uuid || hash}.${extension}`
+    const savedPath = join('transcripts/contents', filename)
+
+    // Write the image file
+    writeFileSync(savedPath, Buffer.from(contentItem.source.data, 'base64'))
+
+    // Return markdown image link (relative path)
+    return `![Image](contents/${filename})`
+  }
+
+  // If not a recognized image, output as JSON for debugging
+  return [
+    `## Unhandled image content on line #${item.lineNumber}`,
+    '```json',
+    JSON.stringify(contentItem, null, 2),
+    '```',
+  ].join('\n')
 }
