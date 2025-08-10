@@ -654,7 +654,7 @@ function parseCommandContent(text: string): string[] | null {
   // Add stdout in bash code fence if present and not empty
   if (stdout && stdout.length > 0) {
     output.push('```bash')
-    const stdoutLines = stdout.split('\n')
+    const stdoutLines = stdout.split('\n').map((line) => filterAnsi(line))
     output.push(...stdoutLines)
     output.push('```')
   }
