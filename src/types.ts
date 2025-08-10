@@ -8,6 +8,7 @@ const InputSchema = z.object({
   pattern: z.string().optional(),
   path: z.string().optional(),
   file_path: z.string().optional(),
+  url: z.string().optional(),
 })
 
 const SourceSchema = z.object({
@@ -72,6 +73,8 @@ const ToolUseResultSchema = z.object({
   stderr: z.string().optional(),
   interrupted: z.boolean().optional(),
   isImage: z.boolean().optional(),
+  result: z.string().optional(),
+  url: z.string().optional(),
 })
 
 // Message schema

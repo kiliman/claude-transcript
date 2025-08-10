@@ -212,7 +212,11 @@ function processItem(item: Item): string | null {
     // Parse for command elements
   } else if (Array.isArray(entry.message.content)) {
     // Handle array format (common in newer entries)
+    let n = 0
     for (const contentItem of entry.message.content) {
+      if (n > 0) {
+        output.push('') // Separate multiple content items with a blank line
+      }
       if (contentItem.type === 'text' && contentItem.text) {
         const text = contentItem.text
         output.push(outputTextContent(item, text))
@@ -221,6 +225,7 @@ function processItem(item: Item): string | null {
       } else if (contentItem.type === 'image') {
         output.push(outputImage(item, contentItem))
       }
+      n++
     }
   } else {
     // Unknown format
@@ -230,7 +235,9 @@ function processItem(item: Item): string | null {
     output.push('```')
   }
 
-  return output.length > 0 ? output.filter(Boolean).join('\n') : null
+  return output.length > 0
+    ? output.filter((line) => line !== null).join('\n')
+    : null
 }
 
 function outputToolUse(item: Item, contentItem: Content): string {
@@ -245,6 +252,7 @@ function outputToolUse(item: Item, contentItem: Content): string {
     pattern ||
     contentItem.input?.path ||
     contentItem.input?.file_path ||
+    contentItem.input?.url ||
     ''
   output.push(
     `${getToolEmoji(toolName)} **${toolName}${description ? `: ${description}` : ''}**`,
@@ -253,11 +261,16 @@ function outputToolUse(item: Item, contentItem: Content): string {
   if (contentItem.input?.command) {
     output.push(`\`\`\`shell\n${contentItem.input?.command}\n\`\`\``)
   }
+  if (contentItem.input?.prompt) {
+    output.push(`\n${contentItem.input?.prompt}`)
+  }
+
   item.state = 'processing'
   // Look for tool result in child entries
   const toolUseId = contentItem.id || ''
   const existingResults = ToolUseTree.get(toolUseId)
   if (existingResults) {
+    let n = 0
     for (const result of existingResults) {
       if (!result.message || !result.message.content) {
         console.warn(
@@ -271,6 +284,9 @@ function outputToolUse(item: Item, contentItem: Content): string {
           `Tool result with UUID ${result.uuid} not found in ItemTree`,
         )
         continue
+      }
+      if (n > 0) {
+        output.push('') // Separate multiple results with a blank line
       }
       if (result.toolUseResult) {
         output.push(
@@ -288,6 +304,7 @@ function outputToolUse(item: Item, contentItem: Content): string {
         output.push(JSON.stringify(result, null, 2))
         output.push('```')
       }
+      n++
     }
   }
   return output.join('\n')
@@ -350,6 +367,14 @@ function outputToolUseResult(
       }
       const content = toolUseResult.stdout
       output.push(handleOutput({ saveOnly, content }))
+    } else if (toolUseResult.url && toolUseResult.result) {
+      output.push(
+        handleOutput({
+          saveOnly,
+          content: `\n### Results\n${toolUseResult.result}`,
+          codeFence: false,
+        }),
+      )
     } else if (toolUseResult.structuredPatch && toolUseResult.filePath) {
       const content = convertDiff(toolUseResult.structuredPatch)
       const fileContent = convertToGitDiff(
@@ -402,11 +427,13 @@ function handleOutput({
   content,
   fileContent,
   filePath,
+  codeFence = true,
 }: {
   saveOnly: boolean
   content: string
   fileContent?: string
   filePath?: string
+  codeFence?: boolean
 }): string {
   if (content.length === 0) {
     return ''
@@ -440,9 +467,13 @@ function handleOutput({
   if (saveOnly) {
     output.push(`([view file](${savedPath}))`)
   } else {
-    output.push(`\`\`\`${language}`)
+    if (codeFence) {
+      output.push(`\`\`\`${language}`)
+    }
     output.push(processedContent)
-    output.push('```')
+    if (codeFence) {
+      output.push('```')
+    }
 
     // Add truncation notice outside code fence
     if (savedPath) {
@@ -482,7 +513,7 @@ function handleLargeContent({
   // If 12 lines or fewer, return as is (but escaped for markdown)
   // Need to save if there were truncated lines
   if (!saveOnly && lineCount <= 12 && !truncatedLineCount) {
-    return { content: escapeCodeFences(lines.join('\n')) }
+    return { content: escapeCodeFences(trimBlankLines(lines).join('\n')) }
   }
 
   // Truncate to 8 lines
@@ -513,12 +544,269 @@ function handleLargeContent({
 
   // Save full content to file (raw, unescaped)
   writeFileSync(savedPath, fileContent, 'utf-8')
-
   return {
-    content: escapeCodeFences(truncatedLines.join('\n')),
+    content: escapeCodeFences(trimBlankLines(truncatedLines).join('\n')),
     savedPath: join('contents', filename), // relative path
     remainingLines: Math.max(0, remainingLines),
   }
+}
+
+function parseCommandContent(text: string): string[] | null {
+  const output: string[] = []
+
+  // Extract command name
+  const commandNameMatch = text.match(/<command-name>([^<]*)<\/command-name>/)
+  const commandName = commandNameMatch ? commandNameMatch[1].trim() : ''
+
+  // Extract command args
+  const commandArgsMatch = text.match(/<command-args>([^<]*)<\/command-args>/)
+  const commandArgs = commandArgsMatch ? commandArgsMatch[1].trim() : ''
+
+  // Extract command args
+  const memoryInputMatch = text.match(
+    /<user-memory-input>(.*)<\/user-memory-input>/,
+  )
+  const memoryInput = memoryInputMatch ? memoryInputMatch[1].trim() : ''
+  if (memoryInput) {
+    output.push(`> [!NOTE]`)
+    output.push(`> 🧠 ${memoryInput}`)
+    return output
+  }
+
+  // Extract command message
+  const commandMessageMatch = text.match(
+    /<command-message>([^<]*)<\/command-message>/,
+  )
+  const commandMessage = commandMessageMatch
+    ? commandMessageMatch[1].trim()
+    : ''
+
+  // Extract stdout
+  const stdoutMatch = text.match(
+    /<local-command-stdout>([\s\S]*?)<\/local-command-stdout>/,
+  )
+  const stdout = stdoutMatch ? stdoutMatch[1].trim() : ''
+
+  // If this is just an empty stdout entry, skip it entirely
+  if (!commandName && stdoutMatch && !stdout) {
+    return null
+  }
+  if (stdout === '(no content)') {
+    return null
+  }
+
+  if (!stdout) {
+    output.push(`> [!IMPORTANT]`)
+  }
+  // Format command if we have it
+  if (commandName) {
+    const fullCommand = commandArgs
+      ? `${commandName} ${commandArgs}`
+      : commandName
+    output.push(`> \`${fullCommand}\`\\`)
+  }
+  if (commandMessage) {
+    output.push(`> ${commandMessage}`)
+  }
+
+  // Add stdout in bash code fence if present and not empty
+  if (stdout && stdout.length > 0) {
+    output.push('```bash')
+    const stdoutLines = stdout.split('\n').map((line) => filterAnsi(line))
+    output.push(...stdoutLines)
+    output.push('```')
+  }
+
+  // If we didn't find any command elements, output as blockquote
+  if (output.length === 0) {
+    const lines = text.split('\n')
+    output.push(...lines.map((line) => `> ${line}`))
+  }
+
+  return output
+}
+
+function isToolUse(entry: Entry) {
+  // Checks if entry.message.content has type "tool_use" and returns its id if present
+  const content = entry?.message?.content
+  if (Array.isArray(content)) {
+    for (const item of content) {
+      if (item?.type === 'tool_use' && item.id) {
+        return item.id
+      }
+    }
+  }
+  return null
+}
+function isToolResult(entry: Entry): string | null {
+  // Checks if entry.message.content has type "tool_result" and returns its tool_use_id if present
+  const content = entry?.message?.content
+  if (Array.isArray(content)) {
+    for (const item of content) {
+      if (item?.type === 'tool_result' && item.tool_use_id) {
+        return item.tool_use_id
+      }
+    }
+  }
+  return null
+}
+
+function outputTextContent(item: Item, text: string) {
+  const { entry, lineNumber } = item
+  const output: string[] = []
+  if (text === '(no content)') {
+    console.warn(`Skipping empty content on line #${lineNumber}`)
+    return ''
+  }
+  if (
+    text.includes('<command-name>') ||
+    text.includes('<local-command-stdout>') ||
+    text.includes('<user-memory-input>')
+  ) {
+    const parsed = parseCommandContent(text)
+    if (parsed === null) return null // Skip empty stdout entries
+    output.push(...parsed)
+  } else {
+    if (entry.type === 'user') {
+      // Convert to blockquote
+      if (text.startsWith('[Request interrupted')) {
+        output.push(`> [!WARNING]`)
+      } else if (text.startsWith("Error: The user doesn't want to proceed")) {
+        output.push(`> [!CAUTION]`)
+      } else {
+        output.push(`> [!IMPORTANT]`)
+      }
+      const lines = text.split('\n')
+      const blockquote = lines.map((line) => `> ${line}`)
+      output.push(...blockquote)
+    } else if (entry.type === 'assistant') {
+      // For assistant entries, escape code fences
+      output.push(escapeCodeFences(text))
+    } else {
+      // Unknown type, just output as is
+      output.push(`## Unknown entry type ${entry.type} on line #${lineNumber}`)
+      output.push('```json')
+      output.push(JSON.stringify(entry, null, 2))
+      output.push('```')
+    }
+  }
+  return output.join('\n')
+}
+
+function convertDiff(structuredPatch: StructuredPatch[]): string {
+  // Create Git-style diff header
+  const diffLines: string[] = []
+
+  // Process each patch chunk
+  for (const patch of structuredPatch) {
+    // Add hunk header
+    const hunkHeader = `@@ -${patch.oldStart},${patch.oldLines} +${patch.newStart},${patch.newLines} @@`
+    diffLines.push(hunkHeader)
+
+    // Add the patch lines
+    diffLines.push(...patch.lines)
+  }
+
+  return diffLines.join('\n')
+}
+
+function convertToGitDiff(
+  filePath: string,
+  structuredPatch: StructuredPatch[],
+): string {
+  // Create Git-style diff header
+  const diffLines: string[] = [
+    `diff --git a${filePath} b${filePath}`,
+    `index 1234567..abcdefg 100644`,
+    `--- a${filePath}`,
+    `+++ b${filePath}`,
+  ]
+
+  diffLines.push(convertDiff(structuredPatch))
+
+  return diffLines.join('\n')
+}
+
+function getToolEmoji(toolName: string): string {
+  const toolToEmojiMap: { [key: string]: string } = {
+    ls: '📂',
+    read: '📖',
+    write: '✍️',
+    edit: '✏️',
+    multiedit: '✏️',
+    glob: '🔍',
+    grep: '🔍',
+    task: '📋',
+    todowrite: '✅',
+    bash: '💻',
+    webfetch: '🌐',
+  }
+
+  return toolToEmojiMap[toolName.toLowerCase()] || '🛠️'
+}
+function filterAnsi(line: string): string {
+  // Remove ANSI escape codes (color codes, etc.)
+  // Regex matches most common ANSI escape sequences
+  return line.replace(
+    // eslint-disable-next-line no-control-regex
+    // biome-ignore lint/suspicious/noControlCharactersInRegex: <explanation>
+    /\x1b\[[0-9;]*m/g,
+    '',
+  )
+}
+
+// Helper to truncate a single line if it's too long
+function truncateLine(line: string, maxLength: number): string {
+  if (line.length > maxLength) {
+    return line.slice(0, maxLength) + '...(truncated)'
+  }
+  return line
+}
+function outputImage(item: Item, contentItem: Content): string | null {
+  // Only handle base64 PNG images for now
+  if (
+    contentItem.type === 'image' &&
+    contentItem.source &&
+    contentItem.source.type === 'base64' &&
+    typeof contentItem.source.data === 'string'
+  ) {
+    // Generate a unique filename for the image
+    const hash = createHash('md5')
+      .update(contentItem.source.data)
+      .digest('hex')
+      .substring(0, 8)
+    const extension = contentItem.source.media_type.split('/')[1] || 'png'
+    const filename = `image-${item.uuid || hash}.${extension}`
+    const savedPath = join('transcripts/contents', filename)
+
+    // Write the image file
+    writeFileSync(savedPath, Buffer.from(contentItem.source.data, 'base64'))
+
+    // Return markdown image link (relative path)
+    return `![Image](contents/${filename})`
+  }
+
+  // If not a recognized image, output as JSON for debugging
+  return [
+    `## Unhandled image content on line #${item.lineNumber}`,
+    '```json',
+    JSON.stringify(contentItem, null, 2),
+    '```',
+  ].join('\n')
+}
+
+function trimBlankLines(lines: string[]): string[] {
+  // Remove leading blank lines
+  let start = 0
+  while (start < lines.length && lines[start].trim() === '') {
+    start++
+  }
+  // Remove trailing blank lines
+  let end = lines.length - 1
+  while (end >= start && lines[end].trim() === '') {
+    end--
+  }
+  return lines.slice(start, end + 1)
 }
 
 function getLanguageFromExtension(ext: string): string {
@@ -605,232 +893,4 @@ function getLanguageFromExtension(ext: string): string {
   }
 
   return languageMap[ext] || ''
-}
-
-function parseCommandContent(text: string): string[] | null {
-  const output: string[] = []
-
-  // Extract command name
-  const commandNameMatch = text.match(/<command-name>([^<]*)<\/command-name>/)
-  const commandName = commandNameMatch ? commandNameMatch[1].trim() : ''
-
-  // Extract command args
-  const commandArgsMatch = text.match(/<command-args>([^<]*)<\/command-args>/)
-  const commandArgs = commandArgsMatch ? commandArgsMatch[1].trim() : ''
-
-  // Extract command message
-  const commandMessageMatch = text.match(
-    /<command-message>([^<]*)<\/command-message>/,
-  )
-  const commandMessage = commandMessageMatch
-    ? commandMessageMatch[1].trim()
-    : ''
-
-  // Extract stdout
-  const stdoutMatch = text.match(
-    /<local-command-stdout>([\s\S]*?)<\/local-command-stdout>/,
-  )
-  const stdout = stdoutMatch ? stdoutMatch[1].trim() : ''
-
-  // If this is just an empty stdout entry, skip it entirely
-  if (!commandName && stdoutMatch && !stdout) {
-    return null
-  }
-
-  if (!stdout) {
-    output.push(`> [!IMPORTANT]`)
-  }
-  // Format command if we have it
-  if (commandName) {
-    const fullCommand = commandArgs
-      ? `${commandName} ${commandArgs}`
-      : commandName
-    output.push(`> \`${fullCommand}\`\\`)
-  }
-  if (commandMessage) {
-    output.push(`> ${commandMessage}`)
-  }
-
-  // Add stdout in bash code fence if present and not empty
-  if (stdout && stdout.length > 0) {
-    output.push('```bash')
-    const stdoutLines = stdout.split('\n').map((line) => filterAnsi(line))
-    output.push(...stdoutLines)
-    output.push('```')
-  }
-
-  // If we didn't find any command elements, output as blockquote
-  if (output.length === 0) {
-    const lines = text.split('\n')
-    output.push(...lines.map((line) => `> ${line}`))
-  }
-
-  return output
-}
-
-function isToolUse(entry: Entry) {
-  // Checks if entry.message.content has type "tool_use" and returns its id if present
-  const content = entry?.message?.content
-  if (Array.isArray(content)) {
-    for (const item of content) {
-      if (item?.type === 'tool_use' && item.id) {
-        return item.id
-      }
-    }
-  }
-  return null
-}
-function isToolResult(entry: Entry): string | null {
-  // Checks if entry.message.content has type "tool_result" and returns its tool_use_id if present
-  const content = entry?.message?.content
-  if (Array.isArray(content)) {
-    for (const item of content) {
-      if (item?.type === 'tool_result' && item.tool_use_id) {
-        return item.tool_use_id
-      }
-    }
-  }
-  return null
-}
-
-function outputTextContent(item: Item, text: string) {
-  const { entry, lineNumber } = item
-  const output: string[] = []
-  if (text === '(no content)') {
-    console.warn(`Skipping empty content on line #${lineNumber}`)
-    return ''
-  }
-  if (
-    text.includes('<command-name>') ||
-    text.includes('<local-command-stdout>')
-  ) {
-    const parsed = parseCommandContent(text)
-    if (parsed === null) return null // Skip empty stdout entries
-    output.push(...parsed)
-  } else {
-    if (entry.type === 'user') {
-      // Convert to blockquote
-      if (text.startsWith('[Request interrupted')) {
-        output.push(`> [!WARNING]`)
-      } else if (text.startsWith("Error: The user doesn't want to proceed")) {
-        output.push(`> [!CAUTION]`)
-      } else {
-        output.push(`> [!IMPORTANT]`)
-      }
-      const lines = text.split('\n')
-      const blockquote = lines.map((line) => `> ${line}`)
-      output.push(...blockquote)
-    } else if (entry.type === 'assistant') {
-      // For assistant entries, escape code fences
-      output.push(escapeCodeFences(text))
-    } else {
-      // Unknown type, just output as is
-      output.push(`## Unknown entry type ${entry.type} on line #${lineNumber}`)
-      output.push('```json')
-      output.push(JSON.stringify(entry, null, 2))
-      output.push('```')
-    }
-  }
-  return output.join('\n')
-}
-
-function convertDiff(structuredPatch: StructuredPatch[]): string {
-  // Create Git-style diff header
-  const diffLines: string[] = []
-
-  // Process each patch chunk
-  for (const patch of structuredPatch) {
-    // Add hunk header
-    const hunkHeader = `@@ -${patch.oldStart},${patch.oldLines} +${patch.newStart},${patch.newLines} @@`
-    diffLines.push(hunkHeader)
-
-    // Add the patch lines
-    diffLines.push(...patch.lines)
-  }
-
-  return diffLines.join('\n')
-}
-
-function convertToGitDiff(
-  filePath: string,
-  structuredPatch: StructuredPatch[],
-): string {
-  // Create Git-style diff header
-  const diffLines: string[] = [
-    `diff --git a${filePath} b${filePath}`,
-    `index 1234567..abcdefg 100644`,
-    `--- a${filePath}`,
-    `+++ b${filePath}`,
-  ]
-
-  diffLines.push(convertDiff(structuredPatch))
-
-  return diffLines.join('\n')
-}
-
-function getToolEmoji(toolName: string): string {
-  const toolToEmojiMap: { [key: string]: string } = {
-    ls: '📂',
-    read: '📖',
-    write: '✍️',
-    edit: '✏️',
-    multiedit: '✏️',
-    glob: '🔍',
-    grep: '🔍',
-    task: '📋',
-    todowrite: '✅',
-    bash: '💻',
-  }
-
-  return toolToEmojiMap[toolName.toLowerCase()] || '🛠️'
-}
-function filterAnsi(line: string): string {
-  // Remove ANSI escape codes (color codes, etc.)
-  // Regex matches most common ANSI escape sequences
-  return line.replace(
-    // eslint-disable-next-line no-control-regex
-    // biome-ignore lint/suspicious/noControlCharactersInRegex: <explanation>
-    /\x1b\[[0-9;]*m/g,
-    '',
-  )
-}
-
-// Helper to truncate a single line if it's too long
-function truncateLine(line: string, maxLength: number): string {
-  if (line.length > maxLength) {
-    return line.slice(0, maxLength) + '...(truncated)'
-  }
-  return line
-}
-function outputImage(item: Item, contentItem: Content): string | null {
-  // Only handle base64 PNG images for now
-  if (
-    contentItem.type === 'image' &&
-    contentItem.source &&
-    contentItem.source.type === 'base64' &&
-    typeof contentItem.source.data === 'string'
-  ) {
-    // Generate a unique filename for the image
-    const hash = createHash('md5')
-      .update(contentItem.source.data)
-      .digest('hex')
-      .substring(0, 8)
-    const extension = contentItem.source.media_type.split('/')[1] || 'png'
-    const filename = `image-${item.uuid || hash}.${extension}`
-    const savedPath = join('transcripts/contents', filename)
-
-    // Write the image file
-    writeFileSync(savedPath, Buffer.from(contentItem.source.data, 'base64'))
-
-    // Return markdown image link (relative path)
-    return `![Image](contents/${filename})`
-  }
-
-  // If not a recognized image, output as JSON for debugging
-  return [
-    `## Unhandled image content on line #${item.lineNumber}`,
-    '```json',
-    JSON.stringify(contentItem, null, 2),
-    '```',
-  ].join('\n')
 }
