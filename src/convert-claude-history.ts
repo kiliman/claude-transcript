@@ -363,6 +363,7 @@ function outputToolUseResult(
       output.push(
         handleOutput({
           saveOnly,
+          isError,
           content,
           fileContent,
           filePath: `${toolUseResult.filePath}.patch`,
@@ -428,10 +429,6 @@ function handleOutput({
   const ext = filePath?.split('.').pop()?.toLowerCase() || ''
   const language = getLanguageFromExtension(ext)
 
-  if (isError) {
-    output.push(`> [!CAUTION]\n> ${content}`)
-    return output.join('\n')
-  }
   if (content.startsWith('[Request interrupted')) {
     output.push(`> [!WARNING]\n> ${content}`)
     return output.join('\n')
@@ -447,10 +444,19 @@ function handleOutput({
   if (saveOnly) {
     output.push(`([view file](${savedPath}))`)
   } else {
-    output.push(`\`\`\`${language}`)
-    output.push(processedContent)
-    output.push('```')
-
+    if (isError) {
+      output.push(`> [!CAUTION]`)
+      output.push(
+        processedContent
+          .split('\n')
+          .map((line) => `> ${line}`)
+          .join('\n'),
+      )
+    } else {
+      output.push(`\`\`\`${language}`)
+      output.push(processedContent)
+      output.push('```')
+    }
     // Add truncation notice outside code fence
     if (savedPath) {
       output.push(
