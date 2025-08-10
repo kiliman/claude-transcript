@@ -446,10 +446,13 @@ function handleOutput({
   } else {
     if (isError) {
       output.push(`> [!CAUTION]`)
+      const lines = processedContent.split('\n')
       output.push(
-        processedContent
-          .split('\n')
-          .map((line) => `> ${line}`)
+        lines
+          .map(
+            (line, index) =>
+              `> ${line}${index === lines.length - 1 ? '' : '\\'}`,
+          )
           .join('\n'),
       )
     } else {
