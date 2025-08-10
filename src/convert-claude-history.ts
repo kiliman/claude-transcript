@@ -313,7 +313,6 @@ function outputToolUseResult(
       output.push(
         handleOutput({
           saveOnly,
-          isError,
           content: toolUseResult.file.content,
           filePath: toolUseResult.filePath,
         }),
@@ -325,7 +324,6 @@ function outputToolUseResult(
       output.push(
         handleOutput({
           saveOnly,
-          isError,
           content: toolUseResult.content,
           filePath: toolUseResult.filePath,
         }),
@@ -333,7 +331,7 @@ function outputToolUseResult(
     } else if (toolUseResult.filenames) {
       // Handle multiple filenames
       const content = toolUseResult.filenames.join('\n')
-      output.push(handleOutput({ saveOnly, content, isError }))
+      output.push(handleOutput({ saveOnly, content }))
     } else if (
       toolName.toLowerCase() === 'todowrite' &&
       toolUseResult.newTodos
@@ -353,7 +351,7 @@ function outputToolUseResult(
         return '' // Skip empty stdout entries
       }
       const content = toolUseResult.stdout
-      output.push(handleOutput({ saveOnly, content, isError }))
+      output.push(handleOutput({ saveOnly, content }))
     } else if (toolUseResult.structuredPatch && toolUseResult.filePath) {
       const content = convertDiff(toolUseResult.structuredPatch)
       const fileContent = convertToGitDiff(
@@ -363,7 +361,6 @@ function outputToolUseResult(
       output.push(
         handleOutput({
           saveOnly,
-          isError,
           content,
           fileContent,
           filePath: `${toolUseResult.filePath}.patch`,
@@ -373,9 +370,7 @@ function outputToolUseResult(
       // Handle content as string or array
       output.push('')
       if (typeof toolUseResult.content === 'string') {
-        output.push(
-          handleOutput({ saveOnly, isError, content: toolUseResult.content }),
-        )
+        output.push(handleOutput({ saveOnly, content: toolUseResult.content }))
       } else if (Array.isArray(toolUseResult.content)) {
         const content = toolUseResult.content.map((c) => c.text).join('\n')
         output.push(content)
@@ -384,16 +379,16 @@ function outputToolUseResult(
           `Tool Use Result: UNKNOWN CONTENT TYPE Line ${resultItem.lineNumber}\n`,
         )
         const content = JSON.stringify(toolUseResult.content, null, 2)
-        output.push(handleOutput({ saveOnly, isError, content }))
+        output.push(handleOutput({ saveOnly, content }))
       }
     } else {
       output.push(`Tool Use Result: UNKNOWN Line ${resultItem.lineNumber}`)
       const content = JSON.stringify(toolUseResult, null, 2)
-      output.push(handleOutput({ saveOnly, isError, content }))
+      output.push(handleOutput({ saveOnly, content }))
     }
   } else {
     //output.push(`Tool Use Result: STRING Line ${item.lineNumber}`)
-    output.push(handleOutput({ saveOnly, isError, content: toolUseResult }))
+    output.push(handleOutput({ saveOnly, content: toolUseResult }))
   }
   resultItem.state = 'processed' // Mark as processed
   return output.join('\n')
@@ -406,13 +401,11 @@ function escapeCodeFences(content: string): string {
 
 function handleOutput({
   saveOnly,
-  isError,
   content,
   fileContent,
   filePath,
 }: {
   saveOnly: boolean
-  isError: boolean
   content: string
   fileContent?: string
   filePath?: string
@@ -444,22 +437,10 @@ function handleOutput({
   if (saveOnly) {
     output.push(`([view file](${savedPath}))`)
   } else {
-    if (isError) {
-      output.push(`> [!CAUTION]`)
-      const lines = processedContent.split('\n')
-      output.push(
-        lines
-          .map(
-            (line, index) =>
-              `> ${line}${index === lines.length - 1 ? '' : '\\'}`,
-          )
-          .join('\n'),
-      )
-    } else {
-      output.push(`\`\`\`${language}`)
-      output.push(processedContent)
-      output.push('```')
-    }
+    output.push(`\`\`\`${language}`)
+    output.push(processedContent)
+    output.push('```')
+
     // Add truncation notice outside code fence
     if (savedPath) {
       output.push(
