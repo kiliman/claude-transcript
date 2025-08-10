@@ -1,4 +1,11 @@
-import type { Content, File, Item, StructuredPatch, Todo, ToolUseResult } from './types.ts'
+import type {
+  Content,
+  File,
+  Item,
+  StructuredPatch,
+  Todo,
+  ToolUseResult,
+} from './types.ts'
 import { OutputFormatter } from './OutputFormatter.ts'
 
 export class ToolResultFormatter {
@@ -13,6 +20,13 @@ export class ToolResultFormatter {
   format(toolUseResult: ToolUseResult, resultItem: Item): string | null {
     if (typeof toolUseResult !== 'object') {
       return this.formatOutput({ content: toolUseResult })
+    }
+    // ignore "grep" or "glob" tool results, they are too noisy
+    if (
+      this.toolName.toLowerCase() === 'grep' ||
+      this.toolName.toLowerCase() === 'glob'
+    ) {
+      return null
     }
 
     // Handle file-based results
@@ -30,7 +44,7 @@ export class ToolResultFormatter {
     }
 
     // Handle specific tool types
-    if (toolUseResult.filenames) {
+    if (toolUseResult.filenames && toolUseResult.filenames.length > 0) {
       return this.formatOutput({ content: toolUseResult.filenames.join('\n') })
     }
     if (this.toolName.toLowerCase() === 'todowrite' && toolUseResult.newTodos) {
@@ -52,7 +66,7 @@ export class ToolResultFormatter {
         toolUseResult.structuredPatch,
       )
     }
-    if (toolUseResult.content) {
+    if (typeof toolUseResult.content === 'string') {
       return this.formatContent(toolUseResult.content, resultItem)
     }
 
