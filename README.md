@@ -2,6 +2,9 @@
 
 Convert Claude Code JSONL conversation files to readable markdown transcripts.
 
+👀 Checkout [.claude-transcripts](.claude-transcripts) to see the sessions I had to 
+actually build this tool.
+
 ## Features
 
 - 🚀 Auto-detects JSONL files from `~/.claude/projects/` directory
