@@ -1,4 +1,3 @@
-import { stderr, stdout } from 'process'
 import { z } from 'zod'
 
 const InputSchema = z.object({
@@ -58,7 +57,7 @@ const TodoSchema = z.object({
 })
 
 const ToolUseResultSchema = z.object({
-  type: z.enum(['text', 'create']).optional(),
+  type: z.enum(['text', 'create', 'update']).optional(),
   file: FileSchema.optional(),
   filePath: z.string().optional(),
   filenames: z.array(z.string()).optional(),

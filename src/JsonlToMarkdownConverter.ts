@@ -457,7 +457,9 @@ export class JsonlToMarkdownConverter {
     // Format timestamps
     if (this.metaEntry.timestamp) {
       const startTime = this.formatTimestamp(this.metaEntry.timestamp)
-      const endTime = this.lastTimestamp ? this.formatTimestamp(this.lastTimestamp) : startTime
+      const endTime = this.lastTimestamp
+        ? this.formatTimestamp(this.lastTimestamp)
+        : startTime
       lines.push(`🕒 ${startTime} - ${endTime}`)
     }
 
@@ -476,8 +478,9 @@ export class JsonlToMarkdownConverter {
   private formatTimestamp(timestamp: string): string {
     // Convert ISO timestamp to readable format without T and Z
     const date = new Date(timestamp)
-    return date.toISOString()
-      .replace(/\.\d{3}Z$/, '')  // Remove milliseconds and Z
-      .replace('T', ' ')          // Replace T with space
+    return date
+      .toISOString()
+      .replace(/\.\d{3}Z$/, '') // Remove milliseconds and Z
+      .replace('T', ' ') // Replace T with space
   }
 }
