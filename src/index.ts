@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { readdirSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { join, basename } from 'node:path'
 import { JsonlToMarkdownConverter } from './JsonlToMarkdownConverter.ts'
