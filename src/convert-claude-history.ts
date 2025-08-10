@@ -163,9 +163,6 @@ function convertJsonlToMarkdown(jsonlPath: string): string | null {
 
     const markdown = processItem(item)
     if (markdown) {
-      if (isDebug) {
-        markdownSections.push(`## Line ${item.lineNumber}`)
-      }
       markdownSections.push(markdown)
       hasValidEntries = true
     }
@@ -198,6 +195,15 @@ function processItem(item: Item): string | null {
   }
 
   console.log(`#${lineNumber} ${entry.type}`)
+  if (isDebug) {
+    output.push(
+      `## Line ${lineNumber} ${entry.type} (isSidechain: ${entry.isSidechain})`,
+    )
+  }
+
+  if (entry.type === 'user' && entry.isSidechain) {
+    entry.type = 'assistant' // Treat sidechain user entries as assistant
+  }
 
   if (typeof entry.message.content === 'string') {
     // Handle string content (common in older entries)
@@ -287,11 +293,16 @@ function outputToolUse(item: Item, contentItem: Content): string {
 
 function outputToolUseResult(
   toolName: string,
-  item: Item,
+  resultItem: Item,
   toolUseResult: ToolUseResult,
 ): string {
   const output: string[] = []
   const saveOnly = ['read', 'ls', 'write'].includes(toolName.toLowerCase())
+  if (isDebug) {
+    output.push(
+      `### Tool Use Result for ${toolName} on line #${resultItem.lineNumber} (isSidechain: ${resultItem.entry.isSidechain})`,
+    )
+  }
   // Check if toolUseResult has a file object
   if (typeof toolUseResult === 'object') {
     if (toolUseResult.file) {
@@ -361,13 +372,13 @@ function outputToolUseResult(
         output.push(content)
       } else {
         output.push(
-          `Tool Use Result: UNKNOWN CONTENT TYPE Line ${item.lineNumber}\n`,
+          `Tool Use Result: UNKNOWN CONTENT TYPE Line ${resultItem.lineNumber}\n`,
         )
         const content = JSON.stringify(toolUseResult.content, null, 2)
         output.push(handleOutput({ saveOnly, content }))
       }
     } else {
-      output.push(`Tool Use Result: UNKNOWN Line ${item.lineNumber}`)
+      output.push(`Tool Use Result: UNKNOWN Line ${resultItem.lineNumber}`)
       const content = JSON.stringify(toolUseResult, null, 2)
       output.push(handleOutput({ saveOnly, content }))
     }
@@ -375,7 +386,7 @@ function outputToolUseResult(
     //output.push(`Tool Use Result: STRING Line ${item.lineNumber}`)
     output.push(handleOutput({ saveOnly, content: toolUseResult }))
   }
-  item.state = 'processed' // Mark as processed
+  resultItem.state = 'processed' // Mark as processed
   return output.join('\n')
 }
 
@@ -734,6 +745,8 @@ function getToolEmoji(toolName: string): string {
     edit: '✏️',
     multiedit: '✏️',
     glob: '🔍',
+    grep: '🔍',
+    task: '📋',
     todowrite: '✅',
     bash: '🐚',
   }

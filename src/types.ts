@@ -88,6 +88,7 @@ const EntrySchema = z.object({
   parentUuid: z.string().nullable().optional(),
   type: z.enum(['user', 'assistant', 'summary']),
   isMeta: z.boolean().optional(),
+  isSidechain: z.boolean(),
   message: MessageSchema.optional(),
   toolUseResult: z.union([z.string(), ToolUseResultSchema]).optional(),
 })
