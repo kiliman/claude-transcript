@@ -250,9 +250,7 @@ function outputToolUse(item: Item, contentItem: Content): string {
     contentItem.input?.path ||
     contentItem.input?.file_path ||
     ''
-  output.push(
-    `${getToolEmoji(toolName)} **${toolName} ${description.replace(/\*/g, '\\*')}**`,
-  )
+  output.push(`${getToolEmoji(toolName)} **${toolName} ${description}**`)
 
   if (contentItem.input?.command) {
     output.push(`\`\`\`shell\n${contentItem.input?.command}\n\`\`\``)
