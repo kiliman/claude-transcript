@@ -5,6 +5,7 @@ import { CommandParser } from './CommandParser.ts'
 import { ToolResultFormatter } from './ToolResultFormatter.ts'
 import { assert, createImageFile } from './utils.ts'
 import type { Content, ToolUseResult } from './types.ts'
+import { basename } from 'node:path'
 
 export class JsonlToMarkdownConverter {
   private itemTree = new Map<string, Item>()
@@ -39,7 +40,7 @@ export class JsonlToMarkdownConverter {
     }
 
     const content = markdownSections.join('\n\n')
-    const filename = this.generateFilename()
+    const filename = this.generateFilename(jsonlPath)
 
     return { content, filename }
   }
@@ -118,7 +119,7 @@ export class JsonlToMarkdownConverter {
           }
         } else if (Array.isArray(content)) {
           // Look for first text content that's not a command
-          const textContent = content.find(c => {
+          const textContent = content.find((c) => {
             if (c.type === 'text' && c.text) {
               const parser = new CommandParser(c.text)
               return !parser.hasCommandElements()
@@ -490,7 +491,7 @@ export class JsonlToMarkdownConverter {
         : startTime
       lines.push(`🕒 ${startTime} - ${endTime}`)
     }
-
+    lines.push(`Session ID: \`${this.metaEntry.sessionId}\``)
     return lines.join('\n')
   }
 
@@ -512,13 +513,14 @@ export class JsonlToMarkdownConverter {
       .replace('T', ' ') // Replace T with space
   }
 
-  private generateFilename(): string {
+  private generateFilename(filePath: string): string {
     // Use meta entry timestamp or fallback to current date
     const timestamp = this.metaEntry?.timestamp || new Date().toISOString()
     const date = new Date(timestamp)
-    
+
     // Format: YYYY-MM-DD_HH-MM-SSZ
-    const dateStr = date.toISOString()
+    const dateStr = date
+      .toISOString()
       .replace(/\.\d{3}Z$/, 'Z') // Remove milliseconds
       .replace(/:/g, '-') // Replace colons with hyphens
       .replace('T', '_') // Replace T with underscore
@@ -533,12 +535,12 @@ export class JsonlToMarkdownConverter {
         .split(/\s+/) // Split on whitespace
         .slice(0, 5) // Take first 5 words
         .join('-')
-      
+
       if (words) {
         promptPart = `-${words}`
       }
     }
 
-    return `${dateStr}${promptPart}.md`
+    return `${dateStr}${promptPart}_${basename(filePath).substring(0, 8)}.md`
   }
 }

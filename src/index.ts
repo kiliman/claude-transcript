@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { readdirSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
-import { join, basename } from 'node:path'
+import { join } from 'node:path'
 import { JsonlToMarkdownConverter } from './JsonlToMarkdownConverter.ts'
 
 main()
@@ -8,10 +8,10 @@ main()
 function main() {
   const args = process.argv.slice(2)
   const isDebug = args.includes('--debug')
-  
+
   // Remove --debug from args for path processing
-  const pathArgs = args.filter(arg => arg !== '--debug')
-  
+  const pathArgs = args.filter((arg) => arg !== '--debug')
+
   if (isDebug) {
     console.log('Debug mode enabled')
   }
@@ -33,7 +33,9 @@ function main() {
     console.error(`Error: Directory not found: ${jsonlFolderPath}`)
     if (pathArgs.length === 0) {
       console.error('Usage: node index.js [path-to-jsonl-folder] [--debug]')
-      console.error('If no path is provided, will look in ~/.claude/projects/<sanitized-cwd>')
+      console.error(
+        'If no path is provided, will look in ~/.claude/projects/<sanitized-cwd>',
+      )
     }
     process.exit(1)
   }
@@ -47,7 +49,7 @@ function main() {
   }
 
   console.log(`Found ${jsonlFiles.length} JSONL file(s) to process...`)
-  
+
   // Create output directory in current working directory
   const outputDir = '.claude-transcripts'
   const contentsDir = join(outputDir, 'contents')
