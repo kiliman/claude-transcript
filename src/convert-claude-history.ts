@@ -748,7 +748,7 @@ function getToolEmoji(toolName: string): string {
     grep: '🔍',
     task: '📋',
     todowrite: '✅',
-    bash: '🐚',
+    bash: '💻',
   }
 
   return toolToEmojiMap[toolName.toLowerCase()] || '🛠️'
