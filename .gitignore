@@ -1,8 +1,7 @@
 # Node modules
 node_modules/
 
-# Output folders
-.claude-transcripts/
+# Output folders  
 transcripts/
 
 # macOS
