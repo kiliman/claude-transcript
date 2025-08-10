@@ -94,6 +94,12 @@ const EntrySchema = z.object({
   isSidechain: z.boolean(),
   message: MessageSchema.optional(),
   toolUseResult: z.union([z.string(), ToolUseResultSchema]).optional(),
+  cwd: z.string().optional(),
+  timestamp: z.string().optional(),
+  sessionId: z.string().optional(),
+  version: z.string().optional(),
+  gitBranch: z.string().optional(),
+  userType: z.string().optional(),
 })
 
 // StateType schema

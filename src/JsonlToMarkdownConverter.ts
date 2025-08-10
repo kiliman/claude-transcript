@@ -11,6 +11,8 @@ export class JsonlToMarkdownConverter {
   private entryList: string[] = []
   private toolUseTree = new Map<string, Entry[]>()
   private isDebug: boolean
+  private metaEntry: Entry | null = null
+  private lastTimestamp: string | null = null
 
   constructor(isDebug: boolean = false) {
     this.isDebug = isDebug
@@ -25,13 +27,25 @@ export class JsonlToMarkdownConverter {
 
     const markdownSections = this.processEntries()
 
-    return markdownSections.length > 0 ? markdownSections.join('\n\n') : null
+    if (markdownSections.length === 0) {
+      return null
+    }
+
+    // Generate header if we have meta information
+    const header = this.generateHeader()
+    if (header) {
+      markdownSections.unshift(header)
+    }
+
+    return markdownSections.join('\n\n')
   }
 
   private reset() {
     this.itemTree.clear()
     this.toolUseTree.clear()
     this.entryList = []
+    this.metaEntry = null
+    this.lastTimestamp = null
   }
 
   private parseJsonlFile(
@@ -78,6 +92,16 @@ export class JsonlToMarkdownConverter {
   private buildItemTree(entries: Array<{ entry: Entry; lineNumber: number }>) {
     entries.forEach(({ entry, lineNumber }) => {
       assert(entry.uuid, `Entry on line ${lineNumber} is missing UUID`)
+
+      // Capture meta entry
+      if (entry.isMeta === true && !this.metaEntry) {
+        this.metaEntry = entry
+      }
+
+      // Track last timestamp
+      if (entry.timestamp) {
+        this.lastTimestamp = entry.timestamp
+      }
 
       const state: StateType = entry.isMeta === true ? 'skipped' : 'pending'
 
@@ -418,5 +442,37 @@ export class JsonlToMarkdownConverter {
       webfetch: '🌐',
     }
     return emojiMap[toolName.toLowerCase()] || '🛠️'
+  }
+
+  private generateHeader(): string | null {
+    if (!this.metaEntry || !this.metaEntry.cwd) {
+      return null
+    }
+
+    const lines: string[] = [
+      '# Claude Code Transcript',
+      `## ${this.getDirectoryName(this.metaEntry.cwd)}`,
+    ]
+
+    // Format timestamps
+    if (this.metaEntry.timestamp) {
+      const startTime = this.formatTimestamp(this.metaEntry.timestamp)
+      const endTime = this.lastTimestamp ? this.formatTimestamp(this.lastTimestamp) : startTime
+      lines.push(`${startTime} - ${endTime}`)
+    }
+
+    return lines.join('\n')
+  }
+
+  private getDirectoryName(cwd: string): string {
+    // Extract just the directory name from the full path
+    const parts = cwd.split('/')
+    return parts[parts.length - 1] || cwd
+  }
+
+  private formatTimestamp(timestamp: string): string {
+    // Convert ISO timestamp to UTC format without milliseconds
+    const date = new Date(timestamp)
+    return date.toISOString().replace(/\.\d{3}Z$/, 'Z')
   }
 }
