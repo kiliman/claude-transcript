@@ -1,0 +1,25 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -108,6 +108,20 @@
+         this.lastTimestamp = entry.timestamp
+       }
+ 
++      // Capture first user prompt (not command elements)
++      if (!this.firstUserPrompt && entry.type === 'user' && !entry.isMeta) {
++        const content = entry.message?.content
++        if (typeof content === 'string' && !this.hasCommandElements(content)) {
++          this.firstUserPrompt = content
++        } else if (Array.isArray(content)) {
++          // Look for first text content that's not a command
++          const textContent = content.find(c => c.type === 'text' && c.text && !this.hasCommandElements(c.text))
++          if (textContent?.text) {
++            this.firstUserPrompt = textContent.text
++          }
++        }
++      }
++
+       const state: StateType = entry.isMeta === true ? 'skipped' : 'pending'
+ 
+       const item: Item = {

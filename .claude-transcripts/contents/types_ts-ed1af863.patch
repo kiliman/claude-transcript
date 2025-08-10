@@ -1,0 +1,17 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/types.ts b/Users/michael/Projects/oss/claude-transcript/src/types.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/types.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/types.ts
+@@ -94,6 +94,12 @@
+   isSidechain: z.boolean(),
+   message: MessageSchema.optional(),
+   toolUseResult: z.union([z.string(), ToolUseResultSchema]).optional(),
++  cwd: z.string().optional(),
++  timestamp: z.string().optional(),
++  sessionId: z.string().optional(),
++  version: z.string().optional(),
++  gitBranch: z.string().optional(),
++  userType: z.string().optional(),
+ })
+ 
+ // StateType schema

@@ -1,0 +1,34 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -20,6 +20,29 @@
+     // Convert to blockquote
+     const lines = entry.message.content.split('\n');
+     output.push(...lines.map(line => `> ${line}`));
++  } else if (Array.isArray(entry.message.content)) {
++    // Handle array format (common in newer entries)
++    for (const contentItem of entry.message.content) {
++      if (contentItem.type === 'text' && contentItem.text) {
++        // Convert text to blockquote
++        const lines = contentItem.text.split('\n');
++        output.push(...lines.map(line => `> ${line}`));
++      } else if (contentItem.type === 'tool_result') {
++        // Output tool result content
++        if (contentItem.content) {
++          output.push('```');
++          output.push(contentItem.content);
++          output.push('```');
++        }
++        
++        // Output toolUseResult if available at the message level
++        if (entry.message.toolUseResult) {
++          output.push('```json');
++          output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
++          output.push('```');
++        }
++      }
++    }
+   } else if (typeof entry.message.content === 'object' && entry.message.content.type === 'tool_result') {
+     // Output tool result content
+     if (entry.message.content.content) {

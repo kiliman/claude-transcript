@@ -1,0 +1,18 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
+@@ -732,8 +732,12 @@
+ 
+ // Handles output formatting with truncation and file saving
+ class OutputFormatter {
+-  constructor(private defaultSaveOnly: boolean) {}
++  private defaultSaveOnly: boolean
+ 
++  constructor(defaultSaveOnly: boolean) {
++    this.defaultSaveOnly = defaultSaveOnly
++  }
++
+   format(options: {
+     saveOnly?: boolean
+     content: string

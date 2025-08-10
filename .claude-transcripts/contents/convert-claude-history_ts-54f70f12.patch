@@ -1,0 +1,13 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -359,7 +359,7 @@
+   return output;
+ }
+ 
+-function processAssistantEntry(entry: Entry, lineNumber: number): string {
++function processAssistantEntry(entry: Entry, lineNumber: number, childEntries: { entry: Entry; lineNumber: number }[] = []): string {
+   const output: string[] = [];
+ 
+   if (entry.message.type === 'message' && Array.isArray(entry.message.content)) {

@@ -1,0 +1,1 @@
+{"type":"assistant","message":{"type":"message","content":[{"type":"text","text":"Here's an example with code fences:\n\n```javascript\nfunction example() {\n  console.log('This has ```nested``` backticks');\n}\n```\n\nAnd more text after."}]}}

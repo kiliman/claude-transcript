@@ -1,0 +1,16 @@
+M  CLAUDE.md
+D  data-capture/package-lock.json
+D  data-capture/package.json
+D  data-capture/tsconfig.json
+M  package-lock.json
+M  package.json
+R  data-capture/chartGenerator.ts -> src/chartGenerator.ts
+R  data-capture/config.ts -> src/config.ts
+R  data-capture/database.ts -> src/database.ts
+R  data-capture/executor.ts -> src/executor.ts
+R  data-capture/index.ts -> src/index.ts
+R  data-capture/logger.ts -> src/logger.ts
+R  data-capture/rollup.ts -> src/rollup.ts
+R  data-capture/scheduler.ts -> src/scheduler.ts
+M  tsconfig.json
+R  serve-charts.ts -> web/serve-charts.ts

@@ -1,0 +1,14 @@
+[main 463bbce] refactor: restructure project directories for better organization
+ 16 files changed, 2082 insertions(+), 2165 deletions(-)
+ delete mode 100644 data-capture/package-lock.json
+ delete mode 100644 data-capture/package.json
+ delete mode 100644 data-capture/tsconfig.json
+ rename {data-capture => src}/chartGenerator.ts (98%)
+ rename {data-capture => src}/config.ts (100%)
+ rename {data-capture => src}/database.ts (98%)
+ rename {data-capture => src}/executor.ts (100%)
+ rename {data-capture => src}/index.ts (100%)
+ rename {data-capture => src}/logger.ts (100%)
+ rename {data-capture => src}/rollup.ts (100%)
+ rename {data-capture => src}/scheduler.ts (100%)
+ rename serve-charts.ts => web/serve-charts.ts (100%)

@@ -1,0 +1,12 @@
+diff --git a/Users/michael/Projects/oss/graph-monitor/README.md b/Users/michael/Projects/oss/graph-monitor/README.md
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/graph-monitor/README.md
++++ b/Users/michael/Projects/oss/graph-monitor/README.md
+@@ -1,6 +1,6 @@
+ # graph-monitor
+ 
+-This tool is a React app using Vite. There are two main components.
++This tool is a system monitoring application that captures metrics and generates static PNG charts. There are two main components.
+ 
+ ## Data Capture
+ 

@@ -1,0 +1,16 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -15,6 +15,11 @@
+   toolUseResult?: any;
+ }
+ 
++function escapeCodeFences(content: string): string {
++  // Replace ``` with \`\`\` to escape code fences in markdown
++  return content.replace(/```/g, '\\`\\`\\`');
++}
++
+ function handleLargeContent(content: string, filePath?: string): { content: string; savedPath?: string; remainingLines?: number } {
+   const lines = content.split('\n');
+   const lineCount = lines.length;

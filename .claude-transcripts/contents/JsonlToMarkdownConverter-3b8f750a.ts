@@ -11,15 +11,12 @@ export class JsonlToMarkdownConverter {
   private entryList: string[] = []
   private toolUseTree = new Map<string, Entry[]>()
   private isDebug: boolean
-  private metaEntry: Entry | null = null
-  private lastTimestamp: string | null = null
-  private firstUserPrompt: string | null = null
 
   constructor(isDebug: boolean = false) {
     this.isDebug = isDebug
   }
 
-  convert(jsonlPath: string): { content: string; filename: string } | null {
+  convert(jsonlPath: string): string | null {
     console.log(`Processing file: ${jsonlPath}`)
     this.reset()
 
@@ -28,29 +25,13 @@ export class JsonlToMarkdownConverter {
 
     const markdownSections = this.processEntries()
 
-    if (markdownSections.length === 0) {
-      return null
-    }
-
-    // Generate header if we have meta information
-    const header = this.generateHeader()
-    if (header) {
-      markdownSections.unshift(header)
-    }
-
-    const content = markdownSections.join('\n\n')
-    const filename = this.generateFilename()
-
-    return { content, filename }
+    return markdownSections.length > 0 ? markdownSections.join('\n\n') : null
   }
 
   private reset() {
     this.itemTree.clear()
     this.toolUseTree.clear()
     this.entryList = []
-    this.metaEntry = null
-    this.lastTimestamp = null
-    this.firstUserPrompt = null
   }
 
   private parseJsonlFile(
@@ -97,39 +78,6 @@ export class JsonlToMarkdownConverter {
   private buildItemTree(entries: Array<{ entry: Entry; lineNumber: number }>) {
     entries.forEach(({ entry, lineNumber }) => {
       assert(entry.uuid, `Entry on line ${lineNumber} is missing UUID`)
-
-      // Capture meta entry
-      if (entry.isMeta === true && !this.metaEntry) {
-        this.metaEntry = entry
-      }
-
-      // Track last timestamp
-      if (entry.timestamp) {
-        this.lastTimestamp = entry.timestamp
-      }
-
-      // Capture first user prompt (not command elements)
-      if (!this.firstUserPrompt && entry.type === 'user' && !entry.isMeta) {
-        const content = entry.message?.content
-        if (typeof content === 'string') {
-          const parser = new CommandParser(content)
-          if (!parser.hasCommandElements()) {
-            this.firstUserPrompt = content
-          }
-        } else if (Array.isArray(content)) {
-          // Look for first text content that's not a command
-          const textContent = content.find(c => {
-            if (c.type === 'text' && c.text) {
-              const parser = new CommandParser(c.text)
-              return !parser.hasCommandElements()
-            }
-            return false
-          })
-          if (textContent?.text) {
-            this.firstUserPrompt = textContent.text
-          }
-        }
-      }
 
       const state: StateType = entry.isMeta === true ? 'skipped' : 'pending'
 
@@ -470,75 +418,5 @@ export class JsonlToMarkdownConverter {
       webfetch: '🌐',
     }
     return emojiMap[toolName.toLowerCase()] || '🛠️'
-  }
-
-  private generateHeader(): string | null {
-    if (!this.metaEntry || !this.metaEntry.cwd) {
-      return null
-    }
-
-    const lines: string[] = [
-      '# 🤖 Claude Code Transcript',
-      `## 🗂️ ${this.formatPath(this.metaEntry.cwd)}`,
-    ]
-
-    // Format timestamps
-    if (this.metaEntry.timestamp) {
-      const startTime = this.formatTimestamp(this.metaEntry.timestamp)
-      const endTime = this.lastTimestamp
-        ? this.formatTimestamp(this.lastTimestamp)
-        : startTime
-      lines.push(`🕒 ${startTime} - ${endTime}`)
-    }
-
-    return lines.join('\n')
-  }
-
-  private formatPath(cwd: string): string {
-    // Replace user home directory with ~
-    const homeDir = process.env.HOME || process.env.USERPROFILE || ''
-    if (homeDir && cwd.startsWith(homeDir)) {
-      return cwd.replace(homeDir, '~')
-    }
-    return cwd
-  }
-
-  private formatTimestamp(timestamp: string): string {
-    // Convert ISO timestamp to readable format without T and Z
-    const date = new Date(timestamp)
-    return date
-      .toISOString()
-      .replace(/\.\d{3}Z$/, '') // Remove milliseconds and Z
-      .replace('T', ' ') // Replace T with space
-  }
-
-  private generateFilename(): string {
-    // Use meta entry timestamp or fallback to current date
-    const timestamp = this.metaEntry?.timestamp || new Date().toISOString()
-    const date = new Date(timestamp)
-    
-    // Format: YYYY-MM-DD_HH-MM-SSZ
-    const dateStr = date.toISOString()
-      .replace(/\.\d{3}Z$/, 'Z') // Remove milliseconds
-      .replace(/:/g, '-') // Replace colons with hyphens
-      .replace('T', '_') // Replace T with underscore
-
-    // Get first 5 words from user prompt
-    let promptPart = ''
-    if (this.firstUserPrompt) {
-      const words = this.firstUserPrompt
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, '') // Remove non-alphanumeric except spaces
-        .trim()
-        .split(/\s+/) // Split on whitespace
-        .slice(0, 5) // Take first 5 words
-        .join('-')
-      
-      if (words) {
-        promptPart = `-${words}`
-      }
-    }
-
-    return `${dateStr}${promptPart}.md`
   }
 }

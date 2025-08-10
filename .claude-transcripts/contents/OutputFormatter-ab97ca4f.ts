@@ -149,7 +149,7 @@ export class OutputFormatter {
     }
 
     const filename = `${baseFileName}-${hash}${extension}`
-    const savedPath = join('.claude-transcripts/contents', filename)
+    const savedPath = join('transcripts/contents', filename)
 
     writeFileSync(savedPath, content, 'utf-8')
 

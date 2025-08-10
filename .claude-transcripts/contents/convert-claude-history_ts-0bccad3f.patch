@@ -1,0 +1,23 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
+@@ -574,11 +574,14 @@
+ 
+ // Handles formatting of tool results
+ class ToolResultFormatter {
+-  constructor(
+-    private toolName: string,
+-    private isDebug: boolean,
+-  ) {}
++  private toolName: string
++  private isDebug: boolean
+ 
++  constructor(toolName: string, isDebug: boolean) {
++    this.toolName = toolName
++    this.isDebug = isDebug
++  }
++
+   format(toolUseResult: ToolUseResult, resultItem: Item): string | null {
+     if (typeof toolUseResult !== 'object') {
+       return this.formatOutput({ content: toolUseResult })

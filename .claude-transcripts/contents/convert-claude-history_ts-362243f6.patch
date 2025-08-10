@@ -1,0 +1,13 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
+@@ -629,7 +629,7 @@
+     })
+   }
+ 
+-  private formatFileResult(file: any, filePath?: string): string {
++  private formatFileResult(file: File | { content: string; filePath?: string; numLines: number; startLine: number; totalLines: number }, filePath?: string): string {
+     return this.formatOutput({
+       saveOnly: this.shouldSaveOnly(),
+       content: file.content,

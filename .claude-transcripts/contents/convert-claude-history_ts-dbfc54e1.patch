@@ -1,0 +1,25 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -153,11 +153,17 @@
+       if (contentItem.type === 'text' && contentItem.text) {
+         output.push(contentItem.text);
+       } else if (contentItem.type === 'tool_use') {
+-        output.push('```json');
+-        output.push(JSON.stringify(contentItem, null, 2));
+-        output.push('```');
++        // Format tool use with emoji and name
++        const toolName = contentItem.name || 'Unknown Tool';
++        const description = contentItem.input?.description || contentItem.input?.path || contentItem.input?.file_path || '';
++        output.push(`🛠️ ${toolName}: ${description}`);
+       }
+     }
++  } else if (entry.message.type === 'tool_use') {
++    // Handle direct tool_use message type
++    const toolName = entry.message.name || 'Unknown Tool';
++    const description = entry.message.input?.description || entry.message.input?.path || entry.message.input?.file_path || '';
++    output.push(`🛠️ ${toolName}: ${description}`);
+   } else {
+     // Unknown format
+     output.push(`## Unknown assistant line #${lineNumber}`);

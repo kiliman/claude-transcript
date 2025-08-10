@@ -1,0 +1,38 @@
+{
+  "metrics": {
+    "bde": {
+      "command": "curl -o /dev/null -s -w 'duration: %{time_total} s\\nstatus: %{http_code}' https://mail.bigdeskenergy.com"
+    },
+    "google": {
+      "command": "curl -o /dev/null -s -w 'duration: %{time_total} s\\nstatus: %{http_code}' https://www.google.com"
+    }
+  },
+  "graphs": {
+    "Response Time: mail.bigdeskenergy.com (Last hour)": {
+      "metric": "bde",
+      "source": "latest",
+      "limit": "1h",
+      "type": "AreaChart",
+      "x-axis": "timestamp",
+      "y-axis": "duration"
+    },
+    "Response Time: mail.bigdeskenergy.com (Last 6 hours)": {
+      "metric": "bde",
+      "source": "rollup-5m",
+      "limit": "6h",
+      "type": "AreaChart",
+      "x-axis": "timestamp",
+      "y-axis": "duration",
+      "aggregation": ["min", "max", "average"]
+    },
+    "Response Time: mail.bigdeskenergy.com (Last 24 hours)": {
+      "metric": "bde",
+      "source": "rollup-30m",
+      "limit": "24h",
+      "type": "AreaChart",
+      "x-axis": "timestamp",
+      "y-axis": "duration",
+      "aggregation": ["min", "max", "average"]
+    }
+  }
+}

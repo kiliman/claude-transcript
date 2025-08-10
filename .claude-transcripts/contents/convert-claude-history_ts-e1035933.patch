@@ -1,0 +1,18 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
+@@ -493,8 +493,12 @@
+ 
+ // Handles parsing of command-style content
+ class CommandParser {
+-  constructor(private text: string) {}
++  private text: string
+ 
++  constructor(text: string) {
++    this.text = text
++  }
++
+   hasCommandElements(): boolean {
+     return (
+       /<command-name>/.test(this.text) ||

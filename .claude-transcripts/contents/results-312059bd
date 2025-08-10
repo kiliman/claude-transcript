@@ -1,0 +1,1 @@
+Error: cd to '/Users/michael/Projects/oss' was blocked. For security, Claude Code may only change directories to child directories of the allowed working directories for this session (including '/Users/michael/Projects/oss/graph-monitor').

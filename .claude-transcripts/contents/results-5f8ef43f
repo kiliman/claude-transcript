@@ -1,0 +1,27 @@
+On branch main
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   CLAUDE.md
+	deleted:    data-capture/chartGenerator.ts
+	deleted:    data-capture/config.ts
+	deleted:    data-capture/database.ts
+	deleted:    data-capture/executor.ts
+	deleted:    data-capture/index.ts
+	deleted:    data-capture/logger.ts
+	deleted:    data-capture/package-lock.json
+	deleted:    data-capture/package.json
+	deleted:    data-capture/rollup.ts
+	deleted:    data-capture/scheduler.ts
+	deleted:    data-capture/tsconfig.json
+	modified:   package-lock.json
+	modified:   package.json
+	deleted:    serve-charts.ts
+	modified:   tsconfig.json
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	src/
+	web/
+
+no changes added to commit (use "git add" and/or "git commit -a")

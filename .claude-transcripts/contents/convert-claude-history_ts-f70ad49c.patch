@@ -1,0 +1,30 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -24,9 +24,9 @@
+   const lines = content.split('\n');
+   const lineCount = lines.length;
+   
+-  // If 12 lines or fewer, return as is
++  // If 12 lines or fewer, return as is (but escaped for markdown)
+   if (lineCount <= 12) {
+-    return { content };
++    return { content: escapeCodeFences(content) };
+   }
+   
+   // Truncate to 8 lines
+@@ -57,11 +57,11 @@
+     mkdirSync('contents', { recursive: true });
+   }
+   
+-  // Save full content to file
++  // Save full content to file (raw, unescaped)
+   writeFileSync(savedPath, content);
+   
+   return { 
+-    content: truncatedLines.join('\n'),
++    content: escapeCodeFences(truncatedLines.join('\n')),
+     savedPath,
+     remainingLines
+   };

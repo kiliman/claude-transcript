@@ -1,0 +1,39 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -502,4 +502,34 @@
+       .replace(/\.\d{3}Z$/, '') // Remove milliseconds and Z
+       .replace('T', ' ') // Replace T with space
+   }
++
++  private generateFilename(): string {
++    // Use meta entry timestamp or fallback to current date
++    const timestamp = this.metaEntry?.timestamp || new Date().toISOString()
++    const date = new Date(timestamp)
++    
++    // Format: YYYY-MM-DD_HH-MM-SSZ
++    const dateStr = date.toISOString()
++      .replace(/\.\d{3}Z$/, 'Z') // Remove milliseconds
++      .replace(/:/g, '-') // Replace colons with hyphens
++      .replace('T', '_') // Replace T with underscore
++
++    // Get first 5 words from user prompt
++    let promptPart = ''
++    if (this.firstUserPrompt) {
++      const words = this.firstUserPrompt
++        .toLowerCase()
++        .replace(/[^a-z0-9\s]/g, '') // Remove non-alphanumeric except spaces
++        .trim()
++        .split(/\s+/) // Split on whitespace
++        .slice(0, 5) // Take first 5 words
++        .join('-')
++      
++      if (words) {
++        promptPart = `-${words}`
++      }
++    }
++
++    return `${dateStr}${promptPart}.md`
++  }
+ }

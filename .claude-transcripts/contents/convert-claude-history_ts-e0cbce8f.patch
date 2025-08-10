@@ -1,0 +1,19 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -52,12 +52,10 @@
+   // Save full content to file
+   writeFileSync(savedPath, content);
+   
+-  // Add truncation notice with link
+-  truncatedLines.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
+-  
+   return { 
+     content: truncatedLines.join('\n'),
+-    savedPath
++    savedPath,
++    remainingLines
+   };
+ }
+ 

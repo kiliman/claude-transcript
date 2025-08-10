@@ -1,0 +1,22 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -246,11 +246,16 @@
+         const language = getLanguageFromExtension(ext);
+ 
+         // Handle potentially large file content
+-        const { content: processedContent } = handleLargeContent(file.content, file.filePath);
++        const { content: processedContent, savedPath, remainingLines } = handleLargeContent(file.content, file.filePath);
+         
+         output.push(`\`\`\`${language}`);
+         output.push(processedContent);
+         output.push('```');
++        
++        // Add truncation notice outside code fence
++        if (savedPath && remainingLines) {
++          output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
++        }
+       } else {
+         // Handle non-file toolUseResult
+         const content = typeof entry.toolUseResult === 'string' 

@@ -1,0 +1,33 @@
+On branch main
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	deleted:    chartGenerator.js
+	deleted:    config.js
+	deleted:    database.js
+	deleted:    executor.js
+	deleted:    index.js
+	deleted:    logger.js
+	modified:   package-lock.json
+	modified:   package.json
+	deleted:    rollup.js
+	deleted:    scheduler.js
+	modified:   ../package.json
+	deleted:    ../serve-charts.js
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	chartGenerator.ts
+	config.ts
+	database.ts
+	executor.ts
+	index.ts
+	logger.ts
+	rollup.ts
+	scheduler.ts
+	tsconfig.json
+	../package-lock.json
+	../serve-charts.ts
+	../tsconfig.json
+
+no changes added to commit (use "git add" and/or "git commit -a")

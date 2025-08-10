@@ -1,0 +1,200 @@
+diff --git a/CLAUDE.md b/CLAUDE.md
+new file mode 100644
+index 0000000..5af4650
+--- /dev/null
++++ b/CLAUDE.md
+@@ -0,0 +1,64 @@
++# CLAUDE.md
++
++This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
++
++## Project Overview
++
++Graph Monitor is a system monitoring tool that captures metrics by executing shell commands, stores the results in SQLite, and generates static PNG charts for visualization.
++
++## Architecture
++
++The system consists of two main components:
++
++1. **Data Capture Component** (`/data-capture`):
++   - Executes configured shell commands periodically
++   - Stores metrics in SQLite database (`metrics.db`)
++   - Performs automatic data rollups (5m, 30m, 1h, 2h, 4h, 12h, 24h intervals)
++   - Generates static PNG charts using Chart.js
++
++2. **Web Server Component** (`serve-charts.js`):
++   - Serves static chart PNG files from `/charts` directory
++   - Provides index.html for viewing charts
++   - Runs on port 8080
++
++## Key Commands
++
++```bash
++# Install dependencies
++npm install
++cd data-capture && npm install
++
++# Run data capture only
++npm run capture
++
++# Run web server only  
++npm run serve
++
++# Run both components
++npm start
++```
++
++## Important Technical Details
++
++### Data Flow
++1. `config.js` defines metrics (shell commands) and graph specifications
++2. Scheduler (`scheduler.js`) executes commands based on intervals
++3. Executor (`executor.js`) parses command output for duration and status
++4. Database (`database.js`) stores raw metrics and manages rollups
++5. Chart generator (`chart-generator.js`) creates PNG files from data
++6. HTTP server serves charts from `/charts` directory
++
++### Database Schema
++- `metrics` table: Raw metric data (id, timestamp, name, value, status)
++- `rollup_*` tables: Aggregated data at various intervals
++
++### Current Configuration
++The system currently monitors:
++- `mail.bigdeskenergy.com` response time
++- `google.com` response time
++
++### Implementation Notes
++- Uses CommonJS modules (not ES modules)
++- Winston logger writes to `/logs` directory
++- No test framework is configured
++- The actual implementation generates static PNG charts, not a React app as originally specified in README.md
+\ No newline at end of file
+diff --git a/README.md b/README.md
+index 114481d..61b2bd6 100644
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,6 @@
+ # graph-monitor
+ 
+-This tool is a React app using Vite. There are two main components.
++This tool is a system monitoring application that captures metrics and generates static PNG charts. There are two main components.
+ 
+ ## Data Capture
+ 
+@@ -10,12 +10,12 @@ This Node.js process will execute commands defined in a config.json file. It wil
+ {
+   "metrics": {
+     "bde": {
+-      "command": "curl https://www.bigdeskenergy.com",
+-      "frequency": "30s",
++      "command": "curl https://www.bigdeskenergy.com"
+     }
+   },
+   "graphs": {
+     "Response Time: www.bigdeskenergy.com (Last hour)": {
++      "metric": "bde",
+       "source": "latest",
+       "limit": "1h",
+       "type": "LineChart",
+@@ -23,18 +23,20 @@ This Node.js process will execute commands defined in a config.json file. It wil
+       "y-axis": "duration"
+     }
+     "Response Time: www.bigdeskenergy.com (Last 24 hours)": {
++      "metric": "bde",
+       "source": "rollup-5m",
+       "limit": "24h",
+       "type": "LineChart",
+       "x-axis": "timestamp",
+-      "y-axis": "duration"
++      "y-axis": "duration",
++      "aggregation": ["min", "max", "average"]
+     }
+ 
+   }
+ 
+ }
+ ```
+-For each `metric`, we're going to execute the shell command at the requested frequency (a numeric value with a time unit of: s=seconds, m=minutes, h=hour)
++For each `metric`, we're going to execute the shell command every minute.
+ 
+ The command will output to stdout one or more lines
+ ```
+@@ -54,6 +56,8 @@ timestamp (unix time), key, name, value, unit
+ 1753219424, bde, status, 200
+ </example>
+ 
++The timestamp is rounded to the nearest minute.
++
+ We also want to create a table that keeps a rolling summary of each metric
+ 
+ We'll rollup the values in the following increments, starting with the first increment greater than our frequency.
+@@ -64,7 +68,6 @@ We'll rollup the values in the following increments, starting with the first inc
+ 12 hours (12h)
+ 1 day (1d)
+ 1 month (1mo)
+-1 year (1y)
+ 
+ For each group, we'll keep a maximum on the latest 120 entries.
+ 
+@@ -79,7 +82,6 @@ increment, timestamp, key, name, unit, min, max, average
+     - 1h 00:00, 01:00, 02:00, etc.
+     - 1d 2025-07-21T00:00, 2025-07-22T00:00, etc.
+     - 1m 2025-07-01T00:00, 2025-08-01T00:00, etc.
+-    - 1y 2025-01-01T00:00, 2026-01-01T00:00, etc.
+ - key, name, unit from metric
+ - min*
+ - max*
+@@ -91,23 +93,46 @@ increment, timestamp, key, name, unit, min, max, average
+ 5m, 1753219500, bde, duration, 123, ms, 99, 201, 112
+ <example>
+ 
++As metrics entries are collected, we'll update the rollup entries. We use a hierarchical storage method to minimize the
++amount of data that is captured. For latest metrics, only the last 60 (1/min) are stored. The 5m rollup uses the latest
++metrics. The next interval uses the previous interval, and so on. Once a rollup reaches 120 entries (not by count, but
++by timestamp based on interval), any entries less than this min timestamp is deleted.
+ 
+-## Graph Web App
++## Chart Generation & Web Server
+ 
+-The Graph Web App will be a Vite+React app that will use the config to generate a series
+-of graphs of the captured data. Use the `recharts` package to render the graphs.
++The data capture process automatically generates static PNG charts based on the configuration using Chart.js. These charts are saved to the `/charts` directory and served by a simple HTTP server.
+ 
+-Graphs are configured in the config.json file.
++A web server runs on port 8080 to serve these static charts through a simple HTML interface.
+ 
+-For each graph, the key is the title of the chart.
++### Running the Application
+ 
+-We specify the following:
++```bash
++# Install dependencies
++npm install
++cd data-capture && npm install
++
++# Run both data capture and web server
++npm start
++
++# Or run components separately
++npm run capture  # Run data capture only
++npm run serve    # Run web server only
++```
++
++### Graph Configuration
++
++Graphs are configured in the config.json file. For each graph, the key is the title of the chart.
+ 
++We specify the following:
++- metric: the metric key we're graphing
+ - source
+     - latest: get from captured metrics
+     - rollup-interval: rollup-5m gets the rollup values from the appropriate interval
+ - limit: limit entries up to (1h = 1 hour, etc) `timestamp >= Date.now - limit`
+-- type: chart type from `recharts`
+-- x-axis: value name used for x-axis data (timestamp): convert timestamp to actual formatted date/time
++- type: chart type (currently supports LineChart)
++- x-axis: value name used for x-axis data (timestamp): converted to formatted date/time
+ - y-axis: value name used for y-axis data (duration)
++- aggegation: for rollup charts, one or more of the following: min, max, average
++
++Charts are regenerated

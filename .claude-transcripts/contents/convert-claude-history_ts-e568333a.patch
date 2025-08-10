@@ -1,0 +1,17 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -190,8 +190,11 @@
+             const ext = file.filePath.split('.').pop()?.toLowerCase() || '';
+             const language = getLanguageFromExtension(ext);
+ 
++            // Handle potentially large file content
++            const { content: processedContent } = handleLargeContent(file.content, file.filePath);
++            
+             output.push(`\`\`\`${language}`);
+-            output.push(file.content);
++            output.push(processedContent);
+             output.push('```');
+           } else {
+             output.push('```');

@@ -1,0 +1,513 @@
+Found 1 JSONL file(s) to process...
+Processing file: test/test2.jsonl
+Processing 507 entries...
+#2 user
+#3 user
+#4 user
+#6 assistant
+#7 assistant
+#8 user
+#9 assistant
+#10 assistant
+#12 assistant
+#13 assistant
+#14 assistant
+#17 assistant
+#18 assistant
+#19 assistant
+#22 assistant
+#23 assistant
+#24 assistant
+#25 assistant
+#26 assistant
+#27 assistant
+#28 assistant
+#29 assistant
+#37 assistant
+#38 assistant
+#39 assistant
+#42 assistant
+#43 assistant
+#45 assistant
+#47 assistant
+#48 assistant
+#50 assistant
+#51 user
+#52 assistant
+#53 assistant
+#55 assistant
+#57 assistant
+#59 assistant
+#61 assistant
+#63 assistant
+#65 assistant
+#66 user
+#67 assistant
+#68 assistant
+#70 user
+#71 user
+#72 assistant
+#73 assistant
+#75 assistant
+#77 assistant
+#79 assistant
+#81 assistant
+#83 assistant
+#84 user
+#85 assistant
+#86 assistant
+#88 assistant
+#89 assistant
+#91 assistant
+#93 assistant
+#95 assistant
+#97 assistant
+#99 assistant
+#101 assistant
+#102 assistant
+#104 assistant
+#106 assistant
+#108 assistant
+#109 assistant
+#111 assistant
+#113 assistant
+#115 assistant
+#116 assistant
+#118 assistant
+#120 assistant
+#122 assistant
+#123 assistant
+#125 assistant
+#127 assistant
+#129 assistant
+#130 assistant
+#131 user
+#132 assistant
+#133 assistant
+#135 assistant
+#136 assistant
+#138 assistant
+#139 assistant
+#141 assistant
+#143 assistant
+#144 assistant
+#146 assistant
+#148 assistant
+#150 assistant
+#151 assistant
+#153 assistant
+#155 assistant
+#157 assistant
+#158 assistant
+#160 assistant
+#162 assistant
+#164 assistant
+#165 assistant
+#167 assistant
+#169 assistant
+#171 assistant
+#172 assistant
+#174 assistant
+#176 assistant
+#178 assistant
+#179 assistant
+#181 assistant
+#183 assistant
+#185 assistant
+#186 assistant
+#188 assistant
+#190 assistant
+#192 assistant
+#193 assistant
+#195 assistant
+#197 assistant
+#199 assistant
+#200 assistant
+#202 assistant
+#204 assistant
+#205 assistant
+#206 user
+#207 assistant
+#208 assistant
+#210 assistant
+#212 assistant
+#214 assistant
+#216 assistant
+#218 assistant
+#220 assistant
+#221 assistant
+#223 assistant
+#225 assistant
+#227 assistant
+#229 assistant
+#230 assistant
+#232 assistant
+#233 assistant
+#235 assistant
+#236 assistant
+#238 assistant
+#240 assistant
+#241 assistant
+#243 assistant
+#244 assistant
+#246 assistant
+#247 assistant
+#249 assistant
+#250 assistant
+#252 assistant
+#253 assistant
+#254 user
+#255 assistant
+#256 assistant
+#258 assistant
+#259 assistant
+#261 assistant
+#262 assistant
+#264 assistant
+#265 assistant
+#267 assistant
+#268 assistant
+#270 assistant
+#272 assistant
+#273 assistant
+#275 assistant
+#276 assistant
+#278 assistant
+#279 assistant
+#281 assistant
+#282 assistant
+#284 assistant
+#285 assistant
+#287 assistant
+#289 assistant
+#291 assistant
+#292 assistant
+#294 assistant
+#295 assistant
+#297 assistant
+#298 assistant
+#300 assistant
+#301 assistant
+#303 assistant
+#304 assistant
+#306 assistant
+#307 assistant
+#309 assistant
+#310 assistant
+#312 assistant
+#314 assistant
+#316 assistant
+#317 assistant
+#319 assistant
+#320 assistant
+#322 assistant
+#323 assistant
+#325 assistant
+#326 assistant
+#328 assistant
+#329 assistant
+#331 assistant
+#332 assistant
+#334 assistant
+#336 assistant
+#337 assistant
+#339 assistant
+#340 assistant
+#342 assistant
+#343 assistant
+#345 assistant
+#347 assistant
+#348 assistant
+#350 assistant
+#351 user
+#352 assistant
+#353 assistant
+#355 assistant
+#357 assistant
+#359 assistant
+#360 user
+#361 assistant
+#362 assistant
+#364 assistant
+#365 assistant
+#367 assistant
+#369 assistant
+#371 assistant
+#372 assistant
+#374 assistant
+#375 assistant
+#377 assistant
+#379 assistant
+#381 assistant
+#383 assistant
+#385 assistant
+#387 assistant
+#389 assistant
+#391 assistant
+#392 assistant
+#394 assistant
+#396 assistant
+#398 assistant
+#400 assistant
+#402 assistant
+#404 assistant
+#405 assistant
+#407 assistant
+#409 assistant
+#411 assistant
+#412 assistant
+#414 assistant
+#415 assistant
+#417 assistant
+#418 assistant
+#420 assistant
+#421 assistant
+#423 assistant
+#424 assistant
+#426 assistant
+#427 assistant
+#429 assistant
+#431 assistant
+#433 assistant
+#434 assistant
+#436 assistant
+#438 assistant
+#439 assistant
+#441 assistant
+#442 assistant
+#444 assistant
+#445 assistant
+#447 assistant
+#449 assistant
+#450 assistant
+#452 assistant
+#454 assistant
+#456 assistant
+#458 assistant
+#460 assistant
+#461 assistant
+#463 assistant
+#465 assistant
+#466 assistant
+#468 assistant
+#470 assistant
+#471 user
+#472 assistant
+#473 assistant
+#475 assistant
+#477 assistant
+#479 assistant
+#481 assistant
+#482 user
+#483 assistant
+#484 assistant
+#486 assistant
+#488 assistant
+#489 assistant
+#491 assistant
+#493 assistant
+#494 assistant
+#496 assistant
+#498 assistant
+#499 assistant
+#501 assistant
+#502 user
+#503 user
+#504 user
+#505 user
+#506 user
+#507 user
+✅ Created 2025-07-22_18-19-02Z-please-analyze-the-codebase-structure.md
+Done!
+Line #1 is already skipped, skipping
+Line #5 is already skipped, skipping
+Line #11 is already processed, skipping
+Line #15 is already processed, skipping
+Line #16 is already processed, skipping
+Line #20 is already processed, skipping
+Line #21 is already processed, skipping
+Line #30 is already processed, skipping
+Line #31 is already processed, skipping
+Line #32 is already processed, skipping
+Line #33 is already processed, skipping
+Line #34 is already processed, skipping
+Line #35 is already processed, skipping
+Line #36 is already processed, skipping
+Line #40 is already processed, skipping
+Line #41 is already processed, skipping
+Line #44 is already processed, skipping
+Line #46 is already processed, skipping
+Line #49 is already processed, skipping
+Line #54 is already processed, skipping
+Line #56 is already processed, skipping
+Line #58 is already processed, skipping
+Line #60 is already processed, skipping
+Line #62 is already processed, skipping
+Line #64 is already processed, skipping
+Line #69 is already processed, skipping
+Line #74 is already processed, skipping
+Line #76 is already processed, skipping
+Line #78 is already processed, skipping
+Line #80 is already processed, skipping
+Line #82 is already processed, skipping
+Line #87 is already processed, skipping
+Line #90 is already processed, skipping
+Line #92 is already processed, skipping
+Line #94 is already processed, skipping
+Line #96 is already processed, skipping
+Line #98 is already processed, skipping
+Line #100 is already processed, skipping
+Line #103 is already processed, skipping
+Line #105 is already processed, skipping
+Line #107 is already processed, skipping
+Line #110 is already processed, skipping
+Line #112 is already processed, skipping
+Line #114 is already processed, skipping
+Line #117 is already processed, skipping
+Line #119 is already processed, skipping
+Line #121 is already processed, skipping
+Line #124 is already processed, skipping
+Line #126 is already processed, skipping
+Line #128 is already processed, skipping
+Line #134 is already processed, skipping
+Line #137 is already processed, skipping
+Line #140 is already processed, skipping
+Line #142 is already processed, skipping
+Line #145 is already processed, skipping
+Line #147 is already processed, skipping
+Line #149 is already processed, skipping
+Line #152 is already processed, skipping
+Line #154 is already processed, skipping
+Line #156 is already processed, skipping
+Line #159 is already processed, skipping
+Line #161 is already processed, skipping
+Line #163 is already processed, skipping
+Line #166 is already processed, skipping
+Line #168 is already processed, skipping
+Line #170 is already processed, skipping
+Line #173 is already processed, skipping
+Line #175 is already processed, skipping
+Line #177 is already processed, skipping
+Line #180 is already processed, skipping
+Line #182 is already processed, skipping
+Line #184 is already processed, skipping
+Line #187 is already processed, skipping
+Line #189 is already processed, skipping
+Line #191 is already processed, skipping
+Line #194 is already processed, skipping
+Line #196 is already processed, skipping
+Line #198 is already processed, skipping
+Line #201 is already processed, skipping
+Line #203 is already processed, skipping
+Line #209 is already processed, skipping
+Line #211 is already processed, skipping
+Line #213 is already processed, skipping
+Line #215 is already processed, skipping
+Line #217 is already processed, skipping
+Line #219 is already processed, skipping
+Line #222 is already processed, skipping
+Line #224 is already processed, skipping
+Line #226 is already processed, skipping
+Line #228 is already processed, skipping
+Line #231 is already processed, skipping
+Line #234 is already processed, skipping
+Line #237 is already processed, skipping
+Line #239 is already processed, skipping
+Line #242 is already processed, skipping
+Line #245 is already processed, skipping
+Line #248 is already processed, skipping
+Line #251 is already processed, skipping
+Line #257 is already processed, skipping
+Line #260 is already processed, skipping
+Line #263 is already processed, skipping
+Line #266 is already processed, skipping
+Line #269 is already processed, skipping
+Line #271 is already processed, skipping
+Line #274 is already processed, skipping
+Line #277 is already processed, skipping
+Line #280 is already processed, skipping
+Line #283 is already processed, skipping
+Line #286 is already processed, skipping
+Line #288 is already processed, skipping
+Line #290 is already processed, skipping
+Line #293 is already processed, skipping
+Line #296 is already processed, skipping
+Line #299 is already processed, skipping
+Line #302 is already processed, skipping
+Line #305 is already processed, skipping
+Line #308 is already processed, skipping
+Line #311 is already processed, skipping
+Line #313 is already processed, skipping
+Line #315 is already processed, skipping
+Line #318 is already processed, skipping
+Line #321 is already processed, skipping
+Line #324 is already processed, skipping
+Line #327 is already processed, skipping
+Line #330 is already processed, skipping
+Line #333 is already processed, skipping
+Line #335 is already processed, skipping
+Line #338 is already processed, skipping
+Line #341 is already processed, skipping
+Line #344 is already processed, skipping
+Line #346 is already processed, skipping
+Line #349 is already processed, skipping
+Line #354 is already processed, skipping
+Line #356 is already processed, skipping
+Line #358 is already processed, skipping
+Line #363 is already processed, skipping
+Line #366 is already processed, skipping
+Line #368 is already processed, skipping
+Line #370 is already processed, skipping
+Line #373 is already processed, skipping
+Line #376 is already processed, skipping
+Line #378 is already processed, skipping
+Line #380 is already processed, skipping
+Line #382 is already processed, skipping
+Line #384 is already processed, skipping
+Line #386 is already processed, skipping
+Line #388 is already processed, skipping
+Line #390 is already processed, skipping
+Line #393 is already processed, skipping
+Line #395 is already processed, skipping
+Line #397 is already processed, skipping
+Line #399 is already processed, skipping
+Line #401 is already processed, skipping
+Line #403 is already processed, skipping
+Line #406 is already processed, skipping
+Line #408 is already processed, skipping
+Line #410 is already processed, skipping
+Line #413 is already processed, skipping
+Line #416 is already processed, skipping
+Line #419 is already processed, skipping
+Line #422 is already processed, skipping
+Line #425 is already processed, skipping
+Line #428 is already processed, skipping
+Line #430 is already processed, skipping
+Line #432 is already processed, skipping
+Line #435 is already processed, skipping
+Line #437 is already processed, skipping
+Line #440 is already processed, skipping
+Line #443 is already processed, skipping
+Line #446 is already processed, skipping
+Line #448 is already processed, skipping
+Line #451 is already processed, skipping
+Line #453 is already processed, skipping
+Line #455 is already processed, skipping
+Line #457 is already processed, skipping
+Line #459 is already processed, skipping
+Line #462 is already processed, skipping
+Line #464 is already processed, skipping
+Line #467 is already processed, skipping
+Line #469 is already processed, skipping
+Line #474 is already processed, skipping
+Line #476 is already processed, skipping
+Line #478 is already processed, skipping
+Line #480 is already processed, skipping
+Line #485 is already processed, skipping
+Line #487 is already processed, skipping
+Line #490 is already processed, skipping
+Line #492 is already processed, skipping
+Line #495 is already processed, skipping
+Line #497 is already processed, skipping
+Line #500 is already processed, skipping
+Skipping empty content on line #503

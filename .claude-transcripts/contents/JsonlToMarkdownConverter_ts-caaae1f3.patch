@@ -1,0 +1,23 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -27,7 +27,17 @@
+ 
+     const markdownSections = this.processEntries()
+ 
+-    return markdownSections.length > 0 ? markdownSections.join('\n\n') : null
++    if (markdownSections.length === 0) {
++      return null
++    }
++
++    // Generate header if we have meta information
++    const header = this.generateHeader()
++    if (header) {
++      markdownSections.unshift(header)
++    }
++
++    return markdownSections.join('\n\n')
+   }
+ 
+   private reset() {

@@ -1,0 +1,22 @@
+diff --git a/Users/michael/Projects/oss/graph-monitor/CLAUDE.md b/Users/michael/Projects/oss/graph-monitor/CLAUDE.md
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/graph-monitor/CLAUDE.md
++++ b/Users/michael/Projects/oss/graph-monitor/CLAUDE.md
+@@ -26,7 +26,6 @@
+ ```bash
+ # Install dependencies
+ npm install
+-cd data-capture && npm install
+ 
+ # Run data capture only
+ npm run capture
+@@ -36,6 +35,9 @@
+ 
+ # Run both components
+ npm start
++
++# Run in development mode with file watching
++npm run dev
+ ```
+ 
+ ## Important Technical Details

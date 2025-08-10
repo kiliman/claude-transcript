@@ -140,7 +140,7 @@ export function createImageFile(
     .substring(0, 8)
   const extension = mediaType.split('/')[1] || 'png'
   const filename = `image-${uuid || hash}.${extension}`
-  const savedPath = join('.claude-transcripts/contents', filename)
+  const savedPath = join('transcripts/contents', filename)
 
   // Write the image file
   writeFileSync(savedPath, Buffer.from(base64Data, 'base64'))

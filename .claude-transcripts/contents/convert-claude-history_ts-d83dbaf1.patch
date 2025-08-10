@@ -1,0 +1,22 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/convert-claude-history.ts
+@@ -8,12 +8,14 @@
+ import { join, basename } from 'node:path'
+ import { createHash } from 'node:crypto'
+ import type {
++  Content,
+   Entry,
+-  StateType,
++  File,
+   Item,
+-  ToolUseResult,
+-  Content,
++  StateType,
+   StructuredPatch,
++  Todo,
++  ToolUseResult,
+ } from './types.ts'
+ import { EntrySchema } from './types.ts'
+ 

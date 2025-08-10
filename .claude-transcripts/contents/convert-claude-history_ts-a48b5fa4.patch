@@ -1,0 +1,23 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -239,11 +239,15 @@
+         output.push(processedContent);
+         output.push('```');
+       } else {
+-        output.push('```');
+-        output.push(typeof entry.toolUseResult === 'string' 
++        // Handle non-file toolUseResult
++        const content = typeof entry.toolUseResult === 'string' 
+           ? entry.toolUseResult 
+-          : JSON.stringify(entry.toolUseResult, null, 2));
++          : JSON.stringify(entry.toolUseResult, null, 2);
++        const { content: processedContent } = handleLargeContent(content);
++        
+         output.push('```');
++        output.push(processedContent);
++        output.push('```');
+       }
+     } else if (entry.message.content.content) {
+       // Fallback to tool_result content if no toolUseResult

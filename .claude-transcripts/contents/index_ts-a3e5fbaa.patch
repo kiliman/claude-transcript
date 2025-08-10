@@ -1,0 +1,20 @@
+diff --git a/Users/michael/Projects/oss/graph-monitor/data-capture/index.ts b/Users/michael/Projects/oss/graph-monitor/data-capture/index.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/graph-monitor/data-capture/index.ts
++++ b/Users/michael/Projects/oss/graph-monitor/data-capture/index.ts
+@@ -1,9 +1,9 @@
+-import ConfigLoader from './config.js';
+-import Database from './database.js';
+-import MetricScheduler from './scheduler.js';
+-import RollupManager from './rollup.js';
+-import ChartGenerator from './chartGenerator.js';
+-import createLogger from './logger.js';
++import ConfigLoader from './config.ts';
++import Database from './database.ts';
++import MetricScheduler from './scheduler.ts';
++import RollupManager from './rollup.ts';
++import ChartGenerator from './chartGenerator.ts';
++import createLogger from './logger.ts';
+ import { watchFile, unwatchFile, existsSync, mkdirSync } from 'node:fs';
+ import { join, dirname } from 'node:path';
+ import { fileURLToPath } from 'node:url';

@@ -1,0 +1,25 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -19,7 +19,7 @@
+     this.isDebug = isDebug
+   }
+ 
+-  convert(jsonlPath: string): string | null {
++  convert(jsonlPath: string): { content: string; filename: string } | null {
+     console.log(`Processing file: ${jsonlPath}`)
+     this.reset()
+ 
+@@ -38,7 +38,10 @@
+       markdownSections.unshift(header)
+     }
+ 
+-    return markdownSections.join('\n\n')
++    const content = markdownSections.join('\n\n')
++    const filename = this.generateFilename()
++
++    return { content, filename }
+   }
+ 
+   private reset() {

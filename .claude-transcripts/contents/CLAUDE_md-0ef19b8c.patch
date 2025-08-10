@@ -1,0 +1,23 @@
+diff --git a/Users/michael/Projects/oss/graph-monitor/CLAUDE.md b/Users/michael/Projects/oss/graph-monitor/CLAUDE.md
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/graph-monitor/CLAUDE.md
++++ b/Users/michael/Projects/oss/graph-monitor/CLAUDE.md
+@@ -43,12 +43,12 @@
+ ## Important Technical Details
+ 
+ ### Data Flow
+-1. `config.js` defines metrics (shell commands) and graph specifications
+-2. Scheduler (`scheduler.js`) executes commands based on intervals
+-3. Executor (`executor.js`) parses command output for duration and status
+-4. Database (`database.js`) stores raw metrics and manages rollups
+-5. Chart generator (`chart-generator.js`) creates PNG files from data
+-6. HTTP server serves charts from `/charts` directory
++1. `config.json` defines metrics (shell commands) and graph specifications
++2. Scheduler (`src/scheduler.ts`) executes commands based on intervals
++3. Executor (`src/executor.ts`) parses command output for duration and status
++4. Database (`src/database.ts`) stores raw metrics and manages rollups
++5. Chart generator (`src/chartGenerator.ts`) creates PNG files from data
++6. HTTP server serves charts from `/web/charts` directory
+ 
+ ### Database Schema
+ - `metrics` table: Raw metric data (id, timestamp, name, value, status)

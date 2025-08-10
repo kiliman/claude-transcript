@@ -1,0 +1,35 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -45,23 +45,21 @@
+           output.push(...lines.map(line => `> ${line}`));
+         }
+       } else if (contentItem.type === 'tool_result') {
+-        // Output tool result content with blockquotes
++        // Output tool result content without blockquotes
+         if (contentItem.content) {
+-          output.push('> ```');
++          output.push('```');
+           const contentStr = typeof contentItem.content === 'string'
+             ? contentItem.content
+             : JSON.stringify(contentItem.content, null, 2);
+-          const contentLines = contentStr.split('\n');
+-          output.push(...contentLines.map(line => `> ${line}`));
+-          output.push('> ```');
++          output.push(contentStr);
++          output.push('```');
+         }
+ 
+         // Output toolUseResult if available at the message level
+         if (entry.message.toolUseResult) {
+-          output.push('> ```json');
+-          const jsonLines = JSON.stringify(entry.message.toolUseResult, null, 2).split('\n');
+-          output.push(...jsonLines.map(line => `> ${line}`));
+-          output.push('> ```');
++          output.push('```json');
++          output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
++          output.push('```');
+         }
+       }
+     }

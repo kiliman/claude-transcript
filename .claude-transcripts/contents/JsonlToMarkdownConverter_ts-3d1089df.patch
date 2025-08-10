@@ -1,0 +1,21 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -83,6 +83,16 @@
+     entries.forEach(({ entry, lineNumber }) => {
+       assert(entry.uuid, `Entry on line ${lineNumber} is missing UUID`)
+ 
++      // Capture meta entry
++      if (entry.isMeta === true && !this.metaEntry) {
++        this.metaEntry = entry
++      }
++
++      // Track last timestamp
++      if (entry.timestamp) {
++        this.lastTimestamp = entry.timestamp
++      }
++
+       const state: StateType = entry.isMeta === true ? 'skipped' : 'pending'
+ 
+       const item: Item = {

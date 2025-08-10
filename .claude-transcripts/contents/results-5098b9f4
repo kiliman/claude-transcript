@@ -1,0 +1,17 @@
+Error: Command timed out after 5s (node:72903) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+> graph-monitor@1.0.0 capture
+> node src/index.ts
+
+[32minfo[39m: Starting Data Capture Service... {"timestamp":"2025-07-22 19:51:48"}
+[32minfo[39m: Loading configuration... {"timestamp":"2025-07-22 19:51:48"}
+[32minfo[39m: Initializing database... {"timestamp":"2025-07-22 19:51:48"}
+[32minfo[39m: Rollup manager started - will calculate rollups on metric capture {"timestamp":"2025-07-22 19:51:48"}
+[32minfo[39m: Started metric collection - running all metrics every minute {"timestamp":"2025-07-22 19:51:48"}
+[32minfo[39m: Generated index.html {"timestamp":"2025-07-22 19:51:48"}
+[32minfo[39m: Chart generation complete: 3 regenerated, 0 skipped {"timestamp":"2025-07-22 19:51:48"}
+[32minfo[39m: Started periodic chart generation (updates every minute) {"timestamp":"2025-07-22 19:51:48"}
+[32minfo[39m: Watching config file for changes: /Users/michael/Projects/oss/graph-monitor/config.json {"timestamp":"2025-07-22 19:51:48"}
+[32minfo[39m: Data Capture Service started successfully {"timestamp":"2025-07-22 19:51:48"}

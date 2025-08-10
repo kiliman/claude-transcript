@@ -1,0 +1,22 @@
+diff --git a/Users/michael/Projects/oss/graph-monitor/package.json b/Users/michael/Projects/oss/graph-monitor/package.json
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/graph-monitor/package.json
++++ b/Users/michael/Projects/oss/graph-monitor/package.json
+@@ -3,11 +3,14 @@
+   "version": "1.0.0",
+   "description": "System monitoring with static chart generation",
+   "type": "module",
++  "engines": {
++    "node": ">=24.0.0"
++  },
+   "scripts": {
+-    "capture": "node --experimental-strip-types src/index.ts",
+-    "serve": "node --experimental-strip-types web/serve-charts.ts",
++    "capture": "node src/index.ts",
++    "serve": "node web/serve-charts.ts",
+     "start": "npm run capture & npm run serve",
+-    "dev": "node --experimental-strip-types --watch src/index.ts"
++    "dev": "node --watch src/index.ts"
+   },
+   "dependencies": {
+     "chart.js": "^4.5.0",

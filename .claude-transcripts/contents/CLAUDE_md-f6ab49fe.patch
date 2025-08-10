@@ -1,0 +1,23 @@
+diff --git a/Users/michael/Projects/oss/graph-monitor/CLAUDE.md b/Users/michael/Projects/oss/graph-monitor/CLAUDE.md
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/graph-monitor/CLAUDE.md
++++ b/Users/michael/Projects/oss/graph-monitor/CLAUDE.md
+@@ -10,14 +10,14 @@
+ 
+ The system consists of two main components:
+ 
+-1. **Data Capture Component** (`/data-capture`):
++1. **Data Capture Component** (`/src`):
+    - Executes configured shell commands periodically
+-   - Stores metrics in SQLite database (`metrics.db`)
++   - Stores metrics in SQLite database (`/data/metrics.db`)
+    - Performs automatic data rollups (5m, 30m, 1h, 2h, 4h, 12h, 24h intervals)
+    - Generates static PNG charts using Chart.js
+ 
+-2. **Web Server Component** (`serve-charts.js`):
+-   - Serves static chart PNG files from `/charts` directory
++2. **Web Server Component** (`/web/serve-charts.ts`):
++   - Serves static chart PNG files from `/web/charts` directory
+    - Provides index.html for viewing charts
+    - Runs on port 8080
+ 

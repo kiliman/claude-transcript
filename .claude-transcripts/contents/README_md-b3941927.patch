@@ -1,0 +1,52 @@
+diff --git a/Users/michael/Projects/oss/graph-monitor/README.md b/Users/michael/Projects/oss/graph-monitor/README.md
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/graph-monitor/README.md
++++ b/Users/michael/Projects/oss/graph-monitor/README.md
+@@ -92,22 +92,40 @@
+ <example>
+ 
+ 
+-## Graph Web App
++## Chart Generation & Web Server
+ 
+-The Graph Web App will be a Vite+React app that will use the config to generate a series
+-of graphs of the captured data. Use the `recharts` package to render the graphs.
++The data capture process automatically generates static PNG charts based on the configuration using Chart.js. These charts are saved to the `/charts` directory and served by a simple HTTP server.
+ 
+-Graphs are configured in the config.json file.
++A web server runs on port 8080 to serve these static charts through a simple HTML interface.
+ 
+-For each graph, the key is the title of the chart.
++### Running the Application
+ 
++```bash
++# Install dependencies
++npm install
++cd data-capture && npm install
++
++# Run both data capture and web server
++npm start
++
++# Or run components separately
++npm run capture  # Run data capture only
++npm run serve    # Run web server only
++```
++
++### Graph Configuration
++
++Graphs are configured in the config.json file. For each graph, the key is the title of the chart.
++
+ We specify the following:
+ 
+ - source
+     - latest: get from captured metrics
+     - rollup-interval: rollup-5m gets the rollup values from the appropriate interval
+ - limit: limit entries up to (1h = 1 hour, etc) `timestamp >= Date.now - limit`
+-- type: chart type from `recharts`
+-- x-axis: value name used for x-axis data (timestamp): convert timestamp to actual formatted date/time
++- type: chart type (currently supports LineChart)
++- x-axis: value name used for x-axis data (timestamp): converted to formatted date/time
+ - y-axis: value name used for y-axis data (duration)
+ 
++Charts are regenerated every 5 minutes as new data is collected.
++

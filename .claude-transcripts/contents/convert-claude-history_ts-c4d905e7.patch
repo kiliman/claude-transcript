@@ -1,0 +1,22 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -220,11 +220,16 @@
+           const contentStr = typeof contentItem.content === 'string'
+             ? contentItem.content
+             : JSON.stringify(contentItem.content, null, 2);
+-          const { content: processedContent } = handleLargeContent(contentStr);
++          const { content: processedContent, savedPath, remainingLines } = handleLargeContent(contentStr);
+           
+           output.push('```');
+           output.push(processedContent);
+           output.push('```');
++          
++          // Add truncation notice outside code fence
++          if (savedPath && remainingLines) {
++            output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
++          }
+         }
+       }
+     }

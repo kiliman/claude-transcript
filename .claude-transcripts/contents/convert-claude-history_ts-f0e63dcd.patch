@@ -1,0 +1,27 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -163,10 +163,10 @@
+     }
+   } else if (typeof entry.message.content === 'object' && entry.message.content.type === 'tool_result') {
+     // Prefer toolUseResult over tool_result content
+-    if (entry.message.toolUseResult) {
++    if (entry.toolUseResult) {
+       // Check if toolUseResult has a file object
+-      if (entry.message.toolUseResult.file) {
+-        const file = entry.message.toolUseResult.file;
++      if (entry.toolUseResult.file) {
++        const file = entry.toolUseResult.file;
+         output.push(file.filePath);
+         
+         // Determine language from file extension
+@@ -178,7 +178,7 @@
+         output.push('```');
+       } else {
+         output.push('```json');
+-        output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
++        output.push(JSON.stringify(entry.toolUseResult, null, 2));
+         output.push('```');
+       }
+     } else if (entry.message.content.content) {

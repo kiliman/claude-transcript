@@ -1,0 +1,27 @@
+- /Users/michael/Projects/oss/graph-monitor/
+  - README.md
+  - charts/
+    - index.html
+    - response-time-mail-bigdeskenergy-com-last-24-hours.png
+    - response-time-mail-bigdeskenergy-com-last-6-hours.png
+    - response-time-mail-bigdeskenergy-com-last-hour.png
+  - config.json
+  - data-capture/
+    - chartGenerator.js
+    - config.js
+    - database.js
+    - executor.js
+    - index.js
+    - logger.js
+    - node_modules/
+    - package-lock.json
+    - package.json
+    - rollup.js
+    - scheduler.js
+  - implementation-checklists.md
+  - logs/
+    - combined.log
+    - error.log
+  - metrics.db
+  - package.json
+  - serve-charts.js

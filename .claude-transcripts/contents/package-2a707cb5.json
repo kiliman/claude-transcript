@@ -1,0 +1,17 @@
+{
+  "name": "graph-monitor",
+  "version": "1.0.0",
+  "description": "System monitoring with static chart generation",
+  "type": "module",
+  "scripts": {
+    "capture": "cd data-capture && npm start",
+    "serve": "node --experimental-strip-types serve-charts.ts",
+    "start": "npm run capture & npm run serve"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

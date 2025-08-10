@@ -1,0 +1,21 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -251,12 +251,14 @@
+       }
+     } else if (entry.message.content.content) {
+       // Fallback to tool_result content if no toolUseResult
+-      output.push('```');
+       const contentStr = typeof entry.message.content.content === 'string'
+         ? entry.message.content.content
+         : JSON.stringify(entry.message.content.content, null, 2);
+-      output.push(contentStr);
++      const { content: processedContent } = handleLargeContent(contentStr);
++      
+       output.push('```');
++      output.push(processedContent);
++      output.push('```');
+     }
+   } else {
+     // Unknown format

@@ -1,0 +1,25 @@
+diff --git a/Users/michael/Projects/oss/graph-monitor/package.json b/Users/michael/Projects/oss/graph-monitor/package.json
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/graph-monitor/package.json
++++ b/Users/michael/Projects/oss/graph-monitor/package.json
+@@ -6,10 +6,19 @@
+   "scripts": {
+     "capture": "node --experimental-strip-types src/index.ts",
+     "serve": "node --experimental-strip-types web/serve-charts.ts",
+-    "start": "npm run capture & npm run serve"
++    "start": "npm run capture & npm run serve",
++    "dev": "node --experimental-strip-types --watch src/index.ts"
+   },
++  "dependencies": {
++    "chart.js": "^4.5.0",
++    "chartjs-node-canvas": "^5.0.0",
++    "date-fns": "^4.1.0",
++    "sqlite3": "^5.1.7",
++    "winston": "^3.17.0"
++  },
+   "devDependencies": {
+     "@types/node": "^22.0.0",
++    "nodemon": "^3.1.10",
+     "typescript": "^5.5.0"
+   },
+   "author": "",

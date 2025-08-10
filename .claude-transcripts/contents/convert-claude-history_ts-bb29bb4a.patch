@@ -1,0 +1,17 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -111,10 +111,10 @@
+       // Process user and assistant entries
+       if (entry.type === 'user') {
+         hasValidEntries = true;
+-        markdownSections.push(processUserEntry(entry, index + 1));
++        markdownSections.push(`### Line #${index + 1}\n\n${processUserEntry(entry, index + 1)}`);
+       } else if (entry.type === 'assistant') {
+         hasValidEntries = true;
+-        markdownSections.push(processAssistantEntry(entry, index + 1));
++        markdownSections.push(`### Line #${index + 1}\n\n${processAssistantEntry(entry, index + 1)}`);
+       }
+     } catch (error) {
+       console.error(`Error parsing line ${index + 1} in ${jsonlPath}:`, error);

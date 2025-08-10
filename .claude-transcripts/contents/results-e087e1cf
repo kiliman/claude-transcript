@@ -1,0 +1,4 @@
+Error: jq: error: syntax error, unexpected INVALID_CHARACTER, expecting ';' or ')' at <top-level>, line 1, column 44:
+    select(.type == "assistant" or .parentUuid \!= null) | {type, uuid, parentUuid, message: (.message | {type, content: (.content | if type == "array" then (.[0:1] | map({type, id, tool_use_id})) else . end)})}
+                                               ^
+jq: 1 compile error

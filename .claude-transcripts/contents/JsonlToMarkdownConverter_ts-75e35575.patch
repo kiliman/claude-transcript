@@ -1,0 +1,42 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -443,4 +443,36 @@
+     }
+     return emojiMap[toolName.toLowerCase()] || '🛠️'
+   }
++
++  private generateHeader(): string | null {
++    if (!this.metaEntry || !this.metaEntry.cwd) {
++      return null
++    }
++
++    const lines: string[] = [
++      '# Claude Code Transcript',
++      `## ${this.getDirectoryName(this.metaEntry.cwd)}`,
++    ]
++
++    // Format timestamps
++    if (this.metaEntry.timestamp) {
++      const startTime = this.formatTimestamp(this.metaEntry.timestamp)
++      const endTime = this.lastTimestamp ? this.formatTimestamp(this.lastTimestamp) : startTime
++      lines.push(`${startTime} - ${endTime}`)
++    }
++
++    return lines.join('\n')
++  }
++
++  private getDirectoryName(cwd: string): string {
++    // Extract just the directory name from the full path
++    const parts = cwd.split('/')
++    return parts[parts.length - 1] || cwd
++  }
++
++  private formatTimestamp(timestamp: string): string {
++    // Convert ISO timestamp to UTC format without milliseconds
++    const date = new Date(timestamp)
++    return date.toISOString().replace(/\.\d{3}Z$/, 'Z')
++  }
+ }
+\ No newline at end of file

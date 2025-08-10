@@ -1,0 +1,96 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -13,14 +13,16 @@
+   isMeta?: boolean;
+ }
+ 
+-function processUserEntry(entry: Entry, lineNumber: number): string {
++function processUserEntry(entry: Entry, lineNumber: number): string | null {
+   const output: string[] = [];
+   
+   if (typeof entry.message.content === 'string') {
+     // Parse for command elements
+     const text = entry.message.content;
+-    if (text.includes('<command-name>')) {
+-      output.push(...parseCommandContent(text));
++    if (text.includes('<command-name>') || text.includes('<local-command-stdout>')) {
++      const parsed = parseCommandContent(text);
++      if (parsed === null) return null; // Skip empty stdout entries
++      output.push(...parsed);
+     } else {
+       // Convert to blockquote
+       const lines = text.split('\n');
+@@ -33,41 +35,47 @@
+         const text = contentItem.text;
+         // Parse for command elements
+         if (text.includes('<command-name>') || text.includes('<local-command-stdout>')) {
+-          output.push(...parseCommandContent(text));
++          const parsed = parseCommandContent(text);
++          if (parsed === null) return null; // Skip empty stdout entries
++          output.push(...parsed);
+         } else {
+           // Convert text to blockquote
+           const lines = text.split('\n');
+           output.push(...lines.map(line => `> ${line}`));
+         }
+       } else if (contentItem.type === 'tool_result') {
+-        // Output tool result content
++        // Output tool result content with blockquotes
+         if (contentItem.content) {
+-          output.push('```');
+-          output.push(contentItem.content);
+-          output.push('```');
++          output.push('> ```');
++          const contentLines = contentItem.content.split('\n');
++          output.push(...contentLines.map(line => `> ${line}`));
++          output.push('> ```');
+         }
+         
+         // Output toolUseResult if available at the message level
+         if (entry.message.toolUseResult) {
+-          output.push('```json');
+-          output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
+-          output.push('```');
++          output.push('> ```json');
++          const jsonLines = JSON.stringify(entry.message.toolUseResult, null, 2).split('\n');
++          output.push(...jsonLines.map(line => `> ${line}`));
++          output.push('> ```');
+         }
+       }
+     }
+   } else if (typeof entry.message.content === 'object' && entry.message.content.type === 'tool_result') {
+-    // Output tool result content
++    // Output tool result content with blockquotes
+     if (entry.message.content.content) {
+-      output.push('```');
+-      output.push(entry.message.content.content);
+-      output.push('```');
++      output.push('> ```');
++      const contentLines = entry.message.content.content.split('\n');
++      output.push(...contentLines.map(line => `> ${line}`));
++      output.push('> ```');
+     }
+     
+     // Output toolUseResult
+     if (entry.message.toolUseResult) {
+-      output.push('```json');
+-      output.push(JSON.stringify(entry.message.toolUseResult, null, 2));
+-      output.push('```');
++      output.push('> ```json');
++      const jsonLines = JSON.stringify(entry.message.toolUseResult, null, 2).split('\n');
++      output.push(...jsonLines.map(line => `> ${line}`));
++      output.push('> ```');
+     }
+   } else {
+     // Unknown format
+@@ -77,7 +85,7 @@
+     output.push('```');
+   }
+   
+-  return output.join('\n');
++  return output.length > 0 ? output.join('\n') : null;
+ }
+ 
+ function parseCommandContent(text: string): string[] | null {

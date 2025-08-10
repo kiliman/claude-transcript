@@ -1,0 +1,95 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -17,16 +17,28 @@
+   const output: string[] = [];
+   
+   if (typeof entry.message.content === 'string') {
+-    // Convert to blockquote
+-    const lines = entry.message.content.split('\n');
+-    output.push(...lines.map(line => `> ${line}`));
++    // Parse for command elements
++    const text = entry.message.content;
++    if (text.includes('<command-name>')) {
++      output.push(...parseCommandContent(text));
++    } else {
++      // Convert to blockquote
++      const lines = text.split('\n');
++      output.push(...lines.map(line => `> ${line}`));
++    }
+   } else if (Array.isArray(entry.message.content)) {
+     // Handle array format (common in newer entries)
+     for (const contentItem of entry.message.content) {
+       if (contentItem.type === 'text' && contentItem.text) {
+-        // Convert text to blockquote
+-        const lines = contentItem.text.split('\n');
+-        output.push(...lines.map(line => `> ${line}`));
++        const text = contentItem.text;
++        // Parse for command elements
++        if (text.includes('<command-name>') || text.includes('<local-command-stdout>')) {
++          output.push(...parseCommandContent(text));
++        } else {
++          // Convert text to blockquote
++          const lines = text.split('\n');
++          output.push(...lines.map(line => `> ${line}`));
++        }
+       } else if (contentItem.type === 'tool_result') {
+         // Output tool result content
+         if (contentItem.content) {
+@@ -68,6 +80,55 @@
+   return output.join('\n');
+ }
+ 
++function parseCommandContent(text: string): string[] {
++  const output: string[] = [];
++  
++  // Extract command name
++  const commandNameMatch = text.match(/<command-name>([^<]*)<\/command-name>/);
++  const commandName = commandNameMatch ? commandNameMatch[1].trim() : '';
++  
++  // Extract command args
++  const commandArgsMatch = text.match(/<command-args>([^<]*)<\/command-args>/);
++  const commandArgs = commandArgsMatch ? commandArgsMatch[1].trim() : '';
++  
++  // Extract command message
++  const commandMessageMatch = text.match(/<command-message>([^<]*)<\/command-message>/);
++  const commandMessage = commandMessageMatch ? commandMessageMatch[1].trim() : '';
++  
++  // Extract stdout
++  const stdoutMatch = text.match(/<local-command-stdout>([\s\S]*?)<\/local-command-stdout>/);
++  const stdout = stdoutMatch ? stdoutMatch[1].trim() : '';
++  
++  // Format command if we have it
++  if (commandName) {
++    const fullCommand = commandArgs ? `${commandName} ${commandArgs}` : commandName;
++    output.push(`\`${fullCommand}\``);
++    
++    // Add message after command if present
++    if (commandMessage && commandMessage !== commandName) {
++      output.push(commandMessage);
++    }
++  } else if (commandMessage) {
++    // Just output the message if no command name
++    output.push(commandMessage);
++  }
++  
++  // Add stdout in bash code fence if present
++  if (stdout) {
++    output.push('```bash');
++    output.push(stdout);
++    output.push('```');
++  }
++  
++  // If we didn't find any command elements, output as blockquote
++  if (output.length === 0) {
++    const lines = text.split('\n');
++    output.push(...lines.map(line => `> ${line}`));
++  }
++  
++  return output;
++}
++
+ function processAssistantEntry(entry: Entry, lineNumber: number): string {
+   const output: string[] = [];
+   

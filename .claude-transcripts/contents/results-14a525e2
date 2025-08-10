@@ -1,0 +1,5 @@
+Error: Command timed out after 5s (node:41341) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Chart server running at http://localhost:8080/
+Serving files from: /Users/michael/Projects/oss/graph-monitor/charts

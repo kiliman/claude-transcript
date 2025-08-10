@@ -1,0 +1,65 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
++++ b/Users/michael/Projects/oss/claude-transcript/convert-claude-history.ts
+@@ -371,6 +371,60 @@
+         const toolName = contentItem.name || 'Unknown Tool';
+         const description = contentItem.input?.description || contentItem.input?.path || contentItem.input?.file_path || '';
+         output.push(`🛠️ ${toolName}: ${description}`);
++        
++        // Look for tool result in child entries
++        const toolUseId = contentItem.id;
++        if (toolUseId) {
++          for (const child of childEntries) {
++            if (Array.isArray(child.entry.message.content)) {
++              for (const childContent of child.entry.message.content) {
++                if (childContent.type === 'tool_result' && childContent.tool_use_id === toolUseId) {
++                  // Found the matching tool result
++                  output.push('');
++                  if (childContent.content) {
++                    // Handle file content or regular content
++                    if (typeof childContent.content === 'object' && childContent.content.file) {
++                      const file = childContent.content.file;
++                      output.push(file.filePath);
++                      
++                      // Determine language from file extension
++                      const ext = file.filePath.split('.').pop()?.toLowerCase() || '';
++                      const language = getLanguageFromExtension(ext);
++                      
++                      // Handle potentially large file content
++                      const { content: processedContent, savedPath, remainingLines } = handleLargeContent(file.content, file.filePath);
++                      
++                      output.push(`\`\`\`${language}`);
++                      output.push(processedContent);
++                      output.push('```');
++                      
++                      // Add truncation notice outside code fence
++                      if (savedPath && remainingLines) {
++                        output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
++                      }
++                    } else {
++                      // Regular content
++                      const contentStr = typeof childContent.content === 'string'
++                        ? childContent.content
++                        : JSON.stringify(childContent.content, null, 2);
++                      const { content: processedContent, savedPath, remainingLines } = handleLargeContent(contentStr);
++                      
++                      output.push('```');
++                      output.push(processedContent);
++                      output.push('```');
++                      
++                      // Add truncation notice outside code fence
++                      if (savedPath && remainingLines) {
++                        output.push(`... +${remainingLines} lines ([view file](${savedPath}))`);
++                      }
++                    }
++                  }
++                  break;
++                }
++              }
++            }
++          }
++        }
+       }
+     }
+   } else if (entry.message.type === 'tool_use') {
