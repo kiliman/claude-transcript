@@ -629,7 +629,7 @@ function parseCommandContent(text: string): string[] | null {
     const fullCommand = commandArgs
       ? `${commandName} ${commandArgs}`
       : commandName
-    output.push(`> \`${fullCommand}\`\\`)
+    output.push(`> [! NOTE] \`${fullCommand}\`\\`)
   }
   if (commandMessage) {
     output.push(`> ${commandMessage}`)
@@ -691,7 +691,11 @@ function outputTextContent(item: Item, text: string) {
     if (entry.type === 'user') {
       // Convert to blockquote
       const lines = text.split('\n')
-      output.push(...lines.map((line) => `> ${line}`))
+      output.push(
+        ...lines.map(
+          (line, index) => `> ${index === 0 ? '[! NOTE] ' : ''}${line}`,
+        ),
+      )
     } else if (entry.type === 'assistant') {
       // For assistant entries, escape code fences
       output.push(escapeCodeFences(text))
