@@ -1,0 +1,32 @@
+Error: /Users/michael/Projects/oss/claude-transcript/biome.json:42:5 deserialize ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Found an unknown key `organize`.
+  
+    40 │       "attributePosition": "auto"
+    41 │     },
+  > 42 │     "organize": {
+       │     ^^^^^^^^^^
+    43 │       "imports": {
+    44 │         "enabled": true
+  
+  i Known keys:
+  
+  - parser
+  - formatter
+  - linter
+  - assist
+  - globals
+  - jsxRuntime
+  
+
+configuration ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Biome exited because the configuration resulted in errors. Please fix them.
+  
+
+
+
+> claude-transcript@1.0.1 lint /Users/michael/Projects/oss/claude-transcript
+> biome lint ./src
+
+ ELIFECYCLE  Command failed with exit code 1.

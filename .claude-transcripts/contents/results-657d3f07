@@ -1,0 +1,86 @@
+> claude-transcript@1.0.1 lint /Users/michael/Projects/oss/claude-transcript
+> biome lint ./src
+
+Checked 7 files in 3ms. No fixes applied.
+src/OutputFormatter.ts:373:33 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    371 │   formatPath(cwd: string): string {
+    372 │     // Replace user home directory with ~
+  > 373 │     const homeDir = process.env['HOME'] || process.env['USERPROFILE'] || ''
+        │                                 ^^^^^^
+    374 │     if (homeDir && cwd.startsWith(homeDir)) {
+    375 │       return cwd.replace(homeDir, '~')
+  
+  i Unsafe fix: Use a literal key instead.
+  
+    371 371 │     formatPath(cwd: string): string {
+    372 372 │       // Replace user home directory with ~
+    373     │ - ····const·homeDir·=·process.env['HOME']·||·process.env['USERPROFILE']·||·''
+        373 │ + ····const·homeDir·=·process.env.HOME·||·process.env['USERPROFILE']·||·''
+    374 374 │       if (homeDir && cwd.startsWith(homeDir)) {
+    375 375 │         return cwd.replace(homeDir, '~')
+  
+
+src/OutputFormatter.ts:373:56 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    371 │   formatPath(cwd: string): string {
+    372 │     // Replace user home directory with ~
+  > 373 │     const homeDir = process.env['HOME'] || process.env['USERPROFILE'] || ''
+        │                                                        ^^^^^^^^^^^^^
+    374 │     if (homeDir && cwd.startsWith(homeDir)) {
+    375 │       return cwd.replace(homeDir, '~')
+  
+  i Unsafe fix: Use a literal key instead.
+  
+    371 371 │     formatPath(cwd: string): string {
+    372 372 │       // Replace user home directory with ~
+    373     │ - ····const·homeDir·=·process.env['HOME']·||·process.env['USERPROFILE']·||·''
+        373 │ + ····const·homeDir·=·process.env['HOME']·||·process.env.USERPROFILE·||·''
+    374 374 │       if (homeDir && cwd.startsWith(homeDir)) {
+    375 375 │         return cwd.replace(homeDir, '~')
+  
+
+src/index.ts:30:33 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    28 │     const cwd = process.cwd()
+    29 │     const sanitizedPath = cwd.replace(/[^a-zA-Z0-9]/g, '-')
+  > 30 │     const homeDir = process.env['HOME'] || process.env['USERPROFILE'] || ''
+       │                                 ^^^^^^
+    31 │     jsonlFolderPath = join(homeDir, '.claude', 'projects', sanitizedPath)
+    32 │     console.log(`No path provided. Looking in: ${jsonlFolderPath}`)
+  
+  i Unsafe fix: Use a literal key instead.
+  
+    28 28 │       const cwd = process.cwd()
+    29 29 │       const sanitizedPath = cwd.replace(/[^a-zA-Z0-9]/g, '-')
+    30    │ - ····const·homeDir·=·process.env['HOME']·||·process.env['USERPROFILE']·||·''
+       30 │ + ····const·homeDir·=·process.env.HOME·||·process.env['USERPROFILE']·||·''
+    31 31 │       jsonlFolderPath = join(homeDir, '.claude', 'projects', sanitizedPath)
+    32 32 │       console.log(`No path provided. Looking in: ${jsonlFolderPath}`)
+  
+
+src/index.ts:30:56 lint/complexity/useLiteralKeys  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i The computed expression can be simplified without the use of a string literal.
+  
+    28 │     const cwd = process.cwd()
+    29 │     const sanitizedPath = cwd.replace(/[^a-zA-Z0-9]/g, '-')
+  > 30 │     const homeDir = process.env['HOME'] || process.env['USERPROFILE'] || ''
+       │                                                        ^^^^^^^^^^^^^
+    31 │     jsonlFolderPath = join(homeDir, '.claude', 'projects', sanitizedPath)
+    32 │     console.log(`No path provided. Looking in: ${jsonlFolderPath}`)
+  
+  i Unsafe fix: Use a literal key instead.
+  
+    28 28 │       const cwd = process.cwd()
+    29 29 │       const sanitizedPath = cwd.replace(/[^a-zA-Z0-9]/g, '-')
+    30    │ - ····const·homeDir·=·process.env['HOME']·||·process.env['USERPROFILE']·||·''
+       30 │ + ····const·homeDir·=·process.env['HOME']·||·process.env.USERPROFILE·||·''
+    31 31 │       jsonlFolderPath = join(homeDir, '.claude', 'projects', sanitizedPath)
+    32 32 │       console.log(`No path provided. Looking in: ${jsonlFolderPath}`)

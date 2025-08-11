@@ -1,0 +1,25 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+@@ -1,13 +1,18 @@
+ import { writeFileSync } from 'node:fs'
+ import { join, basename } from 'node:path'
+ import { createHash } from 'node:crypto'
+-import { filterAnsi, truncateLine, escapeCodeFences, trimBlankLines, getLanguageFromExtension } from './utils.ts'
++import { filterAnsi, truncateLine, escapeCodeFences, trimBlankLines, getLanguageFromExtension, createImageFile } from './utils.ts'
++import type { Item, Content, ToolUseResult } from './types.ts'
++import { CommandParser } from './CommandParser.ts'
++import { ToolResultFormatter } from './ToolResultFormatter.ts'
+ 
+ export class OutputFormatter {
+   private defaultSaveOnly: boolean
++  private isDebug: boolean
+ 
+-  constructor(defaultSaveOnly: boolean) {
++  constructor(defaultSaveOnly: boolean, isDebug: boolean = false) {
+     this.defaultSaveOnly = defaultSaveOnly
++    this.isDebug = isDebug
+   }
+ 
+   format(options: {

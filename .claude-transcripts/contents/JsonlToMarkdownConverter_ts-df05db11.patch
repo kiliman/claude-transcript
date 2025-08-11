@@ -1,0 +1,26 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -218,7 +218,7 @@
+       entry.type === 'user' && entry.isSidechain ? 'assistant' : entry.type
+ 
+     if (typeof entry.message.content === 'string') {
+-      const text = this.formatTextContent(
++      const text = this.outputFormatter.formatTextContent(
+         item,
+         entry.message.content,
+         entryType,
+@@ -228,10 +228,11 @@
+       entry.message.content.forEach((contentItem, index) => {
+         if (index > 0) output.push('')
+ 
+-        const formattedContent = this.formatContentItem(
++        const formattedContent = this.outputFormatter.formatContentItem(
+           item,
+           contentItem,
+           entryType,
++          this.toolUseTree,
+         )
+         if (formattedContent) output.push(formattedContent)
+       })

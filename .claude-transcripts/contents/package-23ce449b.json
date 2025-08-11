@@ -8,15 +8,7 @@
     "claude-transcript": "./src/index.ts"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "typecheck": "tsc --noEmit",
-    "lint": "biome lint ./src",
-    "lint:fix": "biome lint --write ./src",
-    "format": "biome format ./src",
-    "format:fix": "biome format --write ./src",
-    "check": "biome check ./src",
-    "check:fix": "biome check --write ./src",
-    "ci": "pnpm run typecheck && pnpm run check"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "claude",
@@ -44,9 +36,8 @@
   },
   "packageManager": "pnpm@10.12.1",
   "devDependencies": {
-    "@biomejs/biome": "^2.1.4",
     "@types/node": "^24.1.0",
-    "typescript": "^5.9.2"
+    "prettier": "^3.6.2"
   },
   "dependencies": {
     "zod": "^4.0.16"

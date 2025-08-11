@@ -1,0 +1,32 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   ../src/JsonlToMarkdownConverter.ts
+	modified:   ../src/OutputFormatter.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	2025-07-26_17-45-31Z-commandnameidecommandname-commandmessageidecommandmessage-commandargscommandargs_78c40bd8.md
+	2025-08-10_14-42-56Z-commandnameclearcommandname-commandmessageclearcommandmessage-commandargscommandargs_bc761bdf.md
+	2025-08-10_14-42-56Z-commandnameidecommandname-commandmessageidecommandmessage-commandargscommandargs_70970a80.md
+	contents/JsonlToMarkdownConverter-8df2267a.ts
+	contents/JsonlToMarkdownConverter_ts-3f83243f.patch
+	contents/JsonlToMarkdownConverter_ts-4e20d422.patch
+	contents/JsonlToMarkdownConverter_ts-d11e1f7e.patch
+	contents/JsonlToMarkdownConverter_ts-df05db11.patch
+	contents/JsonlToMarkdownConverter_ts-e3e5b8ee.patch
+	contents/JsonlToMarkdownConverter_ts-f3577f14.patch
+	contents/JsonlToMarkdownConverter_ts-fe20f8ab.patch
+	contents/OutputFormatter-31f87c1c.ts
+	contents/OutputFormatter_ts-232f3264.patch
+	contents/OutputFormatter_ts-2a285c56.patch
+	contents/OutputFormatter_ts-2a5fa29a.patch
+	contents/OutputFormatter_ts-608534da.patch
+	contents/OutputFormatter_ts-6e94ab9e.patch
+	contents/OutputFormatter_ts-c495b16d.patch
+	contents/results-529babf0
+
+no changes added to commit (use "git add" and/or "git commit -a")

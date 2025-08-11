@@ -1,0 +1,28 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -275,23 +275,6 @@
+     return null
+   }
+ 
+-  private getToolEmoji(toolName: string): string {
+-    const emojiMap: { [key: string]: string } = {
+-      ls: '📂',
+-      read: '📖',
+-      write: '✍️',
+-      edit: '✏️',
+-      multiedit: '✏️',
+-      glob: '🔍',
+-      grep: '🔍',
+-      task: '📋',
+-      todowrite: '✅',
+-      bash: '💻',
+-      webfetch: '🌐',
+-    }
+-    return emojiMap[toolName.toLowerCase()] || '🛠️'
+-  }
+-
+   private generateHeader(): string | null {
+     if (!this.metaEntry || !this.metaEntry.cwd) {
+       return null

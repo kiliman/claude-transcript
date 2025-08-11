@@ -1,0 +1,38 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+@@ -261,22 +261,30 @@
+ 
+     // Process tool results
+     const toolUseId = contentItem.id || ''
+-    const toolResults = toolUseTree.get(toolUseId) || []
++    const toolResults = this.context?.toolUseTree.get(toolUseId) || []
+ 
+     toolResults.forEach((result, index) => {
+       // separate multiple results with a blank line
+       if (index > 0) output.push('')
+ 
++      const resultItem = this.context?.itemTree.get(result.uuid)
++      if (!resultItem) {
++        console.warn(
++          `Tool result with UUID ${result.uuid} not found in ItemTree`,
++        )
++        return
++      }
++
+       if (result.toolUseResult) {
+         const formattedResult = this.formatToolResult(
+           toolName,
+-          result,
++          resultItem,
+           result.toolUseResult as ToolUseResult,
+         )
+         if (formattedResult) output.push(formattedResult)
+       } else {
+         output.push(
+-          `## Tool result for tool_use_id ${toolUseId} on line #${item.lineNumber}`,
++          `## Tool result for tool_use_id ${toolUseId} on line #${item.lineNumber} at line #${resultItem.lineNumber}`,
+         )
+         output.push('```json')
+         output.push(JSON.stringify(result, null, 2))

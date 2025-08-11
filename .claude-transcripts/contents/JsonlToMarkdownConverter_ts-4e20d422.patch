@@ -1,0 +1,30 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -1,11 +1,9 @@
+ import { readFileSync } from 'node:fs'
+ import type { Entry, Item, StateType } from './types.ts'
+ import { EntrySchema } from './types.ts'
+-import { CommandParser } from './CommandParser.ts'
+-import { ToolResultFormatter } from './ToolResultFormatter.ts'
+-import { assert, createImageFile } from './utils.ts'
+-import type { Content, ToolUseResult } from './types.ts'
++import { assert } from './utils.ts'
+ import { basename } from 'node:path'
++import { OutputFormatter } from './OutputFormatter.ts'
+ 
+ export class JsonlToMarkdownConverter {
+   private itemTree = new Map<string, Item>()
+@@ -15,9 +13,11 @@
+   private metaEntry: Entry | null = null
+   private lastTimestamp: string | null = null
+   private firstUserPrompt: string | null = null
++  private outputFormatter: OutputFormatter
+ 
+   constructor(isDebug: boolean = false) {
+     this.isDebug = isDebug
++    this.outputFormatter = new OutputFormatter(false, isDebug)
+   }
+ 
+   convert(jsonlPath: string): { content: string; filename: string } | null {

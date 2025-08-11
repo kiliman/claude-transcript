@@ -1,8 +1,7 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs'
+import { readdirSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { JsonlToMarkdownConverter } from './JsonlToMarkdownConverter.ts'
-import { assert } from './utils.ts'
 
 main()
 
@@ -20,14 +19,12 @@ function main() {
   // Determine JSONL folder path
   let jsonlFolderPath: string
   if (pathArgs.length > 0) {
-    const firstArg = pathArgs[0]
-    assert(firstArg, 'Path argument must be defined')
-    jsonlFolderPath = firstArg
+    jsonlFolderPath = pathArgs[0]
   } else {
     // Auto-detect from ~/.claude/projects/
     const cwd = process.cwd()
     const sanitizedPath = cwd.replace(/[^a-zA-Z0-9]/g, '-')
-    const homeDir = process.env['HOME'] || process.env['USERPROFILE'] || ''
+    const homeDir = process.env.HOME || process.env.USERPROFILE || ''
     jsonlFolderPath = join(homeDir, '.claude', 'projects', sanitizedPath)
     console.log(`No path provided. Looking in: ${jsonlFolderPath}`)
   }

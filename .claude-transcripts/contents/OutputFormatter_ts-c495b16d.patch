@@ -1,0 +1,30 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+@@ -225,7 +225,6 @@
+     item: Item,
+     contentItem: Content,
+     entryType: string,
+-    toolUseTree: Map<string, any[]>,
+   ): string | null {
+     switch (contentItem.type) {
+       case 'text':
+@@ -233,7 +232,7 @@
+           ? this.formatTextContent(item, contentItem.text, entryType)
+           : null
+       case 'tool_use':
+-        return this.formatToolUse(item, contentItem, toolUseTree)
++        return this.formatToolUse(item, contentItem)
+       case 'image':
+         return this.formatImage(item, contentItem)
+       default:
+@@ -244,7 +243,7 @@
+     }
+   }
+ 
+-  formatToolUse(item: Item, contentItem: Content, toolUseTree: Map<string, any[]>): string {
++  formatToolUse(item: Item, contentItem: Content): string {
+     const output: string[] = []
+     const toolName = contentItem.name || 'Unknown Tool'
+     const description = this.getToolDescription(contentItem)

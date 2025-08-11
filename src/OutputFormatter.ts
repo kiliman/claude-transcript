@@ -1,18 +1,18 @@
-import { writeFileSync } from 'node:fs'
-import { join, basename } from 'node:path'
 import { createHash } from 'node:crypto'
-import {
-  filterAnsi,
-  truncateLine,
-  escapeCodeFences,
-  trimBlankLines,
-  getLanguageFromExtension,
-  createImageFile,
-  assert,
-} from './utils.ts'
-import type { Item, Content, ToolUseResult, Entry } from './types.ts'
+import { writeFileSync } from 'node:fs'
+import { basename, join } from 'node:path'
 import { CommandParser } from './CommandParser.ts'
 import { ToolResultFormatter } from './ToolResultFormatter.ts'
+import type { Content, Entry, Item, ToolUseResult } from './types.ts'
+import {
+  assert,
+  createImageFile,
+  escapeCodeFences,
+  filterAnsi,
+  getLanguageFromExtension,
+  trimBlankLines,
+  truncateLine,
+} from './utils.ts'
 
 export interface FormatterContext {
   toolUseTree: Map<string, Entry[]>
@@ -67,8 +67,8 @@ export class OutputFormatter {
     const processed = this.processContent({
       saveOnly,
       content,
-      fileContent,
-      filePath: effectiveFilePath,
+      ...(fileContent !== undefined && { fileContent }),
+      ...(effectiveFilePath !== undefined && { filePath: effectiveFilePath }),
       codeFence,
     })
 
@@ -370,7 +370,7 @@ export class OutputFormatter {
 
   formatPath(cwd: string): string {
     // Replace user home directory with ~
-    const homeDir = process.env.HOME || process.env.USERPROFILE || ''
+    const homeDir = process.env['HOME'] || process.env['USERPROFILE'] || ''
     if (homeDir && cwd.startsWith(homeDir)) {
       return cwd.replace(homeDir, '~')
     }

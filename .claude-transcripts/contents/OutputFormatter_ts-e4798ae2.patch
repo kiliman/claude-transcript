@@ -1,0 +1,25 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+@@ -29,7 +29,7 @@
+     label?: string
+   }): string {
+     const {
+-      saveOnly = this.defaultSaveOnly,
++      saveOnly = this.context.defaultSaveOnly,
+       content,
+       fileContent,
+       filePath,
+@@ -296,9 +296,9 @@
+     toolUseResult: ToolUseResult,
+   ): string {
+     const output: string[] = []
+-    const formatter = new ToolResultFormatter(toolName, this.isDebug)
++    const formatter = new ToolResultFormatter(toolName, this.context.isDebug)
+ 
+-    if (this.isDebug) {
++    if (this.context.isDebug) {
+       output.push(
+         `### Tool Use Result for ${toolName} on line #${resultItem.lineNumber} (isSidechain: ${resultItem.entry.isSidechain})`,
+       )

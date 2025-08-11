@@ -1,0 +1,20 @@
+# 🤖 Claude Code Transcript
+## 🗂️ ~/Projects/oss/claude-transcript
+🕒 2025-08-10 14:42:56 - 2025-08-11 12:55:15
+Session ID: `bc761bdf-e1dd-4cda-b40f-7ee5c8514a3c`
+
+> [!IMPORTANT]
+> `/clear`\
+> clear
+
+> [!IMPORTANT]
+> I would like to move all the formatting methods from JsonlToMarkdownCoverter and move them to the OutputFormatter class. I think this makes more sense to put all the formatting in one class.
+
+I'll help you refactor the code to move all formatting methods from `JsonlToMarkdownConverter` to the `OutputFormatter` class. Let me start by examining both classes to understand the current structure.
+
+📖 **Read: /Users/michael/Projects/oss/claude-transcript/src/converters/JsonlToMarkdownConverter.ts**
+([view file](contents/results-529babf0))
+
+🔍 **Glob: `"**/*Converter*.ts"`**
+
+📖 **Read: /Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts**

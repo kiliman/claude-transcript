@@ -1,0 +1,18 @@
+Error: > claude-transcript@1.0.1 typecheck /Users/michael/Projects/oss/claude-transcript
+> tsc --noEmit
+
+src/CommandParser.ts(82,20): error TS2532: Object is possibly 'undefined'.
+src/index.ts(22,5): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/index.ts(27,33): error TS4111: Property 'HOME' comes from an index signature, so it must be accessed with ['HOME'].
+src/index.ts(27,53): error TS4111: Property 'USERPROFILE' comes from an index signature, so it must be accessed with ['USERPROFILE'].
+src/JsonlToMarkdownConverter.ts(6,32): error TS6133: 'FormatterContext' is declared but its value is never read.
+src/OutputFormatter.ts(67,43): error TS2379: Argument of type '{ saveOnly: boolean; content: string; fileContent: string | undefined; filePath: string | undefined; codeFence: boolean; }' is not assignable to parameter of type '{ saveOnly: boolean; content: string; fileContent?: string; filePath?: string; codeFence: boolean; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'fileContent' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/OutputFormatter.ts(373,33): error TS4111: Property 'HOME' comes from an index signature, so it must be accessed with ['HOME'].
+src/OutputFormatter.ts(373,53): error TS4111: Property 'USERPROFILE' comes from an index signature, so it must be accessed with ['USERPROFILE'].
+src/utils.ts(23,34): error TS2532: Object is possibly 'undefined'.
+src/utils.ts(28,26): error TS2532: Object is possibly 'undefined'.
+ ELIFECYCLE  Command failed with exit code 2.

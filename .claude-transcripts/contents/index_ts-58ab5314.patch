@@ -1,0 +1,29 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/index.ts b/Users/michael/Projects/oss/claude-transcript/src/index.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/index.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/index.ts
+@@ -2,6 +2,7 @@
+ import { readdirSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
+ import { join } from 'node:path'
+ import { JsonlToMarkdownConverter } from './JsonlToMarkdownConverter.ts'
++import { assert } from './utils.ts'
+ 
+ main()
+ 
+@@ -19,12 +20,14 @@
+   // Determine JSONL folder path
+   let jsonlFolderPath: string
+   if (pathArgs.length > 0) {
+-    jsonlFolderPath = pathArgs[0]
++    const firstArg = pathArgs[0]
++    assert(firstArg, 'Path argument must be defined')
++    jsonlFolderPath = firstArg
+   } else {
+     // Auto-detect from ~/.claude/projects/
+     const cwd = process.cwd()
+     const sanitizedPath = cwd.replace(/[^a-zA-Z0-9]/g, '-')
+-    const homeDir = process.env.HOME || process.env.USERPROFILE || ''
++    const homeDir = process.env['HOME'] || process.env['USERPROFILE'] || ''
+     jsonlFolderPath = join(homeDir, '.claude', 'projects', sanitizedPath)
+     console.log(`No path provided. Looking in: ${jsonlFolderPath}`)
+   }

@@ -1,0 +1,167 @@
+Error: src/JsonlToMarkdownConverter.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The imports and exports are not sorted.
+  
+  > 1 │ import { readFileSync } from 'node:fs'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    2 │ import type { Entry, Item, StateType } from './types.ts'
+    3 │ import { EntrySchema } from './types.ts'
+  
+  i Safe fix: Organize Imports (Biome)
+  
+      1   1 │   import { readFileSync } from 'node:fs'
+      2     │ - import·type·{·Entry,·Item,·StateType·}·from·'./types.ts'
+      3     │ - import·{·EntrySchema·}·from·'./types.ts'
+      4     │ - import·{·assert·}·from·'./utils.ts'
+      5     │ - import·{·basename·}·from·'node:path'
+      6     │ - import·{·OutputFormatter·}·from·'./OutputFormatter.ts'
+      7     │ - import·{·CommandParser·}·from·'./CommandParser.ts'
+          2 │ + import·{·basename·}·from·'node:path'
+          3 │ + import·{·CommandParser·}·from·'./CommandParser.ts'
+          4 │ + import·{·OutputFormatter·}·from·'./OutputFormatter.ts'
+          5 │ + import·type·{·Entry,·Item,·StateType·}·from·'./types.ts'
+          6 │ + import·{·EntrySchema·}·from·'./types.ts'
+          7 │ + import·{·assert·}·from·'./utils.ts'
+      8   8 │   
+      9   9 │   export class JsonlToMarkdownConverter {
+  
+
+src/OutputFormatter.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The imports and exports are not sorted.
+  
+  > 1 │ import { writeFileSync } from 'node:fs'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    2 │ import { join, basename } from 'node:path'
+    3 │ import { createHash } from 'node:crypto'
+  
+  i Safe fix: Organize Imports (Biome)
+  
+      1     │ - import·{·writeFileSync·}·from·'node:fs'
+      2     │ - import·{·join,·basename·}·from·'node:path'
+      3     │ - import·{·createHash·}·from·'node:crypto'
+      4     │ - import·{
+      5     │ - ··filterAnsi,
+      6     │ - ··truncateLine,
+      7     │ - ··escapeCodeFences,
+      8     │ - ··trimBlankLines,
+      9     │ - ··getLanguageFromExtension,
+     10     │ - ··createImageFile,
+     11     │ - ··assert,
+     12     │ - }·from·'./utils.ts'
+     13     │ - import·type·{·Item,·Content,·ToolUseResult,·Entry·}·from·'./types.ts'
+     14     │ - import·{·CommandParser·}·from·'./CommandParser.ts'
+     15     │ - import·{·ToolResultFormatter·}·from·'./ToolResultFormatter.ts'
+          1 │ + import·{·createHash·}·from·'node:crypto'
+          2 │ + import·{·writeFileSync·}·from·'node:fs'
+          3 │ + import·{·basename,·join·}·from·'node:path'
+          4 │ + import·{·CommandParser·}·from·'./CommandParser.ts'
+          5 │ + import·{·ToolResultFormatter·}·from·'./ToolResultFormatter.ts'
+          6 │ + import·type·{·Content,·Entry,·Item,·ToolUseResult·}·from·'./types.ts'
+          7 │ + import·{
+          8 │ + ··assert,
+          9 │ + ··createImageFile,
+         10 │ + ··escapeCodeFences,
+         11 │ + ··filterAnsi,
+         12 │ + ··getLanguageFromExtension,
+         13 │ + ··trimBlankLines,
+         14 │ + ··truncateLine,
+         15 │ + }·from·'./utils.ts'
+     16  16 │   
+     17  17 │   export interface FormatterContext {
+  
+
+src/ToolResultFormatter.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The imports and exports are not sorted.
+  
+   > 1 │ import type {
+       │ ^^^^^^^^^^^^^
+   > 2 │   Content,
+   > 3 │   File,
+   > 4 │   Item,
+   > 5 │   StructuredPatch,
+   > 6 │   Todo,
+   > 7 │   ToolUseResult,
+   > 8 │ } from './types.ts'
+       │ ^^^^^^^^^^^^^^^^^^^
+     9 │ import type { OutputFormatter } from './OutputFormatter.ts'
+    10 │ 
+  
+  i Safe fix: Organize Imports (Biome)
+  
+      1     │ - import·type·{
+      2     │ - ··Content,
+      3     │ - ··File,
+      4     │ - ··Item,
+      5     │ - ··StructuredPatch,
+      6     │ - ··Todo,
+      7     │ - ··ToolUseResult,
+      8     │ - }·from·'./types.ts'
+      9     │ - import·type·{·OutputFormatter·}·from·'./OutputFormatter.ts'
+          1 │ + import·type·{·OutputFormatter·}·from·'./OutputFormatter.ts'
+          2 │ + import·type·{
+          3 │ + ··Content,
+          4 │ + ··File,
+          5 │ + ··Item,
+          6 │ + ··StructuredPatch,
+          7 │ + ··Todo,
+          8 │ + ··ToolUseResult,
+          9 │ + }·from·'./types.ts'
+     10  10 │   
+     11  11 │   export class ToolResultFormatter {
+  
+
+src/index.ts:2:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The imports and exports are not sorted.
+  
+    1 │ #!/usr/bin/env node
+  > 2 │ import { readdirSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    3 │ import { join } from 'node:path'
+    4 │ import { JsonlToMarkdownConverter } from './JsonlToMarkdownConverter.ts'
+  
+  i Safe fix: Organize Imports (Biome)
+  
+     1  1 │   #!/usr/bin/env node
+     2    │ - import·{·readdirSync,·writeFileSync,·existsSync,·mkdirSync·}·from·'node:fs'
+        2 │ + import·{·existsSync,·mkdirSync,·readdirSync,·writeFileSync·}·from·'node:fs'
+     3  3 │   import { join } from 'node:path'
+     4  4 │   import { JsonlToMarkdownConverter } from './JsonlToMarkdownConverter.ts'
+  
+
+src/utils.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The imports and exports are not sorted.
+  
+  > 1 │ import { writeFileSync } from 'node:fs'
+      │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    2 │ import { join } from 'node:path'
+    3 │ import { createHash } from 'node:crypto'
+  
+  i Safe fix: Organize Imports (Biome)
+  
+      1     │ - import·{·writeFileSync·}·from·'node:fs'
+      2     │ - import·{·join·}·from·'node:path'
+      3     │ - import·{·createHash·}·from·'node:crypto'
+          1 │ + import·{·createHash·}·from·'node:crypto'
+          2 │ + import·{·writeFileSync·}·from·'node:fs'
+          3 │ + import·{·join·}·from·'node:path'
+      4   4 │   
+      5   5 │   export function filterAnsi(line: string): string {
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+
+
+
+> claude-transcript@1.0.1 check /Users/michael/Projects/oss/claude-transcript
+> biome check ./src
+
+Checked 7 files in 4ms. No fixes applied.
+Found 5 errors.
+ ELIFECYCLE  Command failed with exit code 1.

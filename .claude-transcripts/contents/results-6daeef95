@@ -1,0 +1,42 @@
+Error: /Users/michael/Projects/oss/claude-transcript/biome.json:3:3 deserialize ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Found an unknown key `organizeImports`.
+  
+    1 │ {
+    2 │   "$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+  > 3 │   "organizeImports": {
+      │   ^^^^^^^^^^^^^^^^^
+    4 │     "enabled": true
+    5 │   },
+  
+  i Known keys:
+  
+  - $schema
+  - root
+  - extends
+  - vcs
+  - files
+  - formatter
+  - linter
+  - javascript
+  - json
+  - css
+  - graphql
+  - grit
+  - html
+  - overrides
+  - plugins
+  - assist
+  
+
+configuration ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Biome exited because the configuration resulted in errors. Please fix them.
+  
+
+
+
+> claude-transcript@1.0.1 lint /Users/michael/Projects/oss/claude-transcript
+> biome lint ./src
+
+ ELIFECYCLE  Command failed with exit code 1.

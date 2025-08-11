@@ -79,6 +79,6 @@ export class CommandParser {
       : new RegExp(`<${tagName}>([^<]*)<\\/${tagName}>`)
 
     const match = this.text.match(pattern)
-    return match ? match[1].trim() : null
+    return match?.[1]?.trim() ?? null
   }
 }

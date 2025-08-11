@@ -1,0 +1,21 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/package.json b/Users/michael/Projects/oss/claude-transcript/package.json
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/package.json
++++ b/Users/michael/Projects/oss/claude-transcript/package.json
+@@ -8,7 +8,15 @@
+     "claude-transcript": "./src/index.ts"
+   },
+   "scripts": {
+-    "test": "echo \"Error: no test specified\" && exit 1"
++    "test": "echo \"Error: no test specified\" && exit 1",
++    "typecheck": "tsc --noEmit",
++    "lint": "biome lint ./src",
++    "lint:fix": "biome lint --write ./src",
++    "format": "biome format ./src",
++    "format:fix": "biome format --write ./src",
++    "check": "biome check ./src",
++    "check:fix": "biome check --write ./src",
++    "ci": "pnpm run typecheck && pnpm run check"
+   },
+   "keywords": [
+     "claude",

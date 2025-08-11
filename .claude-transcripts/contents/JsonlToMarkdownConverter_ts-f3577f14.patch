@@ -1,0 +1,17 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -27,6 +27,12 @@
+     const entries = this.parseJsonlFile(jsonlPath)
+     this.buildItemTree(entries)
+ 
++    // Set context for OutputFormatter
++    this.outputFormatter.setContext({
++      toolUseTree: this.toolUseTree,
++      itemTree: this.itemTree,
++    })
++
+     const markdownSections = this.processEntries()
+ 
+     if (markdownSections.length === 0) {

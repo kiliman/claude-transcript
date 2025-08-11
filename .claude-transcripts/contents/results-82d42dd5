@@ -1,0 +1,51 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   src/JsonlToMarkdownConverter.ts
+	modified:   src/OutputFormatter.ts
+	modified:   src/ToolResultFormatter.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.claude-transcripts/2025-08-10_14-42-56Z-i-would-like-to-move_bc761bdf.md
+	.claude-transcripts/contents/JsonlToMarkdownConverter-48fafa09.ts
+	.claude-transcripts/contents/JsonlToMarkdownConverter-8df2267a.ts
+	.claude-transcripts/contents/JsonlToMarkdownConverter_ts-3f83243f.patch
+	.claude-transcripts/contents/JsonlToMarkdownConverter_ts-4e20d422.patch
+	.claude-transcripts/contents/JsonlToMarkdownConverter_ts-83685f75.patch
+	.claude-transcripts/contents/JsonlToMarkdownConverter_ts-d11e1f7e.patch
+	.claude-transcripts/contents/JsonlToMarkdownConverter_ts-df05db11.patch
+	.claude-transcripts/contents/JsonlToMarkdownConverter_ts-e3e5b8ee.patch
+	.claude-transcripts/contents/JsonlToMarkdownConverter_ts-f3577f14.patch
+	.claude-transcripts/contents/JsonlToMarkdownConverter_ts-f5f7f1a8.patch
+	.claude-transcripts/contents/JsonlToMarkdownConverter_ts-fe20f8ab.patch
+	.claude-transcripts/contents/OutputFormatter-31f87c1c.ts
+	.claude-transcripts/contents/OutputFormatter_ts-232f3264.patch
+	.claude-transcripts/contents/OutputFormatter_ts-2a285c56.patch
+	.claude-transcripts/contents/OutputFormatter_ts-2a5fa29a.patch
+	.claude-transcripts/contents/OutputFormatter_ts-43f80cbb.patch
+	.claude-transcripts/contents/OutputFormatter_ts-608534da.patch
+	.claude-transcripts/contents/OutputFormatter_ts-6e94ab9e.patch
+	.claude-transcripts/contents/OutputFormatter_ts-c495b16d.patch
+	.claude-transcripts/contents/OutputFormatter_ts-e4798ae2.patch
+	.claude-transcripts/contents/ToolResultFormatter-62e49361.ts
+	.claude-transcripts/contents/ToolResultFormatter-80c683ba.ts
+	.claude-transcripts/contents/ToolResultFormatter_ts-36f8b26b.patch
+	.claude-transcripts/contents/results-184b3233
+	.claude-transcripts/contents/results-225e4c18
+	.claude-transcripts/contents/results-25c32521
+	.claude-transcripts/contents/results-2d694f8f
+	.claude-transcripts/contents/results-3750db36
+	.claude-transcripts/contents/results-38f87492
+	.claude-transcripts/contents/results-41a0b7c3
+	.claude-transcripts/contents/results-529babf0
+	.claude-transcripts/contents/results-6a1b7417
+	.claude-transcripts/contents/results-6a6a14c3
+	.claude-transcripts/contents/results-80a1aeb5
+	.claude-transcripts/contents/results-9667ff83
+	.claude-transcripts/contents/results-c1e1cd3d
+
+no changes added to commit (use "git add" and/or "git commit -a")

@@ -1,0 +1,43 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -3,7 +3,7 @@
+ import { EntrySchema } from './types.ts'
+ import { assert } from './utils.ts'
+ import { basename } from 'node:path'
+-import { OutputFormatter } from './OutputFormatter.ts'
++import { OutputFormatter, type FormatterContext } from './OutputFormatter.ts'
+ import { CommandParser } from './CommandParser.ts'
+ 
+ export class JsonlToMarkdownConverter {
+@@ -18,7 +18,13 @@
+ 
+   constructor(isDebug: boolean = false) {
+     this.isDebug = isDebug
+-    this.outputFormatter = new OutputFormatter(false, isDebug)
++    // Create formatter with initial context (will be updated later with actual maps)
++    this.outputFormatter = new OutputFormatter({
++      toolUseTree: new Map(),
++      itemTree: new Map(),
++      defaultSaveOnly: false,
++      isDebug: isDebug,
++    })
+   }
+ 
+   convert(jsonlPath: string): { content: string; filename: string } | null {
+@@ -28,10 +34,12 @@
+     const entries = this.parseJsonlFile(jsonlPath)
+     this.buildItemTree(entries)
+ 
+-    // Set context for OutputFormatter
+-    this.outputFormatter.setContext({
++    // Create new OutputFormatter with complete context
++    this.outputFormatter = new OutputFormatter({
+       toolUseTree: this.toolUseTree,
+       itemTree: this.itemTree,
++      defaultSaveOnly: false,
++      isDebug: this.isDebug,
+     })
+ 
+     const markdownSections = this.processEntries()

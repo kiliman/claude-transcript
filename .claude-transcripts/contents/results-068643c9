@@ -1,0 +1,49 @@
+Error: src/CommandParser.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    82 82 │       return match?.[1]?.trim() ?? null
+    83 83 │     }
+    84    │ - }
+       84 │ + }
+       85 │ + 
+  
+
+src/JsonlToMarkdownConverter.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    306 306 │       // Format timestamps
+    307 307 │       if (this.metaEntry.timestamp) {
+    308     │ - ······const·startTime·=·this.outputFormatter.formatTimestamp(this.metaEntry.timestamp)
+        308 │ + ······const·startTime·=·this.outputFormatter.formatTimestamp(
+        309 │ + ········this.metaEntry.timestamp,
+        310 │ + ······)
+    309 311 │         const endTime = this.lastTimestamp
+    310 312 │           ? this.outputFormatter.formatTimestamp(this.lastTimestamp)
+  
+
+src/utils.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    147 147 │   
+    148 148 │     return filename
+    149     │ - }
+        149 │ + }
+        150 │ + 
+  
+
+format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+
+
+
+> claude-transcript@1.0.1 format /Users/michael/Projects/oss/claude-transcript
+> biome format ./src
+
+Checked 7 files in 2ms. No fixes applied.
+Found 3 errors.
+ ELIFECYCLE  Command failed with exit code 1.

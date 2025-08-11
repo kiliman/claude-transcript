@@ -1,6 +1,6 @@
+import { createHash } from 'node:crypto'
 import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { createHash } from 'node:crypto'
 
 export function filterAnsi(line: string): string {
   // biome-ignore lint/suspicious/noControlCharactersInRegex: ANSI escape codes
@@ -20,12 +20,12 @@ export function escapeCodeFences(content: string): string {
 export function trimBlankLines(lines: string[]): string[] {
   // trim leading and trailing blank lines
   let start = 0
-  while (start < lines.length && lines[start].trim() === '') {
+  while (start < lines.length && lines[start]?.trim() === '') {
     start++
   }
 
   let end = lines.length - 1
-  while (end >= start && lines[end].trim() === '') {
+  while (end >= start && lines[end]?.trim() === '') {
     end--
   }
 

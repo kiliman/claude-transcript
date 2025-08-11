@@ -1,0 +1,47 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -282,14 +282,14 @@
+ 
+     const lines: string[] = [
+       '# 🤖 Claude Code Transcript',
+-      `## 🗂️ ${this.formatPath(this.metaEntry.cwd)}`,
++      `## 🗂️ ${this.outputFormatter.formatPath(this.metaEntry.cwd)}`,
+     ]
+ 
+     // Format timestamps
+     if (this.metaEntry.timestamp) {
+-      const startTime = this.formatTimestamp(this.metaEntry.timestamp)
++      const startTime = this.outputFormatter.formatTimestamp(this.metaEntry.timestamp)
+       const endTime = this.lastTimestamp
+-        ? this.formatTimestamp(this.lastTimestamp)
++        ? this.outputFormatter.formatTimestamp(this.lastTimestamp)
+         : startTime
+       lines.push(`🕒 ${startTime} - ${endTime}`)
+     }
+@@ -297,24 +297,6 @@
+     return lines.join('\n')
+   }
+ 
+-  private formatPath(cwd: string): string {
+-    // Replace user home directory with ~
+-    const homeDir = process.env.HOME || process.env.USERPROFILE || ''
+-    if (homeDir && cwd.startsWith(homeDir)) {
+-      return cwd.replace(homeDir, '~')
+-    }
+-    return cwd
+-  }
+-
+-  private formatTimestamp(timestamp: string): string {
+-    // Convert ISO timestamp to readable format without T and Z
+-    const date = new Date(timestamp)
+-    return date
+-      .toISOString()
+-      .replace(/\.\d{3}Z$/, '') // Remove milliseconds and Z
+-      .replace('T', ' ') // Replace T with space
+-  }
+-
+   private generateFilename(filePath: string): string {
+     // Use meta entry timestamp or fallback to current date
+     const timestamp = this.metaEntry?.timestamp || new Date().toISOString()

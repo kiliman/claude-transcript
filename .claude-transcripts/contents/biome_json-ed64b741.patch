@@ -1,0 +1,17 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/biome.json b/Users/michael/Projects/oss/claude-transcript/biome.json
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/biome.json
++++ b/Users/michael/Projects/oss/claude-transcript/biome.json
+@@ -38,11 +38,6 @@
+       "bracketSameLine": false,
+       "quoteStyle": "single",
+       "attributePosition": "auto"
+-    },
+-    "organize": {
+-      "imports": {
+-        "enabled": true
+-      }
+     }
+   }
+ }
+\ No newline at end of file

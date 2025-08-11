@@ -1,0 +1,35 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -4,6 +4,7 @@
+ import { assert } from './utils.ts'
+ import { basename } from 'node:path'
+ import { OutputFormatter } from './OutputFormatter.ts'
++import { CommandParser } from './CommandParser.ts'
+ 
+ export class JsonlToMarkdownConverter {
+   private itemTree = new Map<string, Item>()
+@@ -119,10 +120,19 @@
+       if (!this.firstUserPrompt && entry.type === 'user' && !entry.isMeta) {
+         const content = entry.message?.content
+         if (typeof content === 'string') {
+-          this.firstUserPrompt = content
++          const parser = new CommandParser(content)
++          if (!parser.hasCommandElements()) {
++            this.firstUserPrompt = content
++          }
+         } else if (Array.isArray(content)) {
+-          // Look for first text content
+-          const textContent = content.find((c) => c.type === 'text' && c.text)
++          // Look for first text content that's not a command
++          const textContent = content.find((c) => {
++            if (c.type === 'text' && c.text) {
++              const parser = new CommandParser(c.text)
++              return !parser.hasCommandElements()
++            }
++            return false
++          })
+           if (textContent?.text) {
+             this.firstUserPrompt = textContent.text
+           }

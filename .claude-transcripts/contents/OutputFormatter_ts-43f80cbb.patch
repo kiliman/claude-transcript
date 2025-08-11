@@ -1,0 +1,28 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+@@ -9,19 +9,14 @@
+ interface FormatterContext {
+   toolUseTree: Map<string, Entry[]>
+   itemTree: Map<string, Item>
++  defaultSaveOnly: boolean
++  isDebug: boolean
+ }
+ 
+ export class OutputFormatter {
+-  private defaultSaveOnly: boolean
+-  private isDebug: boolean
+-  private context: FormatterContext | null = null
++  private context: FormatterContext
+ 
+-  constructor(defaultSaveOnly: boolean, isDebug: boolean = false) {
+-    this.defaultSaveOnly = defaultSaveOnly
+-    this.isDebug = isDebug
+-  }
+-
+-  setContext(context: FormatterContext) {
++  constructor(context: FormatterContext) {
+     this.context = context
+   }
+ 
