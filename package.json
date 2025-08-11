@@ -1,6 +1,6 @@
 {
   "name": "claude-transcript",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Convert Claude Code JSONL conversation files to readable markdown transcripts",
   "type": "module",
   "main": "src/index.ts",
