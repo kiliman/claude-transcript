@@ -1,0 +1,20 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+@@ -354,9 +354,13 @@
+     // Get the first non-null value
+     const value = input.description || input.path || input.file_path || input.url || ''
+     
+-    // If it's a file path (starts with /), convert to relative path
++    // If it's a file path (starts with /), try to convert to relative path
+     if (value && value.startsWith('/')) {
+-      return relative(process.cwd(), value)
++      const relativePath = relative(process.cwd(), value)
++      // Only use relative path if it doesn't go outside cwd (no .. traversal)
++      if (!relativePath.startsWith('..')) {
++        return relativePath
++      }
+     }
+     
+     return value

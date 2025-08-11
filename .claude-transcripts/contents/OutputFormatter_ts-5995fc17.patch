@@ -1,0 +1,22 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/OutputFormatter.ts
+@@ -350,7 +350,16 @@
+     if (!input) return ''
+ 
+     if (input.pattern) return `\`"${input.pattern.replace(/\\/g, '\\')}"\``
+-    return input.description || input.path || input.file_path || input.url || ''
++    
++    // Get the first non-null value
++    const value = input.description || input.path || input.file_path || input.url || ''
++    
++    // If it's a file path (starts with /), convert to relative path
++    if (value && value.startsWith('/')) {
++      return relative(process.cwd(), value)
++    }
++    
++    return value
+   }
+ 
+   getToolEmoji(toolName: string): string {

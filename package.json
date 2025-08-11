@@ -8,6 +8,7 @@
     "claude-transcript": "./src/index.ts"
   },
   "scripts": {
+    "start": "node ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint ./src",

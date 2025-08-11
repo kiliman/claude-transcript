@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import { writeFileSync } from 'node:fs'
-import { basename, join } from 'node:path'
+import { basename, join, relative } from 'node:path'
 import { CommandParser } from './CommandParser.ts'
 import { ToolResultFormatter } from './ToolResultFormatter.ts'
 import type { Content, Entry, Item, ToolUseResult } from './types.ts'
@@ -350,7 +350,20 @@ export class OutputFormatter {
     if (!input) return ''
 
     if (input.pattern) return `\`"${input.pattern.replace(/\\/g, '\\')}"\``
-    return input.description || input.path || input.file_path || input.url || ''
+    
+    // Get the first non-null value
+    const value = input.description || input.path || input.file_path || input.url || ''
+    
+    // If it's a file path (starts with /), try to convert to relative path
+    if (value && value.startsWith('/')) {
+      const relativePath = relative(process.cwd(), value)
+      // Only use relative path if it doesn't go outside cwd (no .. traversal)
+      if (!relativePath.startsWith('..')) {
+        return relativePath
+      }
+    }
+    
+    return value
   }
 
   getToolEmoji(toolName: string): string {
