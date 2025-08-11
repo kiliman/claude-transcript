@@ -1,0 +1,8 @@
+added 429 packages, removed 1 package, changed 1 package, and audited 439 packages in 31s
+
+90 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported

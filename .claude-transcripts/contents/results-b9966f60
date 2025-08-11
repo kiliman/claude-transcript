@@ -1,0 +1,20 @@
+Summary
+
+- Name: noNamespace
+- No fix available.
+- Default severity: warn
+- Available from version: 1.0.0
+- Diagnostic category: lint/style/noNamespace
+
+
+Description
+
+ Disallow the use of TypeScript's `namespace`s.
+
+ Namespaces are an old way to organize your code in TypeScript.
+ They are not recommended anymore and should be replaced by ES6 modules
+ (the `import`/`export` syntax).
+
+Examples
+
+Invalid

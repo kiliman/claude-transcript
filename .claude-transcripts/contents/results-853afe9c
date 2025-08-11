@@ -1,0 +1,19 @@
+- /Users/michael/Projects/oss/claude-transcript/
+  - CHANGELOG.md
+  - README.md
+  - biome.json
+  - docs/
+    - TYPE_STRIPPING_SAFETY.md
+  - package.json
+  - pnpm-lock.yaml
+  - src/
+    - CommandParser.ts
+    - JsonlToMarkdownConverter.ts
+    - OutputFormatter.ts
+    - ToolResultFormatter.ts
+    - index.ts
+    - types.ts
+    - utils.ts
+  - test/
+    - test2.jsonl
+  - tsconfig.json

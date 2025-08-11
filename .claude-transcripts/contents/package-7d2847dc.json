@@ -1,0 +1,55 @@
+{
+  "name": "claude-transcript",
+  "version": "1.0.1",
+  "description": "Convert Claude Code JSONL conversation files to readable markdown transcripts",
+  "type": "module",
+  "main": "src/index.ts",
+  "bin": {
+    "claude-transcript": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint ./src",
+    "lint:fix": "biome lint --write ./src",
+    "format": "biome format ./src",
+    "format:fix": "biome format --write ./src",
+    "check": "biome check ./src",
+    "check:fix": "biome check --write ./src",
+    "ci": "pnpm run typecheck && pnpm run check"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "transcript",
+    "markdown",
+    "converter",
+    "jsonl"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kiliman/claude-transcript.git"
+  },
+  "homepage": "https://github.com/kiliman/claude-transcript#readme",
+  "bugs": {
+    "url": "https://github.com/kiliman/claude-transcript/issues"
+  },
+  "files": [
+    "src/**/*.ts"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "@biomejs/biome": "^2.1.4",
+    "@types/node": "^24.2.1",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "zod": "^4.0.16"
+  }
+}

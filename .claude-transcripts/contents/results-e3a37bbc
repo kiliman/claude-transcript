@@ -1,0 +1,53 @@
+{
+  "query": "Biome linter rules TypeScript enum namespace const enum decorators node type stripping",
+  "results": [
+    "I'll search for information about Biome linter rules related to TypeScript enums, namespaces, const enums, decorators, and node type stripping.",
+    {
+      "tool_use_id": "srvtoolu_018YrB5i75R9Xguy5EJvwh4V",
+      "content": [
+        {
+          "title": "✅ Linter rules from other sources · biomejs/biome · Discussion #3",
+          "url": "https://github.com/biomejs/biome/discussions/3"
+        },
+        {
+          "title": "noEnum | Biome",
+          "url": "https://biomejs.dev/linter/rules/no-enum/"
+        },
+        {
+          "title": "Rules sources | Biome",
+          "url": "https://biomejs.dev/linter/rules-sources/"
+        },
+        {
+          "title": "☂️ Type-aware linter · Issue #3187 · biomejs/biome",
+          "url": "https://github.com/biomejs/biome/issues/3187"
+        },
+        {
+          "title": "noConstEnum | Biome",
+          "url": "https://biomejs.dev/linter/rules/no-const-enum/"
+        },
+        {
+          "title": "Linter | Biome",
+          "url": "https://biomejs.dev/linter/"
+        },
+        {
+          "title": "Set up a Node.js project with TypeScript and Biome",
+          "url": "https://blog.tericcabrel.com/nodejs-typescript-biome/"
+        },
+        {
+          "title": "Configuration | Biome",
+          "url": "https://biomejs.dev/reference/configuration/"
+        },
+        {
+          "title": "Lint & Format JavaScript with Biome on Space Jelly",
+          "url": "https://spacejelly.dev/posts/lint-format-javascript-with-biome"
+        },
+        {
+          "title": "useNamingConvention | Biome",
+          "url": "https://biomejs.dev/linter/rules/use-naming-convention/"
+        }
+      ]
+    },
+    "Based on the search results, I found comprehensive information about Biome linter rules related to TypeScript enums, namespaces, const enums, decorators, and node type stripping. Here's what I discovered:\n\n## TypeScript Enum and Const Enum Rules\n\nTypeScript enums are not a type-level extension to JavaScript like type annotations or definitions. Users may wish to disable non-type-level extensions to use bundlers or compilers that only strip types.\n\n### Key Rules:\n\n1. **`noEnum`** - Const enums are not covered by this rule since noConstEnum already handles them. Enums within the ambient context, including declaration files, are ignores as well.\n\n2. **`noConstEnum`** - Const enums are enums that should be inlined at use sites. Const enums are not supported by bundlers and are incompatible with the isolatedModules mode. Their use can lead to import nonexistent values (because const enums are erased). Thus, library authors and bundler users should not use const enums.\n\n3. **`noDuplicateLiteralEnumMembers`** - Ensure that every enum member initialized with a literal expression is unique. This doesn't necessarlly requires a type system. We need to compute literal expressions.\n\n## TypeScript Namespace Rules\n\nFrom the search results, I found references to namespace-related rules:\n\n- Require using namespace keyword over module keyword to declare custom TypeScript modules.\n- Disallow classes used as namespaces.\n- Disallow TypeScript namespaces.\n\n## Decorators Support\n\nAllows to support the unsafe/experimental parameter decorators. This is configured through the `javascript.parser.unsafeParameterDecoratorsEnabled` option in the Biome configuration.\n\n## Type Stripping and Node Support\n\nSince Biome v2, the toolchain is now able to use TypeScript to infer types and provide more powerful rules. To achieve this, Biome scans all the .d.ts files inside the node_modules folder, even those that come from indirect dependencies.\n\n## Type-Aware Linting\n\nThis umbrella issue tracks the development of type-aware lint rules. We first motivate our decision to implement our own type synthesizer, and then present the type-aware rules we intend to implement.(no content)We believe that the Biome type synthesiser doesn't need to be perfect or handle complex TypeScript types. Even a rudimentary type synthesiser could be valuable to many lint rules.\n\n## Additional Related Rules\n\nOther TypeScript-specific rules mentioned include:\n- Rules for enforcing literal values in enum members\n- Rules for handling mixed enum types (number and string members)\n- Rules for TypeScript-specific naming conventions\n- Rules for type imports and exports\n\nThe search results indicate that Biome is actively developing its TypeScript support, particularly around type-aware linting capabilities, while maintaining fast performance by implementing its own type synthesizer rather than relying on the TypeScript compiler API."
+  ],
+  "durationSeconds": 63.354989749997856
+}

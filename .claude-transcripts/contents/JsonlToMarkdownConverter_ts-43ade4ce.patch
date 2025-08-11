@@ -1,0 +1,38 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/JsonlToMarkdownConverter.ts
+@@ -15,23 +15,26 @@
+   private itemTree = new Map<string, Item>()
+   private entryList: string[] = []
+   private toolUseTree = new Map<string, Entry[]>()
+-  private isDebug: boolean
+-  private outputDir: string
++  private options: Required<ConverterOptions>
+   private metaEntry: Entry | null = null
+   private lastTimestamp: string | null = null
+   private firstUserPrompt: string | null = null
+   private outputFormatter: OutputFormatter
+ 
+-  constructor(isDebug: boolean = false, outputDir: string = '.claude-transcripts') {
+-    this.isDebug = isDebug
+-    this.outputDir = outputDir
++  constructor(options: ConverterOptions = {}) {
++    // Set defaults for options
++    this.options = {
++      isDebug: options.isDebug ?? false,
++      outputDir: options.outputDir ?? '.claude-transcripts',
++    }
++    
+     // Create formatter with initial context (will be updated later with actual maps)
+     this.outputFormatter = new OutputFormatter({
+       toolUseTree: new Map(),
+       itemTree: new Map(),
+       defaultSaveOnly: false,
+-      isDebug: isDebug,
+-      outputDir: outputDir,
++      isDebug: this.options.isDebug,
++      outputDir: this.options.outputDir,
+     })
+   }
+ 

@@ -1,0 +1,20 @@
+Debug mode enabled
+Output directory: test-output
+Found 1 JSONL file(s) to process...
+Processing file: test/test2.jsonl
+Processing 507 entries...
+Line #1 is already skipped, skipping
+#2 user
+#3 user
+#4 user
+Line #5 is already skipped, skipping
+#6 assistant
+#7 assistant
+#8 user
+#9 assistant
+#10 assistant
+Line #11 is already processed, skipping
+#12 assistant
+#13 assistant
+#14 assistant
+Line #15 is already processed, skipping

@@ -1,0 +1,2 @@
+Error: test-typescript-restrictions.ts(9,31): error TS2307: Cannot find module './types.ts' or its corresponding type declarations.
+test-typescript-restrictions.ts(45,32): error TS2307: Cannot find module './types.ts' or its corresponding type declarations.

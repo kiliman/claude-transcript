@@ -1,0 +1,21 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/index.ts b/Users/michael/Projects/oss/claude-transcript/src/index.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/index.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/index.ts
+@@ -63,14 +63,13 @@
+ 
+   console.log(`Found ${jsonlFiles.length} JSONL file(s) to process...`)
+ 
+-  // Create output directory in current working directory
+-  const outputDir = '.claude-transcripts'
++  // Create output directory
+   const contentsDir = join(outputDir, 'contents')
+   mkdirSync(contentsDir, { recursive: true })
+ 
+   jsonlFiles.forEach((file) => {
+     const jsonlPath = join(jsonlFolderPath, file)
+-    const converter = new JsonlToMarkdownConverter(isDebug)
++    const converter = new JsonlToMarkdownConverter(isDebug, outputDir)
+     const result = converter.convert(jsonlPath)
+ 
+     if (result !== null) {

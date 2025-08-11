@@ -1,0 +1,13 @@
+Usage: claude-transcript [options] [path]
+
+Convert Claude JSONL files to markdown transcripts
+
+Arguments:
+  path                      Path to JSONL folder (defaults to
+                            ~/.claude/projects/<sanitized-cwd>)
+
+Options:
+  -V, --version             output the version number
+  --debug                   Enable debug mode
+  -o, --output <directory>  Output directory (default: ".claude-transcripts")
+  -h, --help                display help for command

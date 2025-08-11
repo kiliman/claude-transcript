@@ -1,0 +1,28 @@
+src/JsonlToMarkdownConverter.ts(5,15): error TS2305: Module '"./types.ts"' has no exported member 'Entry'.
+src/JsonlToMarkdownConverter.ts(5,22): error TS2305: Module '"./types.ts"' has no exported member 'Item'.
+src/JsonlToMarkdownConverter.ts(5,28): error TS2305: Module '"./types.ts"' has no exported member 'StateType'.
+src/JsonlToMarkdownConverter.ts(6,10): error TS2305: Module '"./types.ts"' has no exported member 'EntrySchema'.
+src/JsonlToMarkdownConverter.ts(252,38): error TS7006: Parameter 'contentItem' implicitly has an 'any' type.
+src/JsonlToMarkdownConverter.ts(252,51): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/OutputFormatter.ts(6,15): error TS2305: Module '"./types.ts"' has no exported member 'Content'.
+src/OutputFormatter.ts(6,24): error TS2305: Module '"./types.ts"' has no exported member 'Entry'.
+src/OutputFormatter.ts(6,31): error TS2305: Module '"./types.ts"' has no exported member 'Item'.
+src/OutputFormatter.ts(6,37): error TS2305: Module '"./types.ts"' has no exported member 'ToolUseResult'.
+src/test-typescript-restrictions.ts(4,7): error TS6133: 'x' is declared but its value is never read.
+src/test-typescript-restrictions.ts(6,11): error TS6196: 'MyInterface' is declared but never used.
+src/test-typescript-restrictions.ts(9,1): error TS6133: 'SomeType' is declared but its value is never read.
+src/test-typescript-restrictions.ts(13,12): error TS6196: 'Color' is declared but never used.
+src/test-typescript-restrictions.ts(20,11): error TS6133: 'MyNamespace' is declared but its value is never read.
+src/test-typescript-restrictions.ts(25,6): error TS6196: 'Status' is declared but never used.
+src/test-typescript-restrictions.ts(31,7): error TS6196: 'MyClass' is declared but never used.
+src/test-typescript-restrictions.ts(36,22): error TS6133: 'target' is declared but its value is never read.
+src/test-typescript-restrictions.ts(41,7): error TS6196: 'DecoratedClass' is declared but never used.
+src/test-typescript-restrictions.ts(45,10): error TS1484: 'OnlyUsedAsType' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/test-typescript-restrictions.ts(46,7): error TS2741: Property 'value' is missing in type '{}' but required in type 'OnlyUsedAsType'.
+src/test-typescript-restrictions.ts(46,7): error TS6133: 'y' is declared but its value is never read.
+src/ToolResultFormatter.ts(3,3): error TS2305: Module '"./types.ts"' has no exported member 'Content'.
+src/ToolResultFormatter.ts(4,3): error TS2305: Module '"./types.ts"' has no exported member 'File'.
+src/ToolResultFormatter.ts(5,3): error TS2305: Module '"./types.ts"' has no exported member 'Item'.
+src/ToolResultFormatter.ts(6,3): error TS2305: Module '"./types.ts"' has no exported member 'StructuredPatch'.
+src/ToolResultFormatter.ts(7,3): error TS2305: Module '"./types.ts"' has no exported member 'Todo'.
+src/ToolResultFormatter.ts(8,3): error TS2305: Module '"./types.ts"' has no exported member 'ToolUseResult'.

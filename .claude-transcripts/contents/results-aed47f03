@@ -1,0 +1,15 @@
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Packages: +7
++++++++
+Progress: resolved 14, reused 4, downloaded 3, added 7, done
+
+dependencies:
++ commander 14.0.0
++ zod 4.0.16
+
+devDependencies:
++ @biomejs/biome 2.1.4
++ @types/node 24.2.1
++ typescript 5.9.2
+
+Done in 770ms using pnpm v10.12.1

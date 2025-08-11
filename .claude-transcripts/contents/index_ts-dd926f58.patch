@@ -1,0 +1,65 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/index.ts b/Users/michael/Projects/oss/claude-transcript/src/index.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/index.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/index.ts
+@@ -1,26 +1,39 @@
+ #!/usr/bin/env node
+ import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs'
+ import { join } from 'node:path'
++import { Command } from 'commander'
+ import { JsonlToMarkdownConverter } from './JsonlToMarkdownConverter.ts'
+ import { assert } from './utils.ts'
+ 
++const program = new Command()
++
++program
++  .name('claude-transcript')
++  .description('Convert Claude JSONL files to markdown transcripts')
++  .version('1.0.0')
++  .argument('[path]', 'Path to JSONL folder (defaults to ~/.claude/projects/<sanitized-cwd>)')
++  .option('--debug', 'Enable debug mode')
++  .option('-o, --output <directory>', 'Output directory', '.claude-transcripts')
++  .parse()
++
++const options = program.opts()
++const args = program.args
++
+ main()
+ 
+ function main() {
+-  const args = process.argv.slice(2)
+-  const isDebug = args.includes('--debug')
++  const isDebug = options.debug || false
++  const outputDir = options.output
+ 
+-  // Remove --debug from args for path processing
+-  const pathArgs = args.filter((arg) => arg !== '--debug')
+-
+   if (isDebug) {
+     console.log('Debug mode enabled')
++    console.log(`Output directory: ${outputDir}`)
+   }
+ 
+   // Determine JSONL folder path
+   let jsonlFolderPath: string
+-  if (pathArgs.length > 0) {
+-    const firstArg = pathArgs[0]
++  if (args.length > 0) {
++    const firstArg = args[0]
+     assert(firstArg, 'Path argument must be defined')
+     jsonlFolderPath = firstArg
+   } else {
+@@ -34,11 +47,8 @@
+ 
+   if (!existsSync(jsonlFolderPath)) {
+     console.error(`Error: Directory not found: ${jsonlFolderPath}`)
+-    if (pathArgs.length === 0) {
+-      console.error('Usage: node index.js [path-to-jsonl-folder] [--debug]')
+-      console.error(
+-        'If no path is provided, will look in ~/.claude/projects/<sanitized-cwd>',
+-      )
++    if (args.length === 0) {
++      console.error('Run with --help for usage information')
+     }
+     process.exit(1)
+   }

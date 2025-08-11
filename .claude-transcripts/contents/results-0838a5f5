@@ -1,0 +1,4 @@
+> tsc --noEmit
+
+tsconfig.json(34,5): error TS5091: Option 'preserveConstEnums' cannot be disabled when 'verbatimModuleSyntax' is enabled.
+tsconfig.json(38,5): error TS5091: Option 'preserveConstEnums' cannot be disabled when 'verbatimModuleSyntax' is enabled.

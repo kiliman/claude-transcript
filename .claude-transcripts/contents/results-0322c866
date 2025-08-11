@@ -1,0 +1,68 @@
+> biome lint ./src
+
+src/test-type-stripping.ts:9:1 lint/style/noEnum ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Don't use enum
+  
+     8 │ // ❌ SHOULD ERROR: enum (Biome noEnum rule)
+   > 9 │ enum Color {
+       │ ^^^^^^^^^^^^
+--
+       │ ^
+    14 │ 
+    15 │ // ❌ SHOULD ERROR: const enum (Biome noConstEnum rule)
+  
+  i TypeScript enums are not a type-level extension to JavaScript like type annotations or definitions. Users may wish to disable non-type-level extensions to use bundlers or compilers that only strip types.
+--
+  
+
+src/test-type-stripping.ts:16:1 lint/suspicious/noConstEnum  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The enum declaration should not be const
+  
+    15 │ // ❌ SHOULD ERROR: const enum (Biome noConstEnum rule)
+  > 16 │ const enum Direction {
+       │ ^^^^^^^^^^^^^^^^^^^^^^
+--
+       │ ^
+    22 │ 
+    23 │ // ❌ SHOULD ERROR: namespace (Biome noNamespace rule)
+  
+  i Const enums are not supported by bundlers and are incompatible with the 'isolatedModules' mode. Their use can lead to import inexistent values.
+--
+    13 13 │   }
+    14    │ - 
+    15    │ - //·❌·SHOULD·ERROR:·const·enum·(Biome·noConstEnum·rule)
+    16    │ - const·enum·Direction·{
+       14 │ + 
+       15 │ + //·❌·SHOULD·ERROR:·const·enum·(Biome·noConstEnum·rule)
+       16 │ + enum·Direction·{
+    17 17 │     Up,
+--
+  
+
+src/test-type-stripping.ts:24:1 lint/style/noNamespace ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × TypeScript's namespaces are an outdated way to organize code.
+  
+    23 │ // ❌ SHOULD ERROR: namespace (Biome noNamespace rule)
+  > 24 │ namespace MyNamespace {
+       │ ^^^^^^^^^^^^^^^^^^^^^^^
+--
+  
+
+src/test-type-stripping.ts:5:6 lint/correctness/noUnusedVariables ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × This type alias MyType is unused.
+--
+  
+
+src/test-type-stripping.ts:6:11 lint/correctness/noUnusedVariables ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × This interface MyInterface is unused.
+--
+      │           ^^^^^^^^^^^
+    7 │ 
+    8 │ // ❌ SHOULD ERROR: enum (Biome noEnum rule)
+  
+  i Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.

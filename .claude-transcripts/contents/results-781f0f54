@@ -1,0 +1,5 @@
+Error: > claude-transcript@1.0.1 typecheck
+> tsc --noEmit
+
+src/index.ts(25,27): error TS4111: Property 'debug' comes from an index signature, so it must be accessed with ['debug'].
+src/index.ts(26,29): error TS4111: Property 'output' comes from an index signature, so it must be accessed with ['output'].

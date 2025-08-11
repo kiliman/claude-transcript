@@ -1,0 +1,24 @@
+    20 │         "noExplicitAny": "warn",
+    21 │         "noConstEnum": "error",
+  > 22 │         "useValidTypeof": "error"
+       │         ^^^^^^^^^^^^^^^^
+    23 │       },
+--
+    23 │       },
+    24 │       "nursery": {
+  > 25 │         "noEnum": "error",
+       │         ^^^^^^^^
+    26 │         "noNamespace": "error"
+    27 │       }
+  
+--
+  
+    24 │       "nursery": {
+    25 │         "noEnum": "error",
+  > 26 │         "noNamespace": "error"
+       │         ^^^^^^^^^^^^^
+    27 │       }
+--
+configuration ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Biome exited because the configuration resulted in errors. Please fix them.

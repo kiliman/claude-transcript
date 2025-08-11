@@ -1,0 +1,19 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/biome.json b/Users/michael/Projects/oss/claude-transcript/biome.json
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/biome.json
++++ b/Users/michael/Projects/oss/claude-transcript/biome.json
+@@ -17,7 +17,13 @@
+         "noUnusedImports": "error"
+       },
+       "suspicious": {
+-        "noExplicitAny": "warn"
++        "noExplicitAny": "warn",
++        "noConstEnum": "error",
++        "useValidTypeof": "error"
++      },
++      "nursery": {
++        "noEnum": "error",
++        "noNamespace": "error"
+       }
+     }
+   },

@@ -1,0 +1,20 @@
+Summary
+
+- Name: noConstEnum
+- Fix: safe
+- Default severity: warn
+- Available from version: 1.0.0
+- Diagnostic category: lint/suspicious/noConstEnum
+- This rule is recommended
+
+Description
+
+ Disallow TypeScript `const enum`
+
+ Const enums are enums that should be inlined at use sites.
+ Const enums are not supported by bundlers and are incompatible with the `isolatedModules` mode.
+ Their use can lead to import nonexistent values (because const enums are erased).
+
+ Thus, library authors and bundler users should not use const enums.
+
+Examples

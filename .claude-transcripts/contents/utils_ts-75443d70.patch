@@ -1,0 +1,21 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/src/utils.ts b/Users/michael/Projects/oss/claude-transcript/src/utils.ts
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/src/utils.ts
++++ b/Users/michael/Projects/oss/claude-transcript/src/utils.ts
+@@ -133,6 +133,7 @@
+   base64Data: string,
+   mediaType: string,
+   uuid?: string,
++  outputDir: string = '.claude-transcripts',
+ ): string {
+   const hash = createHash('md5')
+     .update(base64Data)
+@@ -140,7 +141,7 @@
+     .substring(0, 8)
+   const extension = mediaType.split('/')[1] || 'png'
+   const filename = `image-${uuid || hash}.${extension}`
+-  const savedPath = join('.claude-transcripts/contents', filename)
++  const savedPath = join(outputDir, 'contents', filename)
+ 
+   // Write the image file
+   writeFileSync(savedPath, Buffer.from(base64Data, 'base64'))
