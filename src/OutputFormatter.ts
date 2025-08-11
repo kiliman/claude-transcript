@@ -19,6 +19,7 @@ export interface FormatterContext {
   itemTree: Map<string, Item>
   defaultSaveOnly: boolean
   isDebug: boolean
+  outputDir: string
 }
 
 export class OutputFormatter {
@@ -167,7 +168,7 @@ export class OutputFormatter {
     }
 
     const filename = `${baseFileName}-${hash}${extension}`
-    const savedPath = join('.claude-transcripts/contents', filename)
+    const savedPath = join(this.context.outputDir, 'contents', filename)
 
     writeFileSync(savedPath, content, 'utf-8')
 
@@ -331,6 +332,7 @@ export class OutputFormatter {
         contentItem.source.data,
         contentItem.source.media_type,
         item.uuid,
+        this.context.outputDir,
       )
       return `![Image](contents/${filename})`
     }

@@ -6,24 +6,35 @@ import type { Entry, Item, StateType } from './types.ts'
 import { EntrySchema } from './types.ts'
 import { assert } from './utils.ts'
 
+export interface ConverterOptions {
+  isDebug?: boolean
+  outputDir?: string
+}
+
 export class JsonlToMarkdownConverter {
   private itemTree = new Map<string, Item>()
   private entryList: string[] = []
   private toolUseTree = new Map<string, Entry[]>()
-  private isDebug: boolean
+  private options: Required<ConverterOptions>
   private metaEntry: Entry | null = null
   private lastTimestamp: string | null = null
   private firstUserPrompt: string | null = null
   private outputFormatter: OutputFormatter
 
-  constructor(isDebug: boolean = false) {
-    this.isDebug = isDebug
+  constructor(options: ConverterOptions = {}) {
+    // Set defaults for options
+    this.options = {
+      isDebug: options.isDebug ?? false,
+      outputDir: options.outputDir ?? '.claude-transcripts',
+    }
+    
     // Create formatter with initial context (will be updated later with actual maps)
     this.outputFormatter = new OutputFormatter({
       toolUseTree: new Map(),
       itemTree: new Map(),
       defaultSaveOnly: false,
-      isDebug: isDebug,
+      isDebug: this.options.isDebug,
+      outputDir: this.options.outputDir,
     })
   }
 
@@ -39,7 +50,8 @@ export class JsonlToMarkdownConverter {
       toolUseTree: this.toolUseTree,
       itemTree: this.itemTree,
       defaultSaveOnly: false,
-      isDebug: this.isDebug,
+      isDebug: this.options.isDebug,
+      outputDir: this.options.outputDir,
     })
 
     const markdownSections = this.processEntries()
@@ -231,7 +243,7 @@ export class JsonlToMarkdownConverter {
     }
 
     console.log(`#${lineNumber} ${entry.type}`)
-    if (this.isDebug) {
+    if (this.options.isDebug) {
       output.push(
         `## Line ${lineNumber} ${entry.type} (isSidechain: ${entry.isSidechain})`,
       )

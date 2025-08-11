@@ -1,26 +1,46 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { Command } from 'commander'
 import { JsonlToMarkdownConverter } from './JsonlToMarkdownConverter.ts'
 import { assert } from './utils.ts'
+
+// Get package.json version
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const packageJson = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'))
+const version = packageJson.version
+
+const program = new Command()
+
+program
+  .name('claude-transcript')
+  .description('Convert Claude JSONL files to markdown transcripts')
+  .version(version)
+  .argument('[path]', 'Path to JSONL folder (defaults to ~/.claude/projects/<sanitized-cwd>)')
+  .option('--debug', 'Enable debug mode')
+  .option('-o, --output <directory>', 'Output directory', '.claude-transcripts')
+  .parse()
+
+const options = program.opts()
+const args = program.args
 
 main()
 
 function main() {
-  const args = process.argv.slice(2)
-  const isDebug = args.includes('--debug')
-
-  // Remove --debug from args for path processing
-  const pathArgs = args.filter((arg) => arg !== '--debug')
+  const isDebug = options['debug'] || false
+  const outputDir = options['output']
 
   if (isDebug) {
     console.log('Debug mode enabled')
+    console.log(`Output directory: ${outputDir}`)
   }
 
   // Determine JSONL folder path
   let jsonlFolderPath: string
-  if (pathArgs.length > 0) {
-    const firstArg = pathArgs[0]
+  if (args.length > 0) {
+    const firstArg = args[0]
     assert(firstArg, 'Path argument must be defined')
     jsonlFolderPath = firstArg
   } else {
@@ -34,11 +54,8 @@ function main() {
 
   if (!existsSync(jsonlFolderPath)) {
     console.error(`Error: Directory not found: ${jsonlFolderPath}`)
-    if (pathArgs.length === 0) {
-      console.error('Usage: node index.js [path-to-jsonl-folder] [--debug]')
-      console.error(
-        'If no path is provided, will look in ~/.claude/projects/<sanitized-cwd>',
-      )
+    if (args.length === 0) {
+      console.error('Run with --help for usage information')
     }
     process.exit(1)
   }
@@ -53,14 +70,16 @@ function main() {
 
   console.log(`Found ${jsonlFiles.length} JSONL file(s) to process...`)
 
-  // Create output directory in current working directory
-  const outputDir = '.claude-transcripts'
+  // Create output directory
   const contentsDir = join(outputDir, 'contents')
   mkdirSync(contentsDir, { recursive: true })
 
   jsonlFiles.forEach((file) => {
     const jsonlPath = join(jsonlFolderPath, file)
-    const converter = new JsonlToMarkdownConverter(isDebug)
+    const converter = new JsonlToMarkdownConverter({
+      isDebug: isDebug,
+      outputDir: outputDir,
+    })
     const result = converter.convert(jsonlPath)
 
     if (result !== null) {
