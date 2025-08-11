@@ -1,0 +1,17 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/CHANGELOG.md b/Users/michael/Projects/oss/claude-transcript/CHANGELOG.md
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/CHANGELOG.md
++++ b/Users/michael/Projects/oss/claude-transcript/CHANGELOG.md
+@@ -1,5 +1,12 @@
+ # CHANGELOG
+ 
++## v1.2.0
++
++- ✨ Show relative paths in tool descriptions for better readability
++  - Converts absolute file paths to relative paths when within current working directory
++  - Keeps absolute paths when relative would contain `..` (outside cwd)
++  - Makes transcripts more portable and easier to read
++
+ ## v1.1.0
+ 
+ - ✨ Add `--output` option to specify custom output directory

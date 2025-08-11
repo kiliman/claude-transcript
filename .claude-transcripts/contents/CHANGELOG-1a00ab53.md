@@ -1,19 +1,5 @@
 # CHANGELOG
 
-## v1.2.1
-
-- 📝 Update README with comprehensive CLI documentation
-  - Document `--output` option for custom output directory
-  - Document `--version` and `--help` options
-  - Add examples of combining multiple options
-
-## v1.2.0
-
-- ✨ Show relative paths in tool descriptions for better readability
-  - Converts absolute file paths to relative paths when within current working directory
-  - Keeps absolute paths when relative would contain `..` (outside cwd)
-  - Makes transcripts more portable and easier to read
-
 ## v1.1.0
 
 - ✨ Add `--output` option to specify custom output directory

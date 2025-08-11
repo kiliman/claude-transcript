@@ -48,48 +48,12 @@ You can also specify a custom JSONL directory:
 npx claude-transcript /path/to/jsonl/folder
 ```
 
-### CLI Options
-
-#### Debug Mode
+### Debug Mode
 
 For detailed output including line numbers and processing information:
 
 ```bash
 npx claude-transcript --debug
-```
-
-#### Custom Output Directory
-
-Specify a custom output directory (default is `.claude-transcripts`):
-
-```bash
-npx claude-transcript --output custom-output-dir
-```
-
-This is useful for testing or organizing transcripts in different locations.
-
-#### Show Version
-
-Display the current version:
-
-```bash
-npx claude-transcript --version
-```
-
-#### Show Help
-
-Display help information with all available options:
-
-```bash
-npx claude-transcript --help
-```
-
-### Combining Options
-
-You can combine multiple options:
-
-```bash
-npx claude-transcript /path/to/jsonl --output test-output --debug
 ```
 
 ## Output

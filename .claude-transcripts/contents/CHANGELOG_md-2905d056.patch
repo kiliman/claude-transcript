@@ -1,0 +1,17 @@
+diff --git a/Users/michael/Projects/oss/claude-transcript/CHANGELOG.md b/Users/michael/Projects/oss/claude-transcript/CHANGELOG.md
+index 1234567..abcdefg 100644
+--- a/Users/michael/Projects/oss/claude-transcript/CHANGELOG.md
++++ b/Users/michael/Projects/oss/claude-transcript/CHANGELOG.md
+@@ -1,5 +1,12 @@
+ # CHANGELOG
+ 
++## v1.2.1
++
++- 📝 Update README with comprehensive CLI documentation
++  - Document `--output` option for custom output directory
++  - Document `--version` and `--help` options
++  - Add examples of combining multiple options
++
+ ## v1.2.0
+ 
+ - ✨ Show relative paths in tool descriptions for better readability
