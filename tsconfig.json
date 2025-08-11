@@ -28,11 +28,17 @@
     "target": "ES2022",
     "lib": ["ES2022"],
     "useDefineForClassFields": true,
+    "experimentalDecorators": false,  // Ensure decorators are disabled
+    "emitDecoratorMetadata": false,   // No decorator metadata
 
     // Interop Constraints
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
+
+    // Additional restrictions for type stripping compatibility
+    "noEmitHelpers": true,         // Prevent helper injection
+    "importHelpers": false,        // Don't use tslib helpers
 
     // Skip Lib Check
     "skipLibCheck": true

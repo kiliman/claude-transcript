@@ -7,7 +7,10 @@
       "style": {
         "noNonNullAssertion": "off",
         "useConst": "error",
-        "useTemplate": "error"
+        "useTemplate": "error",
+        "noEnum": "error",
+        "noNamespace": "error",
+        "noParameterProperties": "error"
       },
       "complexity": {
         "useLiteralKeys": "off"
@@ -17,7 +20,8 @@
         "noUnusedImports": "error"
       },
       "suspicious": {
-        "noExplicitAny": "warn"
+        "noExplicitAny": "warn",
+        "noConstEnum": "error"
       }
     }
   },
