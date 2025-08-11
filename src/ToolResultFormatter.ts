@@ -6,15 +6,15 @@ import type {
   Todo,
   ToolUseResult,
 } from './types.ts'
-import { OutputFormatter } from './OutputFormatter.ts'
+import type { OutputFormatter } from './OutputFormatter.ts'
 
 export class ToolResultFormatter {
   private toolName: string
-  private isDebug: boolean
+  private outputFormatter: OutputFormatter
 
-  constructor(toolName: string, isDebug: boolean) {
+  constructor(toolName: string, outputFormatter: OutputFormatter) {
     this.toolName = toolName
-    this.isDebug = isDebug
+    this.outputFormatter = outputFormatter
   }
 
   format(toolUseResult: ToolUseResult, resultItem: Item): string | null {
@@ -136,8 +136,10 @@ export class ToolResultFormatter {
     codeFence?: boolean
     label?: string
   }): string {
-    const output = new OutputFormatter(this.shouldSaveOnly())
-    return output.format(options)
+    return this.outputFormatter.format({
+      ...options,
+      saveOnly: this.shouldSaveOnly(),
+    })
   }
 
   private shouldSaveOnly(): boolean {

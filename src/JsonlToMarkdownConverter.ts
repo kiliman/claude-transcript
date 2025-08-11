@@ -1,11 +1,10 @@
 import { readFileSync } from 'node:fs'
 import type { Entry, Item, StateType } from './types.ts'
 import { EntrySchema } from './types.ts'
-import { CommandParser } from './CommandParser.ts'
-import { ToolResultFormatter } from './ToolResultFormatter.ts'
-import { assert, createImageFile } from './utils.ts'
-import type { Content, ToolUseResult } from './types.ts'
+import { assert } from './utils.ts'
 import { basename } from 'node:path'
+import { OutputFormatter, type FormatterContext } from './OutputFormatter.ts'
+import { CommandParser } from './CommandParser.ts'
 
 export class JsonlToMarkdownConverter {
   private itemTree = new Map<string, Item>()
@@ -15,9 +14,17 @@ export class JsonlToMarkdownConverter {
   private metaEntry: Entry | null = null
   private lastTimestamp: string | null = null
   private firstUserPrompt: string | null = null
+  private outputFormatter: OutputFormatter
 
   constructor(isDebug: boolean = false) {
     this.isDebug = isDebug
+    // Create formatter with initial context (will be updated later with actual maps)
+    this.outputFormatter = new OutputFormatter({
+      toolUseTree: new Map(),
+      itemTree: new Map(),
+      defaultSaveOnly: false,
+      isDebug: isDebug,
+    })
   }
 
   convert(jsonlPath: string): { content: string; filename: string } | null {
@@ -26,6 +33,14 @@ export class JsonlToMarkdownConverter {
 
     const entries = this.parseJsonlFile(jsonlPath)
     this.buildItemTree(entries)
+
+    // Create new OutputFormatter with complete context
+    this.outputFormatter = new OutputFormatter({
+      toolUseTree: this.toolUseTree,
+      itemTree: this.itemTree,
+      defaultSaveOnly: false,
+      isDebug: this.isDebug,
+    })
 
     const markdownSections = this.processEntries()
 
@@ -227,7 +242,7 @@ export class JsonlToMarkdownConverter {
       entry.type === 'user' && entry.isSidechain ? 'assistant' : entry.type
 
     if (typeof entry.message.content === 'string') {
-      const text = this.formatTextContent(
+      const text = this.outputFormatter.formatTextContent(
         item,
         entry.message.content,
         entryType,
@@ -237,7 +252,7 @@ export class JsonlToMarkdownConverter {
       entry.message.content.forEach((contentItem, index) => {
         if (index > 0) output.push('')
 
-        const formattedContent = this.formatContentItem(
+        const formattedContent = this.outputFormatter.formatContentItem(
           item,
           contentItem,
           entryType,
@@ -252,184 +267,6 @@ export class JsonlToMarkdownConverter {
     }
 
     return output.length > 0 ? output.join('\n') : null
-  }
-
-  private formatContentItem(
-    item: Item,
-    contentItem: Content,
-    entryType: string,
-  ): string | null {
-    switch (contentItem.type) {
-      case 'text':
-        return contentItem.text
-          ? this.formatTextContent(item, contentItem.text, entryType)
-          : null
-      case 'tool_use':
-        return this.formatToolUse(item, contentItem)
-      case 'image':
-        return this.formatImage(item, contentItem)
-      default:
-        console.warn(
-          `Unhandled content type "${contentItem.type}" on line #${item.lineNumber}`,
-        )
-        return null
-    }
-  }
-
-  private formatTextContent(
-    item: Item,
-    text: string,
-    entryType: string,
-  ): string | null {
-    if (text === '(no content)') {
-      console.warn(`Skipping empty content on line #${item.lineNumber}`)
-      return null
-    }
-
-    const output: string[] = []
-    const parser = new CommandParser(text)
-    if (parser.hasCommandElements()) {
-      const parsed = parser.parse()
-      if (parsed) output.push(...parsed)
-    } else if (entryType === 'user') {
-      output.push(...this.formatUserMessage(text))
-    } else if (entryType === 'assistant') {
-      // just output assistant messages as-is
-      output.push(text)
-    } else {
-      output.push(
-        `## Unknown entry type ${entryType} on line #${item.lineNumber}`,
-      )
-      output.push('```json')
-      output.push(JSON.stringify(item.entry, null, 2))
-      output.push('```')
-    }
-
-    return output.length > 0 ? output.join('\n') : null
-  }
-
-  private formatUserMessage(text: string): string[] {
-    const output: string[] = []
-    // user messages are rendered as blockquotes
-    // add special notice for certain messages
-    if (text.startsWith('[Request interrupted')) {
-      output.push(`> [!WARNING]`)
-    } else if (text.startsWith("Error: The user doesn't want to proceed")) {
-      output.push(`> [!CAUTION]`)
-    } else {
-      output.push(`> [!IMPORTANT]`)
-    }
-
-    const lines = text.split('\n')
-    output.push(...lines.map((line) => `> ${line}`))
-
-    return output
-  }
-
-  private formatToolUse(item: Item, contentItem: Content): string {
-    const output: string[] = []
-    const toolName = contentItem.name || 'Unknown Tool'
-    const description = this.getToolDescription(contentItem)
-
-    output.push(
-      `${this.getToolEmoji(toolName)} **${toolName}${description ? `: ${description}` : ''}**`,
-    )
-
-    if (contentItem.input?.command) {
-      output.push(`\`\`\`shell\n${contentItem.input.command}\n\`\`\``)
-    }
-    if (contentItem.input?.prompt) {
-      output.push(`\n${contentItem.input.prompt}`)
-    }
-
-    // Process tool results
-    const toolUseId = contentItem.id || ''
-    const toolResults = this.toolUseTree.get(toolUseId) || []
-
-    toolResults.forEach((result, index) => {
-      assert(result.uuid, 'Tool result entry is missing UUID')
-
-      // separate multiple results with a blank line
-      if (index > 0) output.push('')
-
-      const resultItem = this.itemTree.get(result.uuid)
-      if (!resultItem) {
-        console.warn(
-          `Tool result with UUID ${result.uuid} not found in ItemTree`,
-        )
-        return
-      }
-
-      if (result.toolUseResult) {
-        const formattedResult = this.formatToolResult(
-          toolName,
-          resultItem,
-          result.toolUseResult as ToolUseResult,
-        )
-        if (formattedResult) output.push(formattedResult)
-      } else {
-        output.push(
-          `## Tool result for tool_use_id ${toolUseId} on line #${item.lineNumber} at line #${resultItem.lineNumber}`,
-        )
-        output.push('```json')
-        output.push(JSON.stringify(result, null, 2))
-        output.push('```')
-      }
-    })
-
-    return output.join('\n')
-  }
-
-  private formatToolResult(
-    toolName: string,
-    resultItem: Item,
-    toolUseResult: ToolUseResult,
-  ): string {
-    const output: string[] = []
-    const formatter = new ToolResultFormatter(toolName, this.isDebug)
-
-    if (this.isDebug) {
-      output.push(
-        `### Tool Use Result for ${toolName} on line #${resultItem.lineNumber} (isSidechain: ${resultItem.entry.isSidechain})`,
-      )
-    }
-
-    const formatted = formatter.format(toolUseResult, resultItem)
-    if (formatted) output.push(formatted)
-
-    resultItem.state = 'processed'
-    return output.join('\n')
-  }
-
-  private formatImage(item: Item, contentItem: Content): string | null {
-    if (
-      contentItem.type === 'image' &&
-      contentItem.source &&
-      contentItem.source.type === 'base64' &&
-      typeof contentItem.source.data === 'string'
-    ) {
-      const filename = createImageFile(
-        contentItem.source.data,
-        contentItem.source.media_type,
-        item.uuid,
-      )
-      return `![Image](contents/${filename})`
-    }
-
-    return [
-      `## Unhandled image content on line #${item.lineNumber}`,
-      '```json',
-      JSON.stringify(contentItem, null, 2),
-      '```',
-    ].join('\n')
-  }
-
-  private getToolDescription(contentItem: Content): string {
-    const input = contentItem.input
-    if (!input) return ''
-
-    if (input.pattern) return `\`"${input.pattern.replace(/\\/g, '\\')}"\``
-    return input.description || input.path || input.file_path || input.url || ''
   }
 
   private getToolUseId(entry: Entry): string | null {
@@ -456,23 +293,6 @@ export class JsonlToMarkdownConverter {
     return null
   }
 
-  private getToolEmoji(toolName: string): string {
-    const emojiMap: { [key: string]: string } = {
-      ls: '📂',
-      read: '📖',
-      write: '✍️',
-      edit: '✏️',
-      multiedit: '✏️',
-      glob: '🔍',
-      grep: '🔍',
-      task: '📋',
-      todowrite: '✅',
-      bash: '💻',
-      webfetch: '🌐',
-    }
-    return emojiMap[toolName.toLowerCase()] || '🛠️'
-  }
-
   private generateHeader(): string | null {
     if (!this.metaEntry || !this.metaEntry.cwd) {
       return null
@@ -480,37 +300,19 @@ export class JsonlToMarkdownConverter {
 
     const lines: string[] = [
       '# 🤖 Claude Code Transcript',
-      `## 🗂️ ${this.formatPath(this.metaEntry.cwd)}`,
+      `## 🗂️ ${this.outputFormatter.formatPath(this.metaEntry.cwd)}`,
     ]
 
     // Format timestamps
     if (this.metaEntry.timestamp) {
-      const startTime = this.formatTimestamp(this.metaEntry.timestamp)
+      const startTime = this.outputFormatter.formatTimestamp(this.metaEntry.timestamp)
       const endTime = this.lastTimestamp
-        ? this.formatTimestamp(this.lastTimestamp)
+        ? this.outputFormatter.formatTimestamp(this.lastTimestamp)
         : startTime
       lines.push(`🕒 ${startTime} - ${endTime}`)
     }
     lines.push(`Session ID: \`${this.metaEntry.sessionId}\``)
     return lines.join('\n')
-  }
-
-  private formatPath(cwd: string): string {
-    // Replace user home directory with ~
-    const homeDir = process.env.HOME || process.env.USERPROFILE || ''
-    if (homeDir && cwd.startsWith(homeDir)) {
-      return cwd.replace(homeDir, '~')
-    }
-    return cwd
-  }
-
-  private formatTimestamp(timestamp: string): string {
-    // Convert ISO timestamp to readable format without T and Z
-    const date = new Date(timestamp)
-    return date
-      .toISOString()
-      .replace(/\.\d{3}Z$/, '') // Remove milliseconds and Z
-      .replace('T', ' ') // Replace T with space
   }
 
   private generateFilename(filePath: string): string {
